@@ -35,6 +35,7 @@ jobs:
         version: '1.29.2'
 
     - name: Build and run Docker containers with docker-compose
+      run: docker-compose build
       run: docker-compose up
     - name: Install Dependencies
       run: |
