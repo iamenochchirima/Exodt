@@ -29,10 +29,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-    - name: Install Docker and docker-compose
-      run: |
-          sudo apt update
-          sudo apt install -y docker.io docker-compose
+    - name: Docker and docker-compose
+      uses: KengoTODA/actions-setup-docker-compose@main
+      with:
+        version: '1.29.2'
 
     - name: Build and run Docker containers with docker-compose
       run: docker-compose up
