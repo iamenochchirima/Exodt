@@ -42,13 +42,3 @@ jobs:
         DBPASSWORD: config("DB_PASSWORD")
         DBHOST: 127.0.0.1
         DBPORT: 3306
-    - name: Run Tests
-      run: |
-        python manage.py test
-      env: 
-        DBENGINE: django.db.backends.mysql
-        DBNAME: mysql
-        DBUSER: root
-        DBPASSWORD: zergling
-        DBHOST: 127.0.0.1
-        DBPORT: 3306
