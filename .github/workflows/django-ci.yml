@@ -29,6 +29,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+    - name: Install Docker and docker-compose
+      run: |
+          apt-get update
+          apt-get install -y docker.io docker-compose
+
+    - name: Build and run Docker containers with docker-compose
+      run: docker-compose up
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
