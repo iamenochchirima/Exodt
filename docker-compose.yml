@@ -15,6 +15,6 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: 'django-app-db'
-      DB_PASSWORD: 'config("DB_PASSWORD")'
+      DB_PASSWORD: 'enoch26424'
     volumes:
       - ./data/mysql/db:/var/lib/mysql
