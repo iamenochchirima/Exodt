@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'exodt.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'social',
-		'USER': 'root',
-		'DB_PASSWORD': '',
-		'HOST': '127.0.0.1',
-        'PORT': '3306',
+		'NAME': config("DB_NAME"),
+		'USER': config("DB_USER"),
+		'PASSWORD': config("DB_PASSWORD"),
+		'HOST':config("DB_HOST"),
+		'PORT':'3306',
 	}
 }
 
