@@ -11,7 +11,7 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         registry: docker.io
         repository: iamenochchirima/exodt
-        tags: latest
+        tags: latest-django
         files: ./Dockerfile
     - uses: docker/build-push-action@v1
       with:
@@ -19,5 +19,5 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         registry: docker.io
         repository: iamenochchirima/exodt
-        tags: latest
+        tags: latest-db
         files: ./Dockerfile.mysql
