@@ -42,7 +42,6 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
         docker-compose build --no-cache
-        docker-compose run --rm app
         docker-compose up
     - name: Install Dependencies
       run: |
