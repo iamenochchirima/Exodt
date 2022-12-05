@@ -12,7 +12,8 @@ services:
     depends_on:
       - db 
     secrets:
-      - ${{ secrets.DB_PASSWORD }}
+      - DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
   db:
     image: mysql:5.7
     environment:
