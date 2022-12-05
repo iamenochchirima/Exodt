@@ -25,7 +25,7 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 FROM mysql:8.0
 
 # Copy the database schema
-COPY schema.sql /docker-entrypoint-initdb.d/
+COPY exodtdb.sql /docker-entrypoint-initdb.d/
 
 EXPOSE 3306
 
