@@ -37,6 +37,7 @@ jobs:
     - name: Build and run Docker containers with docker-compose
       run: |
         docker-compose build --no-cache
+        docker-compose run --rm app
         docker-compose up
     - name: Install Dependencies
       run: |
