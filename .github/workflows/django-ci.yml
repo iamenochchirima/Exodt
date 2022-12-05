@@ -23,7 +23,7 @@ jobs:
     env:
       DOCKER_HUB_USERNAME: iamenochchirima
       DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      DOCKER_HUB_REPOSITORY: iamenochchirima/exodt
+      DOCKER_HUB_REPOSITORY: exodt
 
       DB_NAME: mysql
       DB_USER: root
