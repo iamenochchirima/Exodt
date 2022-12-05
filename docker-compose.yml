@@ -11,7 +11,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db 
-      secrets:
+    secrets:
       - my_secret
   db:
     image: mysql:5.7
