@@ -10,11 +10,12 @@ services:
     container_name: django_container
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
-      - db 
+      - db
   db:
+    secrets:
+      - DB_PASSWORD
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: 'django-app-db'
-      MYSQL_ROOT_PASSWORD: '${{ secrets.DB_PASSWORD }}'
     volumes:
       - ./data/mysql/db:/var/lib/mysql
