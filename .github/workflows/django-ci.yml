@@ -47,4 +47,6 @@ jobs:
     - name: Log in to Docker Hub
       run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
     - name: Push Docker Images
-      run: docker-compose push
+      context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/exodt:latest
