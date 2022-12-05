@@ -20,7 +20,7 @@ jobs:
       with:
         repository: iamenochchirima/exodt
         tags: django-app:latest,mysql:latest
-
+env:
   DB_NAME: mysql
   DB_USER: root
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
