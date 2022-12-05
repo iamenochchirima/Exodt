@@ -80,7 +80,8 @@ DATABASES = {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': 'social',
 		'USER': 'root',
-		'PASSWORD': config("DB_PASSWORD"),
+		#'PASSWORD': config("DB_PASSWORD"),
+        'PASSWORD': '${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}',
 		'HOST':'localhost',
 		'PORT':'3306',
 	}
