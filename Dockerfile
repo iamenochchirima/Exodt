@@ -11,6 +11,8 @@ RUN pip install -r /app/requirements.txt
 COPY . /app
 WORKDIR /app
 
+ENV STATIC_ROOT=/static
+
 # Collect static files
 RUN python manage.py collectstatic --no-input
 
