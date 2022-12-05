@@ -18,8 +18,8 @@ jobs:
     - name: Build and Push Docker Images
       uses: docker/build-push-action@v1
       with:
-        repository: iamenochchirima/
-        tags: exodt:app_latest,exodt:mysql_db_latest
+        repository: exodt
+        tags: django-app:latest,mysql:latest
 env:
   DB_NAME: mysql
   DB_USER: root
