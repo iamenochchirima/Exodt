@@ -12,7 +12,7 @@ services:
     depends_on:
       - db 
     secrets:
-      - my_secret
+      - DB_PASSWORD
   db:
     image: mysql:5.7
     environment:
