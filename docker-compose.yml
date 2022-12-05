@@ -11,12 +11,12 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db 
-    environment:
-      DB_PASSWORD: my_password
+      secrets:
+      - my_secret
   db:
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: 'django-app-db'
-      DB_PASSWORD: ''
+      DB_PASSWORD: /run/secrets/my_secret
     volumes:
       - ./data/mysql/db:/var/lib/mysql
