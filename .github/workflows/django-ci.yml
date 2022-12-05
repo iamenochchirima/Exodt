@@ -36,17 +36,13 @@ jobs:
       uses: KengoTODA/actions-setup-docker-compose@main
       with:
         version: '1.29.2'
-
+    - uses: docker/setup-buildx-action@v2
     - name: Build and run Docker containers with docker-compose
-      run: |
-        docker-compose build --no-cache
+      run: docker-compose build --no-cache
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Log in to Docker Hub
       run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
     - name: Push Docker Images
-      context: .
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/exodt:latest
+      run: docker-compose push
