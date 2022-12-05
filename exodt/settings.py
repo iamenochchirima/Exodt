@@ -81,8 +81,8 @@ DATABASES = {
 		'NAME': 'social',
 		'USER': 'root',
 		'PASSWORD': config("DB_PASSWORD"),
-		'HOST':'localhost',
-		'PORT':'3306',
+		'HOST': '127.0.0.1',
+        'PORT': '3306',
 	}
 }
 
