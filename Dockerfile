@@ -1,10 +1,7 @@
 FROM python:3.8
-
-COPY requirements.txt /tmp/
+COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip
-RUN pip install -r /tmp/requirements.txt
-
+RUN pip install -r /app/requirements.txt
 COPY . /app
 WORKDIR /app
-
-CMD ["python", "manage.py", "runserver", "--verbosity 2", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

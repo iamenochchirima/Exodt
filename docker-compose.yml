@@ -19,3 +19,5 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "TRUE"
     volumes:
       - ./data/mysql/db:/var/lib/mysql
+
+
