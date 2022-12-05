@@ -20,4 +20,4 @@ jobs:
         registry: docker.io
         repository: iamenochchirima/exodt
         tags: latest-db
-        files: /mysql/Dockerfile
+        files: ./mysql/Dockerfile
