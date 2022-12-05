@@ -12,12 +12,13 @@ services:
     depends_on:
       - db 
     secrets:
-      - /run/secrets/my_secrets
+      DB_PASSWORD:
+      file: /run/secrets/my_secrets
 
   db:
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: 'django-app-db'
-      DB_PASSWORD: /run/secrets/my_secrets
+      DB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./data/mysql/db:/var/lib/mysql
