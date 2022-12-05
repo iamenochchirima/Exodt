@@ -44,18 +44,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Run Migrations
-      run: python manage.py migrate
-      env: 
-        DB_ENGINE: django.db.backends.mysql
-        DB_NAME: mysql
-        DB_USER: root
-        DB_PASSWORD: ""
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-    - name: Build Docker Image
-      run: docker build -t exodt:app .
     - name: Log in to Docker Hub
       run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-    - name: Push Docker Image
-      run: docker push exodt:app
+    - name: Push Docker Images
+      run: docker-compose push
