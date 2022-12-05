@@ -19,7 +19,7 @@ jobs:
       uses: docker/build-push-action@v1
       with:
         repository: exodt
-        tags: django-app:latest,mysql:latest
+        tags: latest,latest
 env:
   DB_NAME: mysql
   DB_USER: root
