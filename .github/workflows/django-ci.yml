@@ -1,5 +1,7 @@
 name: Build and Push
+
 on: [push]
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -7,27 +9,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build Docker Images
-      run: |
-        docker build -t django-app:latest -f Dockerfile .
-        docker build -t mysql:latest -f Dockerfile .
+    - name: Build and Push Docker Images
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        repository: ${{ secrets.DOCKER_HUB_REPOSITORY }}
+        tags: django-app:latest,mysql:latest
 
-    - name: Push Docker Images to Docker Hub
-      run: |
-        docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-        docker tag django-app:latest $DOCKER_HUB_REPOSITORY/django-app:latest
-        docker tag mysql:latest $DOCKER_HUB_REPOSITORY/mysql:latest
-        docker push $DOCKER_HUB_REPOSITORY/django-app:latest
-        docker push $DOCKER_HUB_REPOSITORY/mysql:latest
+env:
+  DOCKER_HUB_USERNAME: iamenochchirima
+  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+  DOCKER_HUB_REPOSITORY: iamenochchirima/exodt
 
-    env:
-      DOCKER_HUB_USERNAME: iamenochchirima
-      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      DOCKER_HUB_REPOSITORY: exodt
-
-      DB_NAME: mysql
-      DB_USER: root
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-
-
-   
+  DB_NAME: mysql
+  DB_USER: root
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
