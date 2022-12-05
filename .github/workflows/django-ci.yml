@@ -19,7 +19,7 @@ jobs:
       uses: docker/build-push-action@v1
       with:
         repository: exodt
-        tags: latest,latest
+        tags: app_latest,db_latest
 env:
   DB_NAME: mysql
   DB_USER: root
