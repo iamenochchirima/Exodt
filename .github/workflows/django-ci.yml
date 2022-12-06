@@ -5,25 +5,23 @@ on: [push]
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
-  steps:
-  - uses: actions/checkout@v2
-  - uses: docker/build-push-action@v1
-    with:
-      username: iamenochchirima
-      password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      registry: docker.io
-      repository: iamenochchirima/exodt
-      tags: latest-django
-      files: ./Dockerfile-app
-  - uses: docker/build-push-action@v1
-    with:
-      username: iamenochchirima
-      password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      registry: docker.io
-      repository: iamenochchirima/exodt
-      tags: latest-db
-      files: ./Dockerfile-db
-
-
-
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build and push Django app image
+      uses: docker/build-push-action@v1
+      with:
+        username: iamenochchirima
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        registry: docker.io
+        repository: iamenochchirima/exodt
+        tags: latest-django
+        files: ./Dockerfile-app
+    - name: Build and push MySQL image
+      uses: docker/build-push-action@v1
+      with:
+        username: iamenochchirima
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        registry: docker.io
+        repository: iamenochchirima/exodt
+        tags: latest-db
+        files: ./Dockerfile-db
