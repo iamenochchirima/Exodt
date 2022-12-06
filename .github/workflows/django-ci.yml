@@ -15,7 +15,7 @@ jobs:
         registry: docker.io
         repository: iamenochchirima/exodt
         tags: latest-django
-        files: ./app-docker/Dockerfile
+        files: /app-docker/Dockerfile
     - name: Build and push MySQL image
       uses: docker/build-push-action@v1
       with:
@@ -24,4 +24,4 @@ jobs:
         registry: docker.io
         repository: iamenochchirima/exodt
         tags: latest-db
-        files: ./mysqldb-docker/Dockerfile
+        files: /mysqldb-docker/Dockerfile
