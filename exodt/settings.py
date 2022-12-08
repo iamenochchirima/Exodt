@@ -38,7 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main'
+    'django.contrib.sites',
+    'main',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +75,11 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 WSGI_APPLICATION = 'exodt.wsgi.application'
 
 
@@ -78,11 +89,10 @@ WSGI_APPLICATION = 'exodt.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'social',
-		'USER': 'root',
-		#'PASSWORD': config("DB_PASSWORD"),
-        'PASSWORD': '${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}',
-		'HOST':'localhost',
+		'NAME': config("DB_NAME"),
+		'USER': config("DB_USER"),
+		'PASSWORD': config("DB_PASSWORD"),
+		'HOST':config("DB_HOST"),
 		'PORT':'3306',
 	}
 }
@@ -126,8 +136,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATIC_ROOT ='/static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
