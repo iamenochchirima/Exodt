@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   app:
     build: .
@@ -11,13 +10,13 @@ services:
     container_name: django_container
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
-      - db
+      - db 
   db:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: "django-app-db"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "TRUE"
+    image: postgres
     volumes:
-      - ./data/mysql/db:/var/lib/mysql
-
-
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres_db

@@ -7,7 +7,8 @@ defusedxml==0.7.1
 Django==4.1.4
 django-allauth==0.51.0
 idna==3.4
-mysqlclient==2.1.1
+psycopg2-binary>=2.8
+#mysqlclient==2.1.1
 oauthlib==3.2.2
 pycparser==2.21
 PyJWT==2.6.0

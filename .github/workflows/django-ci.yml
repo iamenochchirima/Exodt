@@ -1,27 +1,14 @@
-name: Build and Push
-
-on: [push]
+name: Django on: [push]
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build and push Django app image
-      uses: docker/build-push-action@v1
-      with:
-        username: iamenochchirima
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        registry: docker.io
-        repository: iamenochchirima/exodt
-        tags: latest-django
-        files: ./app-docker/Dockerfile
-    - name: Build and push MySQL image
-      uses: docker/build-push-action@v1
-      with:
-        username: iamenochchirima
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        registry: docker.io
-        repository: iamenochchirima/exodt
-        tags: latest-db
-        files: ./mysqldb-docker/Dockerfile
+      - uses: actions/checkout@v2
+      - name: Build and run the app
+        run: |
+          docker-compose build
+          docker-compose up -d
+      - name: Run Django migrations
+        run: |
+          docker-compose exec app python manage.py migrate
