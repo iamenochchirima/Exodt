@@ -1,4 +1,6 @@
-name: Django on: [push]
+name: Django 
+
+on: [push]
 
 jobs:
   build:
