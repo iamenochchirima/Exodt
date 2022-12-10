@@ -156,8 +156,10 @@ SOCIALACCOUNT_PROVIDERS = {
             'profile',
             'email',
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
+         'APP': {
+            'client_id': config("CLIENT_ID"),
+            'secret': config("SECRET_KEY"),
+            'key': ''
         }
     }
 }
