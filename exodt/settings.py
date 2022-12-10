@@ -102,7 +102,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'exodt_db',
         'USER': 'postgres',
-        'PASSWORD': 'enoch26424',
+        'PASSWORD': config("PSDB_PASSWORD"),
         'HOST': 'localhost',
         'PORT': '',
     }
