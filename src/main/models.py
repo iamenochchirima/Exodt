@@ -36,6 +36,21 @@ class Profile(models.Model):
         self.slug = to_slug
         super().save(*args, **kwargs)
 
+STATUS_CHOICES = (
+    ('send', 'Send'),
+    ('accepted', 'Accepted')
+)
+
+class Connection(models.Model):
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="sender")
+    reciever = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="reciever")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sender} => {self.reciever}-{self.status}"
+
 
 
 
