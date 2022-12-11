@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from .utils import get_random_value
+from django.template.defaultfilters import slugify
 
 class Profile(models.Model):
     first_name = models.CharField(max_length=225, blank=True)
@@ -11,8 +13,8 @@ class Profile(models.Model):
     friends = models.ManyToManyField(User, blank=True, related_name="friends")
     country = models.CharField(max_length=225, blank=False)
     fav_field_os = models.CharField(max_length=225, blank=True)
-    followers = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+    followers = models.CharField(max_length=225, blank=True)
+    following = models.CharField(max_length=225, blank=True)
     slug = models.SlugField(unique=True, blank=True)
     user_profile_type = models.CharField(max_length=200, blank=True)
     updated = models.DateTimeField(auto_now=True)
@@ -20,6 +22,22 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}-{self.created}"
+    
+    def save(self, *args, **kwargs):
+        available = False
+        if self.first_name and self.last_name:
+            to_slug = slugify(str(self.first_name) + " " + str(self.last_name))
+            available = Profile.objects.filter(slug=to_slug).exists()
+            while available:
+                to_slug = slugify(to_slug + " " + str(get_random_value()))
+                available = Profile.objects.filter(slug=to_slug).exists()
+        else:
+            to_slug = str(self.user)
+        self.slug = to_slug
+        super().save(*args, **kwargs)
+
+
+
 
 
 
