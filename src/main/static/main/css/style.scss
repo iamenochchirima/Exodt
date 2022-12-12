@@ -1,0 +1,43 @@
+/* CSS for the layout page */
+body {
+    background-color: white;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .logo h1 {
+    color: blue;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .profile-picture img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  
+  .profile-menu i {
+    font-size: 12px;
+  }
+  
+  .sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: #eee;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar li {
+    margin: 10px 0;
+  }

@@ -36,6 +36,12 @@ class Profile(models.Model):
         self.slug = to_slug
         super().save(*args, **kwargs)
 
+    def get_connections(self):
+        return self.connections.all()
+
+    def get_connections_no(self):
+        return self.connections.all().count()
+
 STATUS_CHOICES = (
     ('send', 'Send'),
     ('accepted', 'Accepted')

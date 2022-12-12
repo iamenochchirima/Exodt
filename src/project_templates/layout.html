@@ -26,24 +26,15 @@
     </a>
    
   </div>
-  <div class="sidebar">
-    <ul>
-     <li>Home</li>
-      <li>Messages</li>
-      <li>Communities</li>
-      <li>Groups</li>
-      <li>Following</li>
-      <li>Events</li>
-      <li>News</li>
-      <li>Articles</li>
-      <li>Collaborations</li>
-    </ul>
-  </div>
+ 
   {% block content %}
   {% endblock content %}
 
   {% block scripts %}
   {% endblock scripts %}
+  
+  {% block styles %}
+  {% endblock styles%}
 
   <script type="text/javascript" src="{% static 'js/main.js' %}"></script>  
 </body>
