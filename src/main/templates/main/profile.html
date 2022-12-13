@@ -65,15 +65,15 @@
                             <td>{{user_profile.bio}}</td>
                         </tr>
                         <tr>
-                            <td>number of friends</td>
-                            <td>{{user_profile.get_friends_no}}</td>
+                            <td>number of connections</td>
+                            <td>{{user_profile.get_connections_no}}</td>
                         </tr>
                         <tr>
-                            <td>number of friends</td>
+                            <td>Connections</td>
                             <td>
                                 <ul>
-                                    {% for friend in user_profile.get_friends %}
-                                        <li>{{friend}}</li>
+                                    {% for connection in user_profile.get_connections %}
+                                        <li>{{connection}}</li>
                                     {% endfor %}
                                 </ul>
                             </td>

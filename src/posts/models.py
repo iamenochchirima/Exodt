@@ -5,16 +5,19 @@ from main.models import Profile
 class Post(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='posts', blank=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
-    liked = models.ManyToManyField(Profile, default=None, related_name='liked' )
+    liked = models.ManyToManyField(Profile, default=None, related_name='liked', blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='author')
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='posts')
 
     def __str__(self):
         return str(self.content[:20])
 
     def num_likes(self):
         return self.liked.all().count()
+    
+    def num_comments(self):
+        return self.comment_set.all().count()
     
     class Meta:
         ordering = ('-created',)
