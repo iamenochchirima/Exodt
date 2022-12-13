@@ -6,7 +6,7 @@
     <h2>My Profile</h2>
     {{user_profile.slug}}
     <hr>
-    <img src="{{ user_profile.profile_picture.url }}" alt="profile_pic">
+    <!--<img src="{{ user_profile.profile_picture.url }}" alt="profile_pic">-->
     {{user_profile.first_name}}<br>
     {{user_profile.last_name}}<br>
     {{user_profile.bio}}<br>
@@ -15,6 +15,13 @@
         <li>{{connection}}</li>
     {% endfor %}
     </ul>
-   <br>
     {{user_profile.get_connections_no}}<br>
+    {% if confirm %}
+    <div class="ui teal message">Your profile have been updated</div>
+    {% endif %}
+    <form action="" method="POST" class="ui form", enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="ui positive_button">Update</button>
+    </form>
 {% endblock content %}
