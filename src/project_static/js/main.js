@@ -1,3 +1,9 @@
 $(document).ready(function(){
-    console.log("Working from the main.js")
+    $('#modal-btn').click(function(){
+        console.log('working')
+        $('.ui.modal')
+        .modal('show')
+        ;
+    })
+    $('.ui.dropdown').dropdown()
 })
