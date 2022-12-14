@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %} Posts {% endblock title %}
+
+{% block content %}
+
+<div class="ui grid">
+    <div class="row">
+        <div class="eleven wide column">
+            {% for post in qs %}
+               <div class="ui fluid card">
+                    <div class="content">
+                        {{post}}
+                    </div>
+                    <div class="content">
+                        <form action="{% url 'posts:like_unlike_post' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value={{post.id}}>
+                            <button type="submit" class="ui primary button">Like</button>
+                        </form>
+                    </div>
+               </div>
+            {% endfor %}
+        </div>
+        <div class="5 wide column">
+            FORM
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
