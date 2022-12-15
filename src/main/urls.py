@@ -7,5 +7,8 @@ app_name = 'main'
 
 urlpatterns = [
     path("", views.index, name='index'),
-    path("profile_view", views.profile_view, name="profile_view")  
+    path("profile_view", views.profile_view, name="profile_view") ,
+    path("invites", views.invites_recieved_view, name="invites"),
+    path("all_profiles", views.profile_list_view, name="all_profiles"),
+    path("toinvite_profiles", views.invite_profile_list_view, name="toinvite_profiles"),
 ]

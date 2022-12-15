@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %} Invite friends {% endblock title %}
+
+{% block content %}
+
+<ul>
+    {% for invite in qs %}
+   <li>{{ invite }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock content %}

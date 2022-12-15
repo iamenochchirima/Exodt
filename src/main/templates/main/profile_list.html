@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %} All profiles {% endblock title %}
+
+{% block content %}
+
+<ul>
+    {% for profile in qs %}
+   <li>{{ profile }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock content %}

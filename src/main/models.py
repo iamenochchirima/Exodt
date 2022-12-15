@@ -2,6 +2,28 @@ from django.contrib.auth.models import User
 from django.db import models
 from .utils import get_random_value
 from django.template.defaultfilters import slugify
+from django.db.models import Q
+
+class ProfileManager(models.Manager):
+
+    def get_all_unconnected_profiles(self, sender):
+        profiles = Profile.objects.all().exclude(user=sender)
+        profile = Profile.objects.get(user=sender)
+        query_set = Connection.objects.filter(Q(sender=profile) | Q(reciever=profile))
+        
+        accepted = set([])
+
+        for rel in query_set:
+            if rel.status == 'accepted':
+                accepted.add(rel.reciever)
+                accepted.add(rel.sender)
+
+        available = [profile for profile in profiles if profile not in accepted]
+        return available
+
+    def get_all_profiles(self, me):
+        profiles = Profile.objects.all().exclude(user=me)
+        return profiles
 
 class Profile(models.Model):
     first_name = models.CharField(max_length=225, blank=True)
@@ -19,6 +41,8 @@ class Profile(models.Model):
     user_profile_type = models.CharField(max_length=200, blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = ProfileManager()
 
     def __str__(self):
         return f"{self.user.username}-{self.created}"
@@ -67,7 +91,13 @@ class Profile(models.Model):
 STATUS_CHOICES = (
     ('send', 'Send'),
     ('accepted', 'Accepted')
+
 )
+
+class ConnectionManager(models.Manager):
+    def invitations_recieved(self, reciever):
+        query_set = Connection.objects.filter(reciever=reciever, status='send')
+        return query_set
 
 class Connection(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="sender")
@@ -75,6 +105,8 @@ class Connection(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = ConnectionManager()
 
     def __str__(self):
         return f"{self.sender} => {self.reciever}-{self.status}"
