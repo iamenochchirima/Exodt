@@ -54,11 +54,11 @@ class ProfileListView(ListView):
         user = User.objects.get(username__iexact=self.request.user.username)
         profile = Profile.objects.get(user=user)
         con_reciever = Connection.objects.filter(sender=profile)
-        con_sender = Connection.objects.filter(reciever=profile)
+        con_sender = Connection.objects.filter(receiver=profile)
         con_r = []
         con_s = []
         for item in con_reciever:
-            con_r.append(item.reciever.user)
+            con_r.append(item.receiver.user)
         for item in con_sender:
             con_s.append(item.sender.user)
         
@@ -76,9 +76,9 @@ def send_invitation(request):
         pk = request.POST.get('profile_pk')
         user = request.user
         sender = Profile.objects.get(user=user)
-        reciever = Profile.objects.get(pk=pk)
+        receiver = Profile.objects.get(pk=pk)
 
-        con = Connection.objects.create(sender=sender, reciever=reciever)
+        con = Connection.objects.create(sender=sender, receiver=receiver)
 
         return redirect(request.META.get('HTTP_REFERER'))
 
@@ -89,9 +89,11 @@ def remove_from_connections(request):
         pk = request.POST.get('profile_pk')
         user = request.user
         sender = Profile.objects.get(user=user)
-        reciever = Profile.objects.get(pk=pk)
+        receiver = Profile.objects.get(pk=pk)
 
-        con = Connection.objects.get(Q(sender=sender) & Q(reciever=reciever) | Q(sender=reciever) & Q(reciever=sender))
+        con = Connection.objects.get(Q(sender=sender) & Q(receiver=receiver) | Q(sender=receiver) & Q(receiver=sender))
+
+        con.delete()
 
         return redirect(request.META.get('HTTP_REFERER'))
 

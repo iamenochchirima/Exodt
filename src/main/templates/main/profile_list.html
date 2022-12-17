@@ -37,7 +37,7 @@
                     {% endif %}
 
                     {% if request.user in profile.connections.all %}
-                    <form action="" method="POST">
+                    <form action="{% url 'main:remove_connection' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="profile_pk" value={{profile.pk}}>
                         <button type="submit" class="ui negative basic button mb-5 w-big"><i class="minus square icon"></i>Remove from connections</button>

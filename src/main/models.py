@@ -9,13 +9,13 @@ class ProfileManager(models.Manager):
     def get_all_unconnected_profiles(self, sender):
         profiles = Profile.objects.all().exclude(user=sender)
         profile = Profile.objects.get(user=sender)
-        query_set = Connection.objects.filter(Q(sender=profile) | Q(reciever=profile))
+        query_set = Connection.objects.filter(Q(sender=profile) | Q(receiver=profile))
         
         accepted = set([])
 
         for rel in query_set:
             if rel.status == 'accepted':
-                accepted.add(rel.reciever)
+                accepted.add(rel.receiver)
                 accepted.add(rel.sender)
 
         available = [profile for profile in profiles if profile not in accepted]
@@ -95,13 +95,13 @@ STATUS_CHOICES = (
 )
 
 class ConnectionManager(models.Manager):
-    def invitations_recieved(self, reciever):
-        query_set = Connection.objects.filter(reciever=reciever, status='send')
+    def invitations_recieved(self, receiver):
+        query_set = Connection.objects.filter(receiver=receiver, status='send')
         return query_set
 
 class Connection(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="sender")
-    reciever = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="reciever")
+    receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="receiver")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -109,7 +109,7 @@ class Connection(models.Model):
     objects = ConnectionManager()
 
     def __str__(self):
-        return f"{self.sender} => {self.reciever}-{self.status}"
+        return f"{self.sender} => {self.receiver}-{self.status}"
 
 
 
