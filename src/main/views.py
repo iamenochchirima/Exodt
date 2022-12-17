@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Profile, Connection
 from .forms import ProfileModelForm
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.db.models import Q
 
 def index(request):
@@ -67,6 +67,33 @@ def invite_profile_list_view(request):
         'qs': query_set
     })
 
+class ProfileDetailView(DetailView):
+    model = Profile
+    template_name = 'main/profile_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(username__iexact=self.request.user.username)
+        profile = Profile.objects.get(user=user)
+        print(profile)
+        con_reciever = Connection.objects.filter(sender=profile)
+        con_sender = Connection.objects.filter(receiver=profile)
+        con_r = []
+        con_s = []
+        for item in con_reciever:
+            con_r.append(item.receiver.user)
+        for item in con_sender:
+            con_s.append(item.sender.user)
+        
+        context['con_r'] = con_r
+        context['con_s'] = con_s
+        context['posts'] = self.get_object().get_all_authors_posts()
+        context['len_posts'] = True if len(self.get_object().get_all_authors_posts()) > 0 else False
+        print(context)
+        return context
+
+
+
 class ProfileListView(ListView):
     model = Profile
     template_name = 'main/profile_list.html'
@@ -104,7 +131,7 @@ def send_invitation(request):
         sender = Profile.objects.get(user=user)
         receiver = Profile.objects.get(pk=pk)
 
-        con = Connection.objects.create(sender=sender, receiver=receiver)
+        con = Connection.objects.create(sender=sender, receiver=receiver, status='send')
 
         return redirect(request.META.get('HTTP_REFERER'))
 
