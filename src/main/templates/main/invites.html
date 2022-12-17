@@ -3,11 +3,48 @@
 
 {% block title %} My Invites {% endblock title %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+{% endblock styles %}
+
 {% block content %}
+
+{% if is_empty %}
+<h1>No Invitations</h1>
+{% endif %}
 
 <ul>
     {% for invite in qs %}
-   <li>{{ invite }}</li>
+    <div class="ui segment">
+        <div class="ui grid">
+            <div class="row">
+                <div class="three wide column">
+                    <img src="{{invite.profile_picture.url}}" alt="" class="ui small circular image">
+                </div>
+                <div class="thirteen wide column">
+                    <h3>{{invite.user}}</h3>
+                    <p>{{invite.bio}}</p>
+                    <a href="">
+                        <button class="ui primary button w-big mb-5">See Profile</button>
+                    </a>
+                    <form action="{% url 'main:accept_invite' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="profile_pk" value={{invite.pk}}>
+                        <button type="submit" class="ui positive basic button w-big mb-5">
+                            <i class="check icon"></i>Accept invite
+                        </button>
+                    </form>
+                    <form action="{% url 'main:decline_invite' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="profile_pk" value={{invite.pk}}>
+                        <button type="submit" class="ui negative basic button w-big mb-5">
+                            <i class="close icon"></i>Decline invite
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
 </ul>
 

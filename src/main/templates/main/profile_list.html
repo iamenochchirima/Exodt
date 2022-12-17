@@ -3,6 +3,10 @@
 
 {% block title %} All profiles {% endblock title %}
 
+{% block styles %}
+<link rel="stylesheet" href="{% static 'posts/posts.css' %}">
+{% endblock styles%}
+
 {% block content %}
 
 {% if is_empty %}
@@ -28,7 +32,8 @@
                         <form action="{% url 'main:send_invitation' %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="profile_pk" value={{profile.pk}}>
-                            <button type="submit" class="ui positive basic button mb-5 w-big"><i class="plus square icon"></i>Add to connections</button>
+                            <button type="submit" class="ui positive basic button mb-5 w-big">
+                                <i class="plus square icon"></i>Add to connections</button>
                         </form>
                      {% endif %}
 

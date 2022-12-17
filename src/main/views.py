@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Profile, Connection
 from .forms import ProfileModelForm
@@ -28,10 +28,36 @@ def profile_view(request):
 def invites_recieved_view(request):
     user_profile = Profile.objects.get(user=request.user)
     query_set = Connection.objects.invitations_recieved(user_profile)
-
+    result = list(map(lambda x: x.sender, query_set))
+    is_empty = False
+    if len(result) == 0:
+        is_empty = True
     return render(request, 'main/invites.html', {
-        'qs': query_set
+        'qs': result,
+        'is_empty': is_empty
     })
+
+def accept_invitation(request):
+    if request.method == 'POST':
+        pk = request.POST.get('profile_pk')
+        sender = Profile.objects.get(pk=pk)
+        receiver = Profile.objects.get(user=request.user)
+        con = get_object_or_404(Connection, sender=sender, receiver=receiver)
+
+        if con.status == 'send':
+            con.status = 'accepted'
+            con.save()
+    return redirect('main:invites')
+    
+
+def decline_invitation(request):
+    if request.method == 'POST':
+        pk = request.POST.get('profile_pk')
+        sender = Profile.objects.get(pk=pk)
+        receiver = Profile.objects.get(user=request.user)
+        con = get_object_or_404(Connection, sender=sender, receiver=receiver)
+        con.delete()
+    return redirect('main:invites')
 
 def invite_profile_list_view(request):
     user = request.user
