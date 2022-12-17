@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect 
 from django.contrib.auth.models import User
 from .models import Profile, Connection
 from .forms import ProfileModelForm
 from django.views.generic import ListView
+from django.db.models import Q
 
 def index(request):
     return render(request, "main/index.html")
@@ -40,15 +41,6 @@ def invite_profile_list_view(request):
         'qs': query_set
     })
 
-
-# def profile_list_view(request):
-#     user = request.user
-#     query_set = Profile.objects.get_all_profiles(user)
-
-#     return render(request, 'main/profile_list.html', {
-#         'qs': query_set
-#     })
-
 class ProfileListView(ListView):
     model = Profile
     template_name = 'main/profile_list.html'
@@ -78,5 +70,33 @@ class ProfileListView(ListView):
         if len(self.get_queryset()) == 0:
             context['is_empty'] = True
         return context
+
+def send_invitation(request):
+    if request.method == 'POST':
+        pk = request.POST.get('profile_pk')
+        user = request.user
+        sender = Profile.objects.get(user=user)
+        reciever = Profile.objects.get(pk=pk)
+
+        con = Connection.objects.create(sender=sender, reciever=reciever)
+
+        return redirect(request.META.get('HTTP_REFERER'))
+
+    return redirect('main:profile_view')
+
+def remove_from_connections(request):
+    if request.method == 'POST':
+        pk = request.POST.get('profile_pk')
+        user = request.user
+        sender = Profile.objects.get(user=user)
+        reciever = Profile.objects.get(pk=pk)
+
+        con = Connection.objects.get(Q(sender=sender) & Q(reciever=reciever) | Q(sender=reciever) & Q(reciever=sender))
+
+        return redirect(request.META.get('HTTP_REFERER'))
+
+    return redirect('main:profile_view')
+
+
 
 

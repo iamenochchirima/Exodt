@@ -25,7 +25,7 @@
                     <br>
 
                     {% if profile.user not in con_r and profile.user not in con_s %}
-                        <form action="" method="POST">
+                        <form action="{% url 'main:send_invitation' %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="profile_pk" value={{profile.pk}}>
                             <button type="submit" class="ui positive basic button mb-5 w-big"><i class="plus square icon"></i>Add to connections</button>
