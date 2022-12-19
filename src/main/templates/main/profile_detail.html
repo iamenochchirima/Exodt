@@ -6,12 +6,71 @@
 {% block content %}
 
 <div class="ui grid">
-    {{object}}
     <div class="row">
         <div class="four wide column">
+            <img src="{{object.profile_picture.url}}" alt="" class="ui medium rounded image">
+            <h1>{{object.user}}</h1>
+            <div class="ui vertical menu">
+                <div class="item">
+                    Connections
+                    <div class="ui label">
+                        {{object.get_connections_no}}
+                    </div>
+                </div>
+                <div class="item">
+                    Posts
+                    <div class="ui label">
+                        {{object.get_posts_no }}
+                    </div>
+                </div>
+                <div class="item">
+                    Likes given
+                    <div class="ui label">
+                        {{object.get_likes_given_no}}
+                    </div>
+                </div>
+                <div class="item">
+                    Likes recieved
+                    <div class="ui label">
+                        {{object.get_likes_recieved_no}}
+                    </div>
+                </div>
+            </div>
+
+            {% if profile.user not in con_r and profile.user not in con_s %}
+            <form action="{% url 'main:send_invitation' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="profile_pk" value={{profile.pk}}>
+                <button type="submit" class="ui positive basic button mb-5 w-big">
+                    <i class="plus square icon"></i>Add to connections</button>
+            </form>
+            {% endif %}
+
+            {% if profile.user in con_r and request.user not in profile.connections.all %}
+                <button class="ui disabled button mb-5 w-big"><i class="user icon"></i>Waiting for approval</button>
+            {% endif %}
+
+            {% if request.user in profile.connections.all %}
+            <form action="{% url 'main:remove_connection' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="profile_pk" value={{profile.pk}}>
+                <button type="submit" class="ui negative basic button mb-5 w-big"><i class="minus square icon"></i>Remove from connections</button>
+            </form>
+            {% endif %}
+
+
             
         </div>
         <div class="twelve wide column">
+            {% if len_posts %}
+                {% for post in posts %}
+                    <div class="segment ui fluid">
+                        {{post.content}}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h1>No Posts from this user</h1>
+            {% endif %}
 
         </div>
     </div>

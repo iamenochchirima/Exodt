@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Post, Like
 from main.models import Profile
+from django.http import JsonResponse
 from .forms import PostModelForm, CommentModelForm
 from django.views.generic import UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
@@ -70,6 +71,15 @@ def like_unlike_post(request):
 
         post.save()
         like.save()
+
+        data = {
+            'value': like.value,
+            'likes': post.liked.all().count()
+        }
+
+        print(data)
+        
+        return JsonResponse(data, safe=False)
 
     return redirect('posts:main_post_view')
 

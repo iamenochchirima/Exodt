@@ -75,7 +75,6 @@ class ProfileDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         user = User.objects.get(username__iexact=self.request.user.username)
         profile = Profile.objects.get(user=user)
-        print(profile)
         con_reciever = Connection.objects.filter(sender=profile)
         con_sender = Connection.objects.filter(receiver=profile)
         con_r = []
@@ -89,7 +88,6 @@ class ProfileDetailView(DetailView):
         context['con_s'] = con_s
         context['posts'] = self.get_object().get_all_authors_posts()
         context['len_posts'] = True if len(self.get_object().get_all_authors_posts()) > 0 else False
-        print(context)
         return context
 
 

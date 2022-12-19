@@ -3,6 +3,7 @@ from django.db import models
 from .utils import get_random_value
 from django.template.defaultfilters import slugify
 from django.db.models import Q
+from django.shortcuts import reverse
 
 class ProfileManager(models.Manager):
 
@@ -46,19 +47,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}-{self.created}"
+
+    def get_absolute_url(self):
+        return reverse("main:profile_detail", kwargs={"slug": self.slug})
     
-    def save(self, *args, **kwargs):
-        available = False
-        if self.first_name and self.last_name:
-            to_slug = slugify(str(self.first_name) + " " + str(self.last_name))
-            available = Profile.objects.filter(slug=to_slug).exists()
-            while available:
-                to_slug = slugify(to_slug + " " + str(get_random_value()))
-                available = Profile.objects.filter(slug=to_slug).exists()
-        else:
-            to_slug = str(self.user)
-        self.slug = to_slug
-        super().save(*args, **kwargs)
 
     def get_connections(self):
         return self.connections.all()
@@ -87,6 +79,29 @@ class Profile(models.Model):
                 total_likes += item.liked.all().count()
         return total_likes
 
+    __initial_first_name = None
+    __initial_last_name = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__initial_first_name = self.first_name
+        self.__initial_last_name = self.last_name
+
+
+    def save(self, *args, **kwargs):
+        available = False
+        to_slug = self.slug
+        if self.first_name != self.__initial_first_name or self.last_name != self.__initial_last_name or self.slug == "":
+            if self.first_name and self.last_name:
+                to_slug = slugify(str(self.first_name) + " " + str(self.last_name))
+                available = Profile.objects.filter(slug=to_slug).exists()
+                while available:
+                    to_slug = slugify(to_slug + " " + str(get_random_value()))
+                    available = Profile.objects.filter(slug=to_slug).exists()
+        else:
+            to_slug = str(self.user)
+        self.slug = to_slug
+        super().save(*args, **kwargs)
 
 STATUS_CHOICES = (
     ('send', 'Send'),
