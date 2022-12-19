@@ -60,6 +60,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'exodt.urls'
+# LOGIN_REDIRECT_URL = 'posts/'
 
 TEMPLATES = [
     {
@@ -72,6 +73,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.profile_pic',
+                'main.context_processors.invitations_recieved_count',
             ],
         },
     },

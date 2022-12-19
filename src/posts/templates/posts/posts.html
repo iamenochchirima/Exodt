@@ -40,7 +40,7 @@
             <div class="content">
                 <p> {{ post.content }} </p>
                 <div class="right floated">
-                    <form action="{% url 'posts:like_unlike_post' %}" method="POST" class='like-form' id='{{post.id}}'>
+                    <form action="{% url 'posts:like_unlike_post' %}" method="POST" class='like-form' id='{{post.id}}' class="like_form" id="{{post.id}}">
                         {% csrf_token %}
                         <input type="hidden" name="post_id" value={{post.id}}>
                         

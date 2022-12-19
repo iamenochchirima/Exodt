@@ -4,10 +4,10 @@ from .models import Profile, Connection
 from .forms import ProfileModelForm
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-def index(request):
-    return render(request, "main/index.html")
-
+@login_required
 def profile_view(request):
     
     user_profile = Profile.objects.get(user=request.user)
@@ -25,6 +25,7 @@ def profile_view(request):
         "confirm": confirm
     })
 
+@login_required
 def invites_recieved_view(request):
     user_profile = Profile.objects.get(user=request.user)
     query_set = Connection.objects.invitations_recieved(user_profile)
@@ -37,6 +38,7 @@ def invites_recieved_view(request):
         'is_empty': is_empty
     })
 
+@login_required
 def accept_invitation(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')
@@ -49,7 +51,7 @@ def accept_invitation(request):
             con.save()
     return redirect('main:invites')
     
-
+@login_required
 def decline_invitation(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')
@@ -59,6 +61,7 @@ def decline_invitation(request):
         con.delete()
     return redirect('main:invites')
 
+@login_required
 def invite_profile_list_view(request):
     user = request.user
     query_set = Profile.objects.get_all_unconnected_profiles(user)
@@ -67,7 +70,7 @@ def invite_profile_list_view(request):
         'qs': query_set
     })
 
-class ProfileDetailView(DetailView):
+class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = 'main/profile_detail.html'
 
@@ -92,7 +95,7 @@ class ProfileDetailView(DetailView):
 
 
 
-class ProfileListView(ListView):
+class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = 'main/profile_list.html'
 
@@ -122,6 +125,7 @@ class ProfileListView(ListView):
             context['is_empty'] = True
         return context
 
+@login_required
 def send_invitation(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')
@@ -135,6 +139,7 @@ def send_invitation(request):
 
     return redirect('main:profile_view')
 
+@login_required
 def remove_from_connections(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')

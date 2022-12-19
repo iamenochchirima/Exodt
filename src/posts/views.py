@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 
+@login_required
 def main_post_view(request):
     query_set = Post.objects.all()
     profile = Profile.objects.get(user=request.user)
@@ -47,6 +48,7 @@ def main_post_view(request):
         'comment_sent': comment_sent
     })
 
+@login_required
 def like_unlike_post(request):
     user = request.user
     if request.method == 'POST':
