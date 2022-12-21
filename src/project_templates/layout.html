@@ -1,10 +1,13 @@
 {% load static %}
+{% url 'index' as path_to_home %}
 {% url 'main:profile_view' as path_to_profile_view %}
+
+
 <!-- HTML for the layout page -->
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" type='text/css' href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.css">
@@ -12,10 +15,18 @@
   <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">
-      <h1>EXODT</h1>
+
+  <header>
+
+    <a href="{{path_to_home}}">EXODT</a>
+
+    <div id="search-bar" class="center-search-bar">
+      <form action="">
+        <input placeholder="Search" type="text" id="search" name="q">
+        <button type="submit">Go</button>
+      </form>
     </div>
+  
     <a href="{{path_to_profile_view}}">
       <div class="profile-info">
         <div class="profile-picture">
@@ -26,8 +37,8 @@
         </div>
       </div>
     </a>
-   
-  </div>
+
+  </header>
  
   {% block content %}
   {% endblock content %}

@@ -6,10 +6,12 @@ cryptography==38.0.4
 defusedxml==0.7.1
 Django==4.1.4
 django-allauth==0.51.0
+django-jquery==3.1.0
 idna==3.4
-psycopg2-binary>=2.8
-#mysqlclient==2.1.1
+mysqlclient==2.1.1
 oauthlib==3.2.2
+Pillow==9.3.0
+psycopg2-binary==2.9.5
 pycparser==2.21
 PyJWT==2.6.0
 python-decouple==3.6
