@@ -20,7 +20,7 @@ def main_post_view(request):
     post_form = PostModelForm()
     comment_form = CommentModelForm()
 
-    if 'submit_post_form' in request.POST:
+    if 'submit_p_form' in request.POST:
         post_form = PostModelForm(request.POST, request.FILES)
         if post_form.is_valid():
             instance = post_form.save(commit=False)
