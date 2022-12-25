@@ -1,1 +1,1 @@
-console.log('Working')
+let url = `ws://${window.location.host}/ws/socket`
