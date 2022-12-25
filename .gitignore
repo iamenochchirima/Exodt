@@ -1,5 +1,6 @@
 .env
 venv
 ./src/data
-*__pycache__/
 *.pyc
+*__pycache__/
+
