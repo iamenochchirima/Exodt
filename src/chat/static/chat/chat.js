@@ -1,26 +1,11 @@
-// let url = `ws://${window.location.host}/ws/socket-server/`
+document.querySelector('#room-name-input').focus();
+document.querySelector('#room-name-input').onkeyup = function (e) {
+    if (e.keyCode === 13) { // enter, return
+        document.querySelector('#room-name-submit').click();
+    }
+};
 
-// const chatSocket = new WebSocket(url)
-
-// chatSocket.onmessage = function(e) {
-//     let data = JSON.parse(e.data)
-//     console.log('Data:', data)
-
-//     if(data.type === 'chat') {
-//         let messages = document.getElementById('messages')
-
-//         messages.insertAdjacentHTML('beforeend', `<div>
-//             <p>${data.message}</p>
-//         </div>`)
-//     }
-// }
-
-// let form = document.getElementById('form')
-// form.addEventListener('submit', (e) => {
-//     e.preventDefault()
-//     let message = e.target.message.value
-//     chatSocket.send(JSON.stringify({
-//         'message': message
-//     }))
-//     form.reset()
-// })
+document.querySelector('#room-name-submit').onclick = function (e) {
+    var roomName = document.querySelector('#room-name-input').value;
+    window.location.pathname = '/chat/' + roomName + '/';
+};
