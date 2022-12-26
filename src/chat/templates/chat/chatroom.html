@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block title %} Chat {% endblock title %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'chat/chat.css' %}">
+{% endblock styles%}
+
+{% block content %}
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-6">
+            <form>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1" class="h4 pt-5">Chatroom</label>
+                    <textarea class="form-control" id="chat-text" rows="10"></textarea><br>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" id="input" type="text"></br>
+                </div>
+                <input class="btn btn-secondary btn-lg btn-block" id="submit" type="button" value="Send">
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ request.user.username|json_script:"user_username" }}
+{{ room_name|json_script:"room-name" }}
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'chat/chatroom.js' %}"></script>
+{% endblock %}
