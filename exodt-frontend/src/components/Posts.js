@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import List from './List'
 import withListLoading from './withListLoading';
+import { POSTS_URL } from '../constants/'
 function Posts() {
   const ListLoading = withListLoading(List);
   const [appState, setAppState] = useState({
@@ -10,8 +11,7 @@ function Posts() {
 
   useEffect(() => {
     setAppState({ loading: true });
-    const apiUrl = `http://localhost:8000/api/`;
-    fetch(apiUrl)
+    fetch(POSTS_URL)
       .then((res) => res.json())
       .then((posts) => {
         setAppState({ loading: false, posts: posts });
