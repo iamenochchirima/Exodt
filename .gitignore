@@ -1,8 +1,8 @@
 .env
 venv
 .exodt-frontend/node_modules
-./src/data
-./src/htmlcov
+./exodt-backend/data
+./exodt-backend/htmlcov
 *.pyc
 *__pycache__/
 
