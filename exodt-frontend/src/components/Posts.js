@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import List from './List'
 import withListLoading from './withListLoading';
 import { POSTS_URL } from '../constants/'
+
 function Posts() {
   const ListLoading = withListLoading(List);
   const [appState, setAppState] = useState({
