@@ -1,13 +1,13 @@
 import React from 'react';
 
 function PostLoading(Component) {
-	return function PostLoadingComponent({ isLoading, ...props }) {
-		if (!isLoading) return <Component {...props} />;
-		return (
-			<p style={{ fontSize: '25px' }}>
-				We are waiting for the data to load!...
-			</p>
-		);
-	};
+  return function PostLoadingComponent({ isLoading, ...props }) {
+    if (!isLoading) return <Component {...props} />;
+    return (
+      <p style={{ textAlign: 'center', fontSize: '30px' }}>
+        Hold on, fetching data may take some time :)
+      </p>
+    );
+  };
 }
 export default PostLoading;

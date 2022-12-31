@@ -9,7 +9,7 @@ const List = (props) => {
         return (
           <li key={post.id} className='list'>
             <span className='post-text'>{post.content} </span>
-            <span className='post-description'>{post.description}</span>
+            <span className='post-description'>{post.created}</span>
           </li>
         );
       })}

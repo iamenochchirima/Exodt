@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import List from './List'
-import withListLoading from './withListLoading';
+import PostLoading from './PostLoading';
 import { POSTS_URL } from '../constants/'
 
-function Posts() {
-  const ListLoading = withListLoading(List);
+function Post() {
+  const ListLoading = PostLoading(List);
   const [appState, setAppState] = useState({
     loading: false,
     posts: null,
@@ -19,9 +19,9 @@ function Posts() {
       });
   }, [setAppState]);
   return (
-    <div className='Posts'>
+    <div className='Post'>
       <div className='container'>
-        <h1>Posts</h1>
+        <h1>Post</h1>
       </div>
       <div className='repo-container'>
         <ListLoading isLoading={appState.loading} posts={appState.posts} />
@@ -29,4 +29,4 @@ function Posts() {
     </div>
   );
 }
-export default Posts;
+export default Post;
