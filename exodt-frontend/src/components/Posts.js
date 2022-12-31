@@ -1,32 +1,31 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from 'react';
+import List from './List'
+import withListLoading from './withListLoading';
+function Posts() {
+  const ListLoading = withListLoading(List);
+  const [appState, setAppState] = useState({
+    loading: false,
+    posts: null,
+  });
 
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api/";
-
-class Posts extends Component {
-  state = {
-    posts: []
-  };
-
-  componentDidMount() {
-    this.resetState();
-  }
-
-  getPosts = () => {
-    axios.get(API_URL).then(res => this.setState({ posts: res.data }));
-  };
-
-  resetState = () => {
-    this.getPosts();
-  };
-
-  render() {
-    return (
-        students={this.state.students}
-      <h1>Posts load</h1>
-    );
-  }
+  useEffect(() => {
+    setAppState({ loading: true });
+    const apiUrl = `http://localhost:8000/api/`;
+    fetch(apiUrl)
+      .then((res) => res.json())
+      .then((posts) => {
+        setAppState({ loading: false, posts: posts });
+      });
+  }, [setAppState]);
+  return (
+    <div className='Posts'>
+      <div className='container'>
+        <h1>Posts</h1>
+      </div>
+      <div className='repo-container'>
+        <ListLoading isLoading={appState.loading} posts={appState.posts} />
+      </div>
+    </div>
+  );
 }
-
 export default Posts;

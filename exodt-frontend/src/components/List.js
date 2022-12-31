@@ -1,15 +1,15 @@
 import React from 'react';
 const List = (props) => {
-  const { repos } = props;
-  if (!repos || repos.length === 0) return <p>No repos, sorry</p>;
+  const { posts } = props;
+  if (!posts || posts.length === 0) return <p>No posts, sorry</p>;
   return (
     <ul>
-      <h2 className='list-head'>Available Public Repositories</h2>
-      {repos.map((repo) => {
+      <h2 className='list-head'>All Posts</h2>
+      {posts.map((post) => {
         return (
-          <li key={repo.id} className='list'>
-            <span className='repo-text'>{repo.name} </span>
-            <span className='repo-description'>{repo.description}</span>
+          <li key={post.id} className='list'>
+            <span className='post-text'>{post.content} </span>
+            <span className='post-description'>{post.description}</span>
           </li>
         );
       })}
