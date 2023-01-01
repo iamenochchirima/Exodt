@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import List from './List'
-import PostLoading from './PostLoading';
+import PostsList from './PostsList'
+import PostLoadingComponent from './PostLoading';
 import { POSTS_URL } from '../constants/'
 
 function Post() {
-  const ListLoading = PostLoading(List);
+  const PostLoading = PostLoadingComponent(PostsList);
   const [appState, setAppState] = useState({
     loading: false,
     posts: null,
@@ -20,11 +20,8 @@ function Post() {
   }, [setAppState]);
   return (
     <div className='Post'>
-      <div className='container'>
-        <h1>Post</h1>
-      </div>
       <div className='repo-container'>
-        <ListLoading isLoading={appState.loading} posts={appState.posts} />
+        <PostLoading isLoading={appState.loading} posts={appState.posts} />
       </div>
     </div>
   );

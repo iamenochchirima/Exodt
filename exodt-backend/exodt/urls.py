@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('admin/', admin.site.urls),
     path('api/', include('exodt_api.urls', namespace='exodt_api')),
+    path('api_auth', include('rest_framework.urls', namespace='rest_framework')),
     path('accounts/', include('allauth.urls')),
     path('main/', include('main.urls', namespace='main')),
     path('posts/', include('posts.urls', namespace='posts')),
