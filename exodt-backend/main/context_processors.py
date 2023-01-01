@@ -2,6 +2,8 @@ from . models import Profile, Connection
 
 def profile_pic(request):
     if request.user.is_authenticated:
+        profiles = Profile.objects.all().count()
+        print(profiles)
         profile = Profile.objects.get(user=request.user)
         picture = profile.profile_picture
         return {'pic':picture}

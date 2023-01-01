@@ -1,9 +1,9 @@
 from django.db.models.signals import post_save, pre_delete
-from django.contrib.auth.models import User
+from users.models import CustomUser
 from django.dispatch import receiver
 from .models import Profile, Connection
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=CustomUser)
 def post_save_profile_create(sender, instance, created, **kwargs):
 
     if created:
@@ -27,4 +27,4 @@ def pre_delete_remove_connections(sender, instance, **kwargs):
     sender.connections.remove(receiver.user)
     receiver.connections.remove(sender.user)
     sender.save()
-    receiver.save( )
+    receiver.save()
