@@ -91,7 +91,7 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         available = False
         to_slug = self.slug
-        if self.first_name != self.__initial_first_name or self.last_name != self.__initial_last_name or self.slug == "":
+        if self.first_name != self.__initial_first_name or self.last_name != self.__initial_last_name or self.slug == None:
             if self.first_name and self.last_name:
                 to_slug = slugify(str(self.first_name) + " " + str(self.last_name))
                 available = Profile.objects.filter(slug=to_slug).exists()

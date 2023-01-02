@@ -15,10 +15,12 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
+import { NavLink } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
+
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
-	width: '100%',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -192,7 +194,32 @@ const Header = () => {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-          <div className={classes.grow} />
+          <div className={classes.grow} >
+          <Link
+							component={NavLink}
+							to="/"
+							underline="none"
+							color="textPrimary"
+						>
+							Home
+						</Link>
+            <Link
+							component={NavLink}
+							to="/signup"
+							underline="none"
+							color="textPrimary"
+						>
+							Signup
+						</Link>
+            <Link
+							component={NavLink}
+							to="/login"
+							underline="none"
+							color="textPrimary"
+						>
+							Login
+						</Link>
+          </div>
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
