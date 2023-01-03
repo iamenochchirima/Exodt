@@ -64,8 +64,6 @@ export default function SignUp() {
 			})
 			.then((res) => {
 				navigate('/');
-				console.log(res);
-				console.log(res.data);
 			});
 	};
 

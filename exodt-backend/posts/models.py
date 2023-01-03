@@ -2,16 +2,40 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from main.models import Profile
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Post(models.Model):
+
+    class PostObjects(models.Manager):
+        def get_queryset(self):
+            return super().get_queryset() .filter(status='published')
+
+    options = (
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+    )
+
+    title = models.CharField(max_length=250)
     content = models.TextField()
     image = models.ImageField(upload_to='posts', blank=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
     liked = models.ManyToManyField(Profile, default=None, related_name='liked', blank=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
+    excerpt = models.TextField(null=True)
+    slug = models.SlugField(max_length=250, unique_for_date='created')
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=options, default='published')
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='posts')
 
+    postobjects = PostObjects()
+    objects = models.Manager()
+
     def __str__(self):
-        return str(self.content[:20])
+        return self.title
 
     def num_likes(self):
         return self.liked.all().count()

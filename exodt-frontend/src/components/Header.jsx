@@ -219,6 +219,15 @@ const Header = () => {
 						>
 							Login
 						</Link>
+            <Link
+							component={NavLink}
+							to="/logout"
+							underline="none"
+							color="textPrimary"
+						>
+							Logout
+						</Link>
+
           </div>
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
