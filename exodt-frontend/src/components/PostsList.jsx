@@ -50,7 +50,7 @@ const PostList = (props) => {
 								<Card className={classes.card}>
 									<Link
 										color="textPrimary"
-										href={'post/' + post.id}
+										href={'post/' + post.slug}
 										className={classes.link}
 									>
 										<CardMedia

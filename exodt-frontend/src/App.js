@@ -18,7 +18,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/logout" element={<LogOut />} />
-        <Route path="/post/:id" element={<PostView />} />
+        <Route path="/post/:slug" element={<PostView />} />
         <Route path="/search" element={<Search/>} />
       </Routes>
     </>

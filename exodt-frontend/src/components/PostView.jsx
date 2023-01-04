@@ -17,13 +17,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Post() {
-	const { id } = useParams();
+	const { slug } = useParams();
 	const classes = useStyles();
 
 	const [data, setData] = useState({ posts: [] });
 
 	useEffect(() => {
-		axiosInstance.get(id).then((res) => {
+		axiosInstance.get('post/' + slug).then((res) => {
 			setData({ posts: res.data });
 			console.log(res.data);
 		});

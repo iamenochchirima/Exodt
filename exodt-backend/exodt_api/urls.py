@@ -9,7 +9,7 @@ app_name = 'exodt_api'
 # urlpatterns = router.urls
 
 urlpatterns = [
-    path('<int:pk>/', views.PostDetail.as_view(), name='detailcreate'),
+    path('post/<str:pk>/', views.PostDetail.as_view(), name='detailcreate'),
     path('search/', views.PostListDetailFilter.as_view(), name='postsearch'),
     path('', views.PostList.as_view(), name='listcreate'),
 ]
