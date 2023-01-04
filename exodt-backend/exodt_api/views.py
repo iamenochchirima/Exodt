@@ -4,6 +4,7 @@ from . serializers import PostSerializer
 from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework import filters
 
 
 class PostUserWritrPermission(BasePermission):
@@ -15,13 +16,26 @@ class PostUserWritrPermission(BasePermission):
             return True
         return obj.author.user == request.user
 
-class PostList(viewsets.ModelViewSet):
-    permission_classes = [PostUserWritrPermission]
+class PostList(generics.ListAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
 
-    def get_object(self):
-        obj = self.kwargs.get('pk')
-        return get_object_or_404(Post, slug=obj)
+    def get_queryset(self):
+        user = self.request.user
+        # return Post.objects.filter(author=user.profile)
+        return Post.objects.all()
+
+class PostDetail(generics.RetrieveAPIView):
+    serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Post.objects.all()
+        item = self.kwargs['pk']
+        print(item)
+        return Post.objects.filter(id=item)
+
+class PostListDetailFilter(generics.ListAPIView):
+
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['^slug']
