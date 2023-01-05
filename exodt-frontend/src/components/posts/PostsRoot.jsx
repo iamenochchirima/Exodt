@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PostsList from './PostsList'
 import PostLoadingComponent from './PostLoading';
-import { POSTS_URL } from '../constants'
+import { POSTS_URL } from '../../constants'
 import axios from 'axios'
 
 
@@ -14,8 +14,8 @@ function Post() {
 
   useEffect(() => {
     setAppState({ loading: true });
-    axios.get(POSTS_URL).then((posts) => {
-      const allPosts = posts.data;
+    axios.get(POSTS_URL).then((res) => {
+      const allPosts = res.data;
         setAppState({ loading: false, posts: allPosts });
       });
   }, [setAppState]);

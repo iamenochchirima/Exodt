@@ -1,11 +1,10 @@
 from rest_framework import generics, viewsets
 from posts.models import Post
 from . serializers import PostSerializer
-from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import SAFE_METHODS, AllowAny, BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
-
 
 class PostUserWritrPermission(BasePermission):
 
@@ -21,8 +20,6 @@ class PostList(generics.ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        user = self.request.user
-        # return Post.objects.filter(author=user.profile)
         return Post.objects.all()
 
 class PostDetail(generics.RetrieveAPIView):
@@ -33,8 +30,27 @@ class PostDetail(generics.RetrieveAPIView):
         return get_object_or_404(Post, slug=slug)
 
 class PostListDetailFilter(generics.ListAPIView):
-
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['^slug']
+
+class CreatePost(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class AdminPostDetail(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class EditPost(generics.UpdateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+class DeletePost(generics.RetrieveDestroyAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()

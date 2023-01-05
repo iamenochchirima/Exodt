@@ -1,7 +1,7 @@
 
 
 import React, {useEffect } from 'react';
-import axiosInstance from '../Axios';
+import axiosInstance from '../../Axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
