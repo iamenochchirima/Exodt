@@ -9,9 +9,9 @@ const axiosInstance = axios.create({
 		Authorization: localStorage.getItem('access_token')
 			? 'JWT ' + localStorage.getItem('access_token')
 			: null,
-		'Content-Type': 'application/json',
+			'Content-Type': 'multipart/form-data',
 		accept: 'application/json',
-	}, 
+	},
 });
 
 axiosInstance.interceptors.response.use(
@@ -54,7 +54,9 @@ axiosInstance.interceptors.response.use(
 
 				if (tokenParts.exp > now) {
 					return axiosInstance
-						.post('/token/refresh/', { refresh: refreshToken })
+						.post('/token/refresh/', {
+							refresh: refreshToken,
+						})
 						.then((response) => {
 							localStorage.setItem('access_token', response.data.access);
 							localStorage.setItem('refresh_token', response.data.refresh);

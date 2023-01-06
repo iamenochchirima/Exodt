@@ -26,27 +26,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function Edit() {
-
-	function slugify(string) {
-		const a =
-			'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';
-		const b =
-			'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------';
-		const p = new RegExp(a.split('').join('|'), 'g');
-
-		return string
-			.toString()
-			.toLowerCase()
-			.replace(/\s+/g, '-') // Replace spaces with -
-			.replace(p, (c) => b.charAt(a.indexOf(c))) // Replace special characters
-			.replace(/&/g, '-and-') // Replace & with 'and'
-			.replace(/[^\w\-]+/g, '') // Remove all non-word characters
-			.replace(/\-\-+/g, '-') // Replace multiple - with single -
-			.replace(/^-+/, '') // Trim - from start of text
-			.replace(/-+$/, ''); // Trim - from end of text
-	}
-
+export default function Create() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const initialFormData = Object.freeze({
@@ -60,9 +40,7 @@ export default function Edit() {
 	const [formData, updateFormData] = useState(initialFormData);
 
 	useEffect(() => {
-		axiosInstance.get('admin/edit/postdetail/' + id)
-		.then((res) => {
-			
+		axiosInstance.get('admin/edit/postdetail/' + id).then((res) => {
 			updateFormData({
 				...formData,
 				['title']: res.data.title,
@@ -79,7 +57,6 @@ export default function Edit() {
 			...formData,
 			// Trimming any whitespace
 			[e.target.name]: e.target.value.trim(),
-			['slug']: slugify(e.target.value.trim()),
 		});
 	};
 
@@ -136,7 +113,7 @@ export default function Edit() {
 								value={formData.excerpt}
 								onChange={handleChange}
 								multiline
-								rows={8}
+								minRows={8}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -164,7 +141,7 @@ export default function Edit() {
 								value={formData.content}
 								onChange={handleChange}
 								multiline
-								rows={8}
+								minRows={8}
 							/>
 						</Grid>
 					</Grid>

@@ -69,7 +69,7 @@ const Search = () => {
 									>
 										<CardMedia
 											className={classes.cardMedia}
-											image="https://source.unsplash.com/random"
+											image={post.image}
 											title="Image title"
 										/>
 									</Link>

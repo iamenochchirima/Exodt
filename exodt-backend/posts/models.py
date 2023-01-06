@@ -1,12 +1,16 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from main.models import Profile
+from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
+def upload_to(instance, filename):
+    return 'posts/{filename}'.format(filename=filename)
 
 class Post(models.Model):
 
@@ -21,7 +25,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=250)
     content = models.TextField()
-    image = models.ImageField(upload_to='posts', blank=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
+    image = models.ImageField(_('Image'), upload_to=upload_to, blank=True, default="https://source.unsplash.com/random" , validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
     liked = models.ManyToManyField(Profile, default=None, related_name='liked', blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
     excerpt = models.TextField(null=True)

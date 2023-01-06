@@ -1,10 +1,13 @@
 from rest_framework import generics, viewsets
 from posts.models import Post
 from . serializers import PostSerializer
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import SAFE_METHODS, AllowAny, BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
+from rest_framework import status
 
 class PostUserWritrPermission(BasePermission):
 
@@ -35,10 +38,24 @@ class PostListDetailFilter(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['^slug']
 
-class CreatePost(generics.CreateAPIView):
+# class CreatePost(generics.CreateAPIView):
+#     permission_classes = [AllowAny]
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+
+class CreatePost(APIView):
     permission_classes = [AllowAny]
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, format=None):
+        print(request.data)
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class AdminPostDetail(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
