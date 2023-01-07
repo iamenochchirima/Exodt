@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
@@ -7,11 +7,12 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
+    re_path(r'^auth/', include('drf_social_oauth2.urls', namespace='drf')),
     path('admin/', admin.site.urls),
     path('api/', include('exodt_api.urls', namespace='exodt_api')),
     path('api/user/', include('users.urls', namespace='users')),
     path('api_auth', include('rest_framework.urls', namespace='rest_framework')),
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
     path('main/', include('main.urls', namespace='main')),
     path('posts/', include('posts.urls', namespace='posts')),
     path('chat/', include('chat.urls', namespace='chat')),

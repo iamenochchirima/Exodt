@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics
 from posts.models import Post
 from . serializers import PostSerializer
 from rest_framework.views import APIView
@@ -19,11 +19,9 @@ class PostUserWritrPermission(BasePermission):
         return obj.author.user == request.user
 
 class PostList(generics.ListAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-
-    def get_queryset(self):
-        return Post.objects.all()
+    queryset = Post.objects.all()
 
 class PostDetail(generics.RetrieveAPIView):
     serializer_class = PostSerializer
@@ -38,13 +36,8 @@ class PostListDetailFilter(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['^slug']
 
-# class CreatePost(generics.CreateAPIView):
-#     permission_classes = [AllowAny]
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-
 class CreatePost(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):
@@ -58,16 +51,16 @@ class CreatePost(APIView):
 
 
 class AdminPostDetail(generics.RetrieveAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 class EditPost(generics.UpdateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
 class DeletePost(generics.RetrieveDestroyAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()

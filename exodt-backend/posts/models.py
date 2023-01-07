@@ -25,7 +25,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=250)
     content = models.TextField()
-    image = models.ImageField(_('Image'), upload_to=upload_to, blank=True, default="https://source.unsplash.com/random" , validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
+    image = models.ImageField(_('Image'), upload_to=upload_to, blank=True, default='posts/default.jpg', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
     liked = models.ManyToManyField(Profile, default=None, related_name='liked', blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
     excerpt = models.TextField(null=True)

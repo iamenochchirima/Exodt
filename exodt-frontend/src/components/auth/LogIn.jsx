@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axiosInstance from '../../Axios';
+import axiosInstance from '../../axios/Login';
 import { useNavigate } from 'react-router-dom';
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -54,16 +54,20 @@ export default function SignIn() {
 		e.preventDefault();
 
 		axiosInstance
-			.post(`token/`, {
-				email: formData.email,
+			.post(`auth/token/`, {
+				grant_type: 'password',
+				username: formData.email,
 				password: formData.password,
+				client_id: 'cI4GJtrKIQMLwDXRUz5Q2EGXojRAvyCjJs7dm3vX',
+				client_secret:
+					'iSU4bPfTTaOFnd0Q4ImVU8RGVLc8Zqrm8VlJOTjWf25grqtfTH8ZzTZrp3EdQecZ3kbROUrghePll41exz688gdzm1OMQjF286NPmdCHu9owdBwzmfK99rOJakhHqEGT',
 			})
 			.then((res) => {
-				localStorage.setItem('access_token', res.data.access);
-				localStorage.setItem('refresh_token', res.data.refresh);
-				axiosInstance.defaults.headers['Authorization'] =
-					'JWT ' + localStorage.getItem('access_token');
+				console.log(res);
+				localStorage.setItem('access_token', res.data.access_token);
+				localStorage.setItem('refresh_token', res.data.refresh_token);
 				navigate('/');
+				window.location.reload();
 			});
 	};
 

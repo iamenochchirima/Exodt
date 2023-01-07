@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PostsList from './PostsList'
 import PostLoadingComponent from './PostLoading';
-import { POSTS_URL } from '../../constants'
-import axios from 'axios'
+import axiosInstance from '../../Axios';
 
 
 function Post() {
@@ -14,11 +13,13 @@ function Post() {
 
   useEffect(() => {
     setAppState({ loading: true });
-    axios.get(POSTS_URL).then((res) => {
-      const allPosts = res.data;
-        setAppState({ loading: false, posts: allPosts });
-      });
-  }, [setAppState]);
+		axiosInstance.get().then((res) => {
+			const allPosts = res.data;
+			console.log(res.data);
+			setAppState({ loading: false, posts: allPosts });
+			console.log(res.data);
+		});
+	}, [setAppState]);
   return (
     <div className='Post'>
       <div className='repo-container'>

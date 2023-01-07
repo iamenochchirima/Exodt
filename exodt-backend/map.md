@@ -18,3 +18,5 @@
 4. Massages
 
 4. allauth
+
+curl -X POST -d "client_id=diX01LsgpNpUDGr7a7cr0DAQFxi5d3JsJjYTkt2w&client_secret=pbkdf2_sha256$390000$zgdsxrfmE1bSTswKCMX4AR$WzEBiOEYb8VLL1gSDf2RF0/ljwB5IDuw+oW6EJ0CNak=&grant_type=password&username=iamenochchirima@gmail.com&password=enoch123" http://localhost:8000/auth/token
