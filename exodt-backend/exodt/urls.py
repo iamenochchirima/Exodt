@@ -12,7 +12,7 @@ urlpatterns = [
     path('api/', include('exodt_api.urls', namespace='exodt_api')),
     path('api/user/', include('users.urls', namespace='users')),
     path('api_auth', include('rest_framework.urls', namespace='rest_framework')),
-    # path('accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),
     path('main/', include('main.urls', namespace='main')),
     path('posts/', include('posts.urls', namespace='posts')),
     path('chat/', include('chat.urls', namespace='chat')),

@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
 	timeout: 5000,
 	headers: {
 		Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-			'Content-Type': 'multipart/form-data',
+		'Content-Type': 'multipart/form-data',
 		accept: 'application/json',
 	},
 });

@@ -4,10 +4,6 @@ from rest_framework.routers import DefaultRouter
 
 app_name = 'exodt_api'
 
-# router = DefaultRouter()
-# router.register('', PostList, basename='post')
-# urlpatterns = router.urls
-
 urlpatterns = [
     path('', views.PostList.as_view(), name='listpost'),
     path('post/<str:pk>/', views.PostDetail.as_view(), name='detailcreate'),
