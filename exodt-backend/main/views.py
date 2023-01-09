@@ -7,6 +7,9 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+def index(request):
+    return render(request, 'main/home.html')
+
 @login_required
 def profile_view(request):
     
