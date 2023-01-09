@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../axios/Login';
 import { useNavigate } from 'react-router-dom';
+
+import { connect } from 'react-redux'
+import { login } from '../../actions/auth';
+
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -8,6 +12,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import { NavLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -34,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SignIn() {
+const Login = ({ login }) => {
 	const navigate = useNavigate();
 	const initialFormData = Object.freeze({
 		email: '',
@@ -44,34 +49,21 @@ export default function SignIn() {
 	const [formData, updateFormData] = useState(initialFormData);
 
 	const handleChange = (e) => {
-		updateFormData({
-			...formData,
-			[e.target.name]: e.target.value.trim(),
-		});
+		updateFormData({...formData, [e.target.name]: e.target.value.trim(), });
 	};
+
+	const {email, password} = formData;
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-
-		axiosInstance
-			.post(`auth/token/`, {
-				grant_type: 'password',
-				username: formData.email,
-				password: formData.password,
-				client_id: 'cI4GJtrKIQMLwDXRUz5Q2EGXojRAvyCjJs7dm3vX',
-				client_secret:
-					'iSU4bPfTTaOFnd0Q4ImVU8RGVLc8Zqrm8VlJOTjWf25grqtfTH8ZzTZrp3EdQecZ3kbROUrghePll41exz688gdzm1OMQjF286NPmdCHu9owdBwzmfK99rOJakhHqEGT',
-			})
-			.then((res) => {
-				console.log(res);
-				localStorage.setItem('access_token', res.data.access_token);
-				localStorage.setItem('refresh_token', res.data.refresh_token);
-				navigate('/');
-				window.location.reload();
-			});
+		
+		login(email, password);
 	};
 
 	const classes = useStyles();
+
+	// Is the user authenticated
+	// Redirect them to home page
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -122,13 +114,19 @@ export default function SignIn() {
 					</Button>
 					<Grid container>
 						<Grid item xs>
-							<Link href="#" variant="body2">
+							<Link 
+								component={NavLink}
+								to="/reset-password"
+							>
 								Forgot password?
 							</Link>
 						</Grid>
 						<Grid item>
-							<Link href="#" variant="body2">
-								{"Don't have an account? Sign Up"}
+							<Link 
+								component={NavLink}
+								to="/signup"
+							>
+								Don't have an account? Sign Up
 							</Link>
 						</Grid>
 					</Grid>
@@ -137,3 +135,9 @@ export default function SignIn() {
 		</Container>
 	);
 }
+
+const mapStateToProps = state => ({
+	// IsAuthenticated
+});
+
+export default connect(null, { login })(Login);
