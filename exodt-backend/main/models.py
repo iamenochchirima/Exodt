@@ -1,9 +1,11 @@
-from users.models import CustomUser
 from django.db import models
 from .utils import get_random_value
 from django.template.defaultfilters import slugify
 from django.db.models import Q
 from django.shortcuts import reverse
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class ProfileManager(models.Manager):
 
@@ -30,10 +32,10 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=225, blank=True)
     last_name = models.CharField(max_length=225, blank=True)
     email = models.EmailField(max_length=200, blank=False)
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(default="No bio", max_length=300)
     profile_picture = models.ImageField(default="profile_pic.jpg", upload_to="profile_pictures/")
-    connections = models.ManyToManyField(CustomUser, blank=True, related_name="friends")
+    connections = models.ManyToManyField(User, blank=True, related_name="friends")
     country = models.CharField(max_length=225, blank=False)
     fav_field_os = models.CharField(max_length=225, blank=True)
     followers = models.CharField(max_length=225, blank=True)
