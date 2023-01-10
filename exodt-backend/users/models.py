@@ -11,6 +11,7 @@ class CustomAccountManager(BaseUserManager):
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
         other_fields.setdefault('is_active', True)
+        other_fields.setdefault('is_verified', True)
 
         if other_fields.get('is_staff') is not True:
             raise ValueError(
@@ -41,15 +42,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     start_date = models.DateTimeField(default=timezone.now)
-    about = models.TextField(_(
-        'about'), max_length=500, blank=True)
+    is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
+    def tokens(self):
+        return ''
 
     def get_full_name(self):
         return f"{self.first_name}-{self.last_name}" 
@@ -59,11 +64,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_first_name(self):
         return self.first_name
-
-    @property
-    def is_admin(self):
-        "Is the user a admin member?"
-        return self.admin
 
     def __str__(self):
         return self.email
