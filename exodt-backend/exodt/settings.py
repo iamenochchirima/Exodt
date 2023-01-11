@@ -48,11 +48,6 @@ INSTALLED_APPS = [
     'users',
 
     'djoser',
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
 ]
 
 ASGI_APPLICATION = "exodt.asgi.application"
@@ -213,6 +208,11 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'SET_PASSWORD_RETYPE': True,
     'SET_USERNAME_RETYPE': True,
+    'HIDE_USERS': True,
+    'PERMISSIONS':{
+        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
+    },
     'SERIALIZERS': {
         'user': 'users.serializers.UserCreateSerializer',
         'user_create': 'users.serializers.UserCreateSerializer',
@@ -222,12 +222,12 @@ DJOSER = {
 }
 
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_TOKEN_CLASSES': (
-        'rest_framework_simplejwt.tokens.AccessToken',
-    )
+   'AUTH_HEADER_TYPES': ('JWT',),
+   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+   'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+   'AUTH_TOKEN_CLASSES': (
+       'rest_framework_simplejwt.tokens.AccessToken',
+   )
 }
 
 
@@ -237,20 +237,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = False
 
 LOGIN_REDIRECT_URL = '/'
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-         'APP': {
-            'client_id': config("CLIENT_ID"),
-            'secret': config("SECRET_KEY"),
-            'key': ''
-        }
-    }
-}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -269,6 +255,4 @@ CORS_ORIGIN_WHITELIST = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "users.CustomUser"
-
-REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
+AUTH_USER_MODEL = "users.UserAccount"

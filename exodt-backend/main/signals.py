@@ -1,9 +1,9 @@
 from django.db.models.signals import post_save, pre_delete
-from users.models import CustomUser
+from users.models import UserAccount
 from django.dispatch import receiver
 from .models import Profile, Connection
 
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=UserAccount)
 def post_save_profile_create(sender, instance, created, **kwargs):
 
     print(instance)

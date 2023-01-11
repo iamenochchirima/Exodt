@@ -19,7 +19,7 @@ class PostUserWritrPermission(BasePermission):
         return obj.author.user == request.user
 
 class PostList(generics.ListAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 

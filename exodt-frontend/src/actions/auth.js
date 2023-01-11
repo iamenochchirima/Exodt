@@ -26,13 +26,15 @@ export const load_user = () => async dispatch => {
         const config = {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('access')}`,
+                'Authorization': `JWT ${localStorage.getItem('access')}`,
                 'Accept': 'application/json'
             }
         }; 
 
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
+
+            console.log(res)
     
             dispatch({
                 type: USER_LOADED_SUCCESS,
@@ -48,6 +50,8 @@ export const load_user = () => async dispatch => {
             type: USER_LOADED_FAIL
         });
     }
+
+    console.log(localStorage.getItem('access'));
 };
 
 export const googleAuthenticate = (state, code) => async dispatch => {
