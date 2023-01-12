@@ -48,9 +48,11 @@ INSTALLED_APPS = [
     'users',
 
     'djoser',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 ASGI_APPLICATION = "exodt.asgi.application"
+WSGI_APPLICATION = 'exodt.wsgi.application'
 
 # CHANNEL_LAYERS = {
 #     "default": {
@@ -97,13 +99,6 @@ TEMPLATES = [
         },
     },
 ]
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-WSGI_APPLICATION = 'exodt.wsgi.application'
 
 
 # Database
@@ -192,9 +187,13 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'exodtofficial@gmail.com'
-EMAIL_HOST_PASSWORD = 'lkbkfmrkrlrtugnz'
+# EMAIL_HOST_USER = 'exodtofficial@gmail.com'
+# EMAIL_HOST_PASSWORD = 'lkbkfmrkrlrtugnz'
+EMAIL_HOST_USER = 'chirimaenoch@gmail.com'
+EMAIL_HOST_PASSWORD = 'yyrdsnxjvxviltek'
 EMAIL_USE_TLS = True
+
+DOMAIN = ("localhost:3000")
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
@@ -216,10 +215,17 @@ DJOSER = {
     'SERIALIZERS': {
         'user': 'users.serializers.UserCreateSerializer',
         'user_create': 'users.serializers.UserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserCreateSerializer',
+        'current_user': 'users.serializers.UserCreateSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 
 }
+
+AUTHENTICATION_BACKENDS = [
+    # 'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
+]
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
@@ -229,6 +235,20 @@ SIMPLE_JWT = {
        'rest_framework_simplejwt.tokens.AccessToken',
    )
 }
+
+# SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_CLIENT_ID')
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_SECRET_KEY')
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = config('GOOGLE_OAUTH2_SCOPE')
+# SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
+
+# SOCIAL_AUTH_FACEBOOK_KEY = '[YOUR FACEBOOK API KEY]'
+# SOCIAL_AUTH_FACEBOOK_SECRET = '[YOUR FACEBOOK API SECRET]'
+# SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+#     'fields': 'email, first_name, last_name'
+# }
 
 
 SITE_ID = 2
@@ -256,3 +276,5 @@ CORS_ORIGIN_WHITELIST = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.UserAccount"
+
+# REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }

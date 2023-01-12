@@ -27,7 +27,7 @@
           <div class="col-md-5 p-3">
                 <h1>My Google Login Project</h1>
                 {% if user.is_authenticated %}
-                <p>Welcome, {{ user.username }} !</p>
+                <p>Welcome, {{ user.first_name }} !</p>
                 {% else %}
                 <h1>Welcome Friend, please log in</h1>
                 {% endif %}

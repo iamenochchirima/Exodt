@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,10 +15,14 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SearchBar from 'material-ui-search-bar';
+import { Button } from '@material-ui/core';
 
 import { NavLink } from 'react-router-dom';
-import Link from '@material-ui/core/Link';
 import { useNavigate } from 'react-router-dom';
+
+import { Link, Navigate } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../actions/auth';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -29,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     display: 'none',
-	marginLeft: '',
+	  marginLeft: '',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -86,7 +90,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Header = () => {
+const Header = ({ logout, isAuthenticated }) => {
+
+  const [redirect, setRedirect] = useState(false);
+
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+  };
+
+  const guestLinks = () => (
+      <Fragment>
+          <Link
+							component={NavLink}
+							to="/signup"
+							underline="none"
+							color="textPrimary"
+						>
+						<Button color="white">Signup</Button>
+						</Link>
+            <Link
+							to="/login"
+							underline="none"
+							color="textPrimary"
+						>
+						<Button color="white">Login</Button>
+						</Link>
+      </Fragment>
+  );
+
+  const authLinks = () => (
+      <Link
+      onClick={logout_user}
+      underline="none"
+      color="inherit"
+      >
+      <Button color="white">Logout</Button>
+      </Link>
+  );
+
+
 	const classes = useStyles();
 
   let navigate = useNavigate();
@@ -202,37 +245,14 @@ const Header = () => {
 					/>
           <div className={classes.grow} >
           <Link
-							component={NavLink}
 							to="/"
 							underline="none"
 							color="textPrimary"
 						>
 							Home
 						</Link>
-            <Link
-							component={NavLink}
-							to="/signup"
-							underline="none"
-							color="textPrimary"
-						>
-							Signup
-						</Link>
-            <Link
-							component={NavLink}
-							to="/login"
-							underline="none"
-							color="textPrimary"
-						>
-							Login
-						</Link>
-            <Link
-							component={NavLink}
-							to="/logout"
-							underline="none"
-							color="textPrimary"
-						>
-							Logout
-						</Link>
+
+            {isAuthenticated ? authLinks() : guestLinks()}
 
           </div>
           <div className={classes.sectionDesktop}>
@@ -276,4 +296,8 @@ const Header = () => {
   );
 }
 
-export default Header
+const mapStateToProps = state => ({
+	isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { logout })(Header);

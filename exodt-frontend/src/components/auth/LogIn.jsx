@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import axiosInstance from '../../axios/Login';
-import { useNavigate } from 'react-router-dom';
-
 import { connect } from 'react-redux'
 import { login } from '../../actions/auth';
 
@@ -12,8 +9,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { NavLink } from 'react-router-dom';
-import Link from '@material-ui/core/Link';
+import { NavLink, Link, Navigate} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -39,8 +35,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Login = ({ login }) => {
-	const navigate = useNavigate();
+const Login = ({ login, isAuthenticated }) => {
 	const initialFormData = Object.freeze({
 		email: '',
 		password: '',
@@ -62,8 +57,9 @@ const Login = ({ login }) => {
 
 	const classes = useStyles();
 
-	// Is the user authenticated
-	// Redirect them to home page
+	if (isAuthenticated) {
+		return <Navigate to='/'/>
+	}
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -82,6 +78,7 @@ const Login = ({ login }) => {
 						id="email"
 						label="Email Address"
 						name="email"
+						value={email}
 						autoComplete="email"
 						autoFocus
 						onChange={handleChange}
@@ -94,6 +91,7 @@ const Login = ({ login }) => {
 						name="password"
 						label="Password"
 						type="password"
+						value={password}
 						id="password"
 						autoComplete="current-password"
 						onChange={handleChange}
@@ -137,7 +135,7 @@ const Login = ({ login }) => {
 }
 
 const mapStateToProps = state => ({
-	// IsAuthenticated
+	isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(null, { login })(Login);
+export default connect(mapStateToProps, { login })(Login);

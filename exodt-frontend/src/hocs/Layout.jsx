@@ -1,13 +1,20 @@
-import React from 'react'
-import Header from '../components/Header'
+import Header from '../components/Header';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { checkAuthenticated, load_user } from '../actions/auth';
 
-const Layout = (props) => {
-  return (
-    <div>
-        <Header />
-        {props.children}
-    </div>
-  )
-}
+const Layout = ({ checkAuthenticated, load_user, children }) => {
+    useEffect(() => {
+        checkAuthenticated();
+        load_user();
+    }, []);
 
-export default Layout
+    return (
+        <div>
+            <Header />
+            {children}
+        </div>
+    );
+};
+
+export default connect(null, { checkAuthenticated, load_user })(Layout);

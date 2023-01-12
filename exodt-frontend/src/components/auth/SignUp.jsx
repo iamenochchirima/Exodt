@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axiosInstance from '../../Axios';
-import { useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux'
+import { signup } from '../../actions/auth';
+
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -8,8 +9,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { NavLink } from 'react-router-dom';
-import Link from '@material-ui/core/Link';
+import { NavLink, Link, Navigate} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,47 +28,51 @@ const useStyles = makeStyles((theme) => ({
 	},
 	form: {
 		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(3),
+		marginTop: theme.spacing(1),
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
 }));
 
-export default function SignUp() {
-	const navigate = useNavigate();
+const SignUp = ({ signup, isAuthenticated }) => {
+
+	const [accountCreated, setAccountCreated] = useState(false);
+
 	const initialFormData = Object.freeze({
+		first_name: '',
+		last_name: '',
 		email: '',
-		username: '',
 		password: '',
+		re_password: '',
 	});
 
 	const [formData, updateFormData] = useState(initialFormData);
 
 	const handleChange = (e) => {
-		updateFormData({
-			...formData,
-			// Trimming any whitespace
-			[e.target.name]: e.target.value.trim(),
-		});
+		updateFormData({...formData, [e.target.name]: e.target.value.trim(), });
 	};
+
+	const {first_name, last_name, email, password, re_password} = formData;
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
 
-		axiosInstance
-			.post(`user/create/`, {
-				email: formData.email,
-				username: formData.username,
-				password: formData.password,
-			})
-			.then((res) => {
-				navigate('/');
-			});
+		if (password === re_password) {
+			signup(first_name, last_name, email, password, re_password);
+			setAccountCreated(true);
+		}
+	
 	};
 
 	const classes = useStyles();
+
+	if (isAuthenticated) {
+        return <Navigate to='/' />
+    }
+    if (accountCreated) {
+        return <Navigate to='/login' />
+    }
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -76,54 +80,74 @@ export default function SignUp() {
 			<div className={classes.paper}>
 				<Avatar className={classes.avatar}></Avatar>
 				<Typography component="h1" variant="h5">
-					Sign up
+					Create your account
 				</Typography>
 				<form className={classes.form} noValidate>
-					<Grid container spacing={2}>
-						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								id="email"
-								label="Email Address"
-								name="email"
-								autoComplete="email"
-								onChange={handleChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								id="username"
-								label="Username"
-								name="username"
-								autoComplete="username"
-								onChange={handleChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								name="password"
-								label="Password"
-								type="password"
-								id="password"
-								autoComplete="current-password"
-								onChange={handleChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<FormControlLabel
-								control={<Checkbox value="allowExtraEmails" color="primary" />}
-								label="I want to receive inspiration, marketing promotions and updates via email."
-							/>
-						</Grid>
+					<Grid item xs={12}>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							id="first_name"
+							label="Firstname"
+							name="first_name"
+							value={first_name}
+							autoComplete="first_name"
+							onChange={handleChange}
+						/>
 					</Grid>
+					<TextField
+						variant="outlined"
+						required
+						fullWidth
+						id="last_name"
+						label="Lastname"
+						name="last_name"
+						value={last_name}
+						autoComplete="last_name"
+						onChange={handleChange}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="email"
+						label="Email Address"
+						name="email"
+						value={email}
+						autoComplete="email"
+						autoFocus
+						onChange={handleChange}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="password"
+						label="Password"
+						type="password"
+						value={password}
+						id="password"
+						onChange={handleChange}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="re_password"
+						label="Retype password"
+						type="password"
+						value={re_password}
+						id="re_password"
+						onChange={handleChange}
+					/>
+					<FormControlLabel
+						control={<Checkbox value="remember" color="primary" />}
+						label="Remember me"
+					/>
 					<Button
 						type="submit"
 						fullWidth
@@ -132,9 +156,9 @@ export default function SignUp() {
 						className={classes.submit}
 						onClick={handleSubmit}
 					>
-						Sign Up
+						Sign up
 					</Button>
-					<Grid container justify="flex-end">
+					<Grid container>
 						<Grid item>
 							<Link 
 								component={NavLink}
@@ -149,3 +173,9 @@ export default function SignUp() {
 		</Container>
 	);
 }
+
+const mapStateToProps = state => ({
+	isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { signup })(SignUp);
