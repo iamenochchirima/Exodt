@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux'
-import { reset_password } from '../../actions/auth';
+import { reset_password } from '../../redux/actions/auth';
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';

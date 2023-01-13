@@ -18,8 +18,42 @@ import {
     GOOGLE_AUTH_FAIL,
     FACEBOOK_AUTH_SUCCESS,
     FACEBOOK_AUTH_FAIL,
-    LOGOUT
+    LOGOUT,
+    LOAD_POSTS_SUCCESS,
+    LOAD_POSTS_FAIL,
 } from './types';
+
+export const load_posts = () => async dispatch => {
+
+    if (localStorage.getItem('access')) {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${localStorage.getItem('access')}`,
+                'Accept': 'application/json'
+            }
+        }; 
+
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/`, config);
+    
+            dispatch({
+                type: LOAD_POSTS_SUCCESS,
+                payload: res.data
+            });
+            console.log(res, "I'm here");
+        } catch (err) {
+            dispatch({
+                type: LOAD_POSTS_FAIL
+            });
+        }
+    } else {
+        dispatch({
+            type: LOAD_POSTS_FAIL
+        });
+    }
+    
+}
 
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
@@ -50,8 +84,6 @@ export const load_user = () => async dispatch => {
             type: USER_LOADED_FAIL
         });
     }
-
-    console.log(localStorage.getItem('access'));
 };
 
 export const googleAuthenticate = (state, code) => async dispatch => {

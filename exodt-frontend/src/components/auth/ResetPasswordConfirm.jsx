@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux'
-import { reset_password_confirm } from '../../actions/auth';
+import { reset_password_confirm } from '../../redux/actions/auth';
 import { useParams } from 'react-router-dom';
 
 //MaterialUI

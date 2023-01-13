@@ -17,20 +17,29 @@ import {
     GOOGLE_AUTH_FAIL,
     FACEBOOK_AUTH_SUCCESS,
     FACEBOOK_AUTH_FAIL,
-    LOGOUT
+    LOGOUT,
+    LOAD_POSTS_SUCCESS,
+    LOAD_POSTS_FAIL,
 } from '../actions/types';
 
 const initialState = {
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
-    user: null
+    user: null,
+    posts: [],
 };
 
 export default function(state = initialState, action) {
     const { type, payload } = action;
 
     switch(type) {
+        case LOAD_POSTS_SUCCESS:
+            return {
+                ...state,
+                isAuthenticated: true,
+                posts: payload
+            }
         case AUTHENTICATED_SUCCESS:
             return {
                 ...state,

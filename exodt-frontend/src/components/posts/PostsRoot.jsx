@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PostsList from './PostsList'
 import PostLoadingComponent from './PostLoading';
 import axiosInstance from '../../Axios';
+import { connect } from 'react-redux'
+import { load_posts } from '../../redux/actions/auth';
 
 
-function Post() {
+function Post({ load_posts }) {
   const PostLoading = PostLoadingComponent(PostsList);
   const [appState, setAppState] = useState({
     loading: false,
@@ -13,11 +15,10 @@ function Post() {
 
   useEffect(() => {
     setAppState({ loading: true });
-		axiosInstance.get().then((res) => {
-			const allPosts = res.data;
-			console.log(res.data);
+		load_posts().then((res) => {
+			const allPosts = res.posts;
 			setAppState({ loading: false, posts: allPosts });
-			console.log(res.data);
+			console.log(allPosts, 'The data youre looking for');
 		});
 	}, [setAppState]);
   return (
@@ -28,4 +29,4 @@ function Post() {
     </div>
   );
 }
-export default Post;
+export default connect(null, { load_posts })(Post);

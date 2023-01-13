@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux'
-import { login } from '../../actions/auth';
+import { login } from '../../redux/actions/auth';
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';

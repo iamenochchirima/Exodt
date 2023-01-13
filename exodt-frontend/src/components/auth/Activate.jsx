@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { verify } from '../../actions/auth';
+import { verify } from '../../redux/actions/auth';
 
 const Activate = ({ verify }) => {
     const [verified, setVerified] = useState(false);

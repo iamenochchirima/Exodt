@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Link, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../actions/auth';
+import { logout } from '../redux/actions/auth';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
