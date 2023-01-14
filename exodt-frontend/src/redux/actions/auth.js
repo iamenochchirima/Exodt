@@ -41,7 +41,6 @@ export const load_posts = () => async dispatch => {
                 type: LOAD_POSTS_SUCCESS,
                 payload: res.data
             });
-            console.log(res, "I'm here");
         } catch (err) {
             dispatch({
                 type: LOAD_POSTS_FAIL

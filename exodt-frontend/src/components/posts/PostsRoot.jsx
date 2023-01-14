@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { load_posts } from '../../redux/actions/auth';
 
 
-function Post({ load_posts }) {
+function Post({ load_posts, posts }) {
   const PostLoading = PostLoadingComponent(PostsList);
   const [appState, setAppState] = useState({
     loading: false,
@@ -15,11 +15,11 @@ function Post({ load_posts }) {
 
   useEffect(() => {
     setAppState({ loading: true });
-		load_posts().then((res) => {
-			const allPosts = res.posts;
-			setAppState({ loading: false, posts: allPosts });
-			console.log(allPosts, 'The data youre looking for');
-		});
+		load_posts();
+    console.log(posts, 'Here!!!!!!!!!!!!!!!!!!!!!!!!!');
+    setAppState({ loading: false, posts: posts });
+ 
+
 	}, [setAppState]);
   return (
     <div className='Post'>
@@ -29,4 +29,10 @@ function Post({ load_posts }) {
     </div>
   );
 }
-export default connect(null, { load_posts })(Post);
+
+
+const mapStateToProps = state => ({
+	isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { load_posts })(Post);
