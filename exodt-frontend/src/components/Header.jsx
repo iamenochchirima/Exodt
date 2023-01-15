@@ -16,13 +16,9 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SearchBar from 'material-ui-search-bar';
 import { Button } from '@material-ui/core';
+import { useNavigate, NavLink, Link, Navigate } from 'react-router-dom';
 
-import { NavLink } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
-import { Link, Navigate } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { logout } from '../redux/actions/auth';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -90,14 +86,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Header = ({ logout, isAuthenticated }) => {
+const Header = () => {
 
   const [redirect, setRedirect] = useState(false);
 
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-  };
+  const { isAuthenticated } = useSelector(state => state.user)
+
+  // const logout_user = () => {
+  //     logout();
+  //     setRedirect(true);
+  // };
 
   const guestLinks = () => (
       <Fragment>
@@ -121,7 +119,7 @@ const Header = ({ logout, isAuthenticated }) => {
 
   const authLinks = () => (
       <Link
-      onClick={logout_user}
+      // onClick={logout_user}
       underline="none"
       color="inherit"
       >
@@ -296,8 +294,9 @@ const Header = ({ logout, isAuthenticated }) => {
   );
 }
 
-const mapStateToProps = state => ({
-	isAuthenticated: state.auth.isAuthenticated
-});
+// const mapStateToProps = state => ({
+// 	isAuthenticated: state.auth.isAuthenticated
+// });
 
-export default connect(mapStateToProps, { logout })(Header);
+
+export default (Header);
