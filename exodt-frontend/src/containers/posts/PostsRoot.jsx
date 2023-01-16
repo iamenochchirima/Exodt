@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PostsList from './PostsList'
 import PostLoadingComponent from './PostLoading';
-import axiosInstance from '../../Axios';
+// import axiosInstance from '../../Axios';
 // import { connect } from 'react-redux'
 // import { load_posts } from '../../redux/actions/auth';
 

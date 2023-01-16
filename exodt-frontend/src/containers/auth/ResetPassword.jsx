@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux'
-import { login } from '../../redux/actions/auth';
+// import { reset_password } from '../../redux/actions/auth';
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -35,10 +34,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Login = ({ login, isAuthenticated }) => {
+const ResetPassword = () => {
+
+  const [requestSent, setRequestSent] = useState(false);
+
 	const initialFormData = Object.freeze({
 		email: '',
-		password: '',
 	});
 
 	const [formData, updateFormData] = useState(initialFormData);
@@ -47,17 +48,18 @@ const Login = ({ login, isAuthenticated }) => {
 		updateFormData({...formData, [e.target.name]: e.target.value.trim(), });
 	};
 
-	const {email, password} = formData;
+	const {email} = formData;
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		
-		login(email, password);
+		// reset_password(email);
+    	setRequestSent(true);
 	};
 
 	const classes = useStyles();
 
-	if (isAuthenticated) {
+	if (requestSent) {
 		return <Navigate to='/'/>
 	}
 
@@ -65,9 +67,8 @@ const Login = ({ login, isAuthenticated }) => {
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
 			<div className={classes.paper}>
-				<Avatar className={classes.avatar}></Avatar>
 				<Typography component="h1" variant="h5">
-					Sign in
+					Request password request
 				</Typography>
 				<form className={classes.form} noValidate>
 					<TextField
@@ -83,23 +84,6 @@ const Login = ({ login, isAuthenticated }) => {
 						autoFocus
 						onChange={handleChange}
 					/>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						name="password"
-						label="Password"
-						type="password"
-						value={password}
-						id="password"
-						autoComplete="current-password"
-						onChange={handleChange}
-					/>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
-						label="Remember me"
-					/>
 					<Button
 						type="submit"
 						fullWidth
@@ -108,34 +92,12 @@ const Login = ({ login, isAuthenticated }) => {
 						className={classes.submit}
 						onClick={handleSubmit}
 					>
-						Sign In
+						Reset
 					</Button>
-					<Grid container>
-						<Grid item xs>
-							<Link 
-								component={NavLink}
-								to="/reset-password"
-							>
-								Forgot password?
-							</Link>
-						</Grid>
-						<Grid item>
-							<Link 
-								component={NavLink}
-								to="/signup"
-							>
-								Don't have an account? Sign Up
-							</Link>
-						</Grid>
-					</Grid>
 				</form>
 			</div>
 		</Container>
 	);
 }
 
-const mapStateToProps = state => ({
-	isAuthenticated: state.auth.isAuthenticated
-});
-
-export default connect(mapStateToProps, { login })(Login);
+export default ResetPassword;

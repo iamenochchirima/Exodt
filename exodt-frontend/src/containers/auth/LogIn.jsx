@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux'
-import { reset_password_confirm } from '../../redux/actions/auth';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useDispatch, useSelector } from 'react-redux'
+import { userLogin } from '../../redux/features/auth/authActions';
+
+import { useForm } from 'react-hook-form'
+
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -36,44 +40,44 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ResetPasswordConfirm = ({ reset_password_confirm }) => {
+const Login = () => {
+	const classes = useStyles();
+	const navigate = useNavigate()
 
-  const { uid, token } = useParams();
-
-  const [requestSent, setRequestSent] = useState(false);
+	const dispatch = useDispatch();
+	const { loading, userInfo, error } = useSelector((state) => state.auth);
 
 	const initialFormData = Object.freeze({
-		new_password: '',
-		re_new_password: '',
+		email: '',
+		password: '',
 	});
-
 	const [formData, updateFormData] = useState(initialFormData);
-
+	
 	const handleChange = (e) => {
 		updateFormData({...formData, [e.target.name]: e.target.value.trim(), });
 	};
 
-	const {new_password, re_new_password} = formData;
+	const {email, password} = formData;
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
+	const { register, handleSubmit } = useForm();
 
-		reset_password_confirm(uid, token, new_password, re_new_password);
-    setRequestSent(true);
-	};
-
-	const classes = useStyles();
-
-	if (requestSent) {
-		return <Navigate to='/'/>
-	}
+	const submitForm = (data) => {
+		dispatch(userLogin(data))
+	  };
+	// useEffect(() => {
+	// if (userInfo) {
+	// 	navigate('/profiles')
+	// }
+	// }, [navigate, userInfo])
 
 	return (
+
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
 			<div className={classes.paper}>
+				<Avatar className={classes.avatar}></Avatar>
 				<Typography component="h1" variant="h5">
-					Set new password
+					Sign in
 				</Typography>
 				<form className={classes.form} noValidate>
 					<TextField
@@ -81,24 +85,32 @@ const ResetPasswordConfirm = ({ reset_password_confirm }) => {
 						margin="normal"
 						required
 						fullWidth
-						name="new_password"
-            value={new_password}
-						label="New password"
-						type="password"
-						id="new_password"
+						id="email"
+						label="Email Address"
+						name="email"
+						{...register('email')}
+						value={email}
+						autoComplete="email"
+						autoFocus
 						onChange={handleChange}
 					/>
-          <TextField
+					<TextField
 						variant="outlined"
 						margin="normal"
 						required
 						fullWidth
-						name="re_new_password"
-						label="Retype new assword"
-            value={re_new_password}
+						name="password"
+						label="Password"
 						type="password"
-						id="re_new_password"
+						{...register('password')}
+						value={password}
+						id="password"
+						autoComplete="current-password"
 						onChange={handleChange}
+					/>
+					<FormControlLabel
+						control={<Checkbox value="remember" color="primary" />}
+						label="Remember me"
 					/>
 					<Button
 						type="submit"
@@ -106,15 +118,33 @@ const ResetPasswordConfirm = ({ reset_password_confirm }) => {
 						variant="contained"
 						color="primary"
 						className={classes.submit}
-						onClick={handleSubmit}
+						onClick={handleSubmit(submitForm)}
 					>
-						Confirm
+						Sign In
 					</Button>
+					<Grid container>
+						<Grid item xs>
+							<Link 
+								component={NavLink}
+								to="/reset-password"
+							>
+								Forgot password?
+							</Link>
+						</Grid>
+						<Grid item>
+							<Link 
+								component={NavLink}
+								to="/signup"
+							>
+								Don't have an account? Sign Up
+							</Link>
+						</Grid>
+					</Grid>
 				</form>
 			</div>
 		</Container>
+
 	);
 }
 
-
-export default connect(null, { reset_password_confirm })(ResetPasswordConfirm);
+export default Login;

@@ -41,7 +41,7 @@ class Profile(models.Model):
     followers = models.CharField(max_length=225, blank=True)
     following = models.CharField(max_length=225, blank=True)
     slug = models.SlugField(unique=True, blank=True)
-    user_profile_type = models.CharField(max_length=200, blank=True)
+    profile_type = models.CharField(max_length=200, blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
