@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { verify } from '../../redux/actions/auth';
+// import { connect } from 'react-redux';
+// import { verify } from '../../redux/actions/auth';
 
-const Activate = ({ verify }) => {
+const Activate = () => {
     const [verified, setVerified] = useState(false);
     const {uid, token } = useParams();
 
     const verify_account = e => {
       
-        verify(uid, token);
+        // verify(uid, token);
         setVerified(true);
     };
 
@@ -37,4 +37,4 @@ const Activate = ({ verify }) => {
     );
 };
 
-export default connect(null, { verify })(Activate);
+export default Activate;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux'
-import { reset_password } from '../../redux/actions/auth';
+// import { connect } from 'react-redux'
+// import { reset_password_confirm } from '../../redux/actions/auth';
+// import { useParams } from 'react-router-dom';
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -35,12 +36,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ResetPassword = ({ reset_password }) => {
+const ResetPasswordConfirm = () => {
+
+//   const { uid, token } = useParams();
 
   const [requestSent, setRequestSent] = useState(false);
 
 	const initialFormData = Object.freeze({
-		email: '',
+		new_password: '',
+		re_new_password: '',
 	});
 
 	const [formData, updateFormData] = useState(initialFormData);
@@ -49,13 +53,13 @@ const ResetPassword = ({ reset_password }) => {
 		updateFormData({...formData, [e.target.name]: e.target.value.trim(), });
 	};
 
-	const {email} = formData;
+	const {new_password, re_new_password} = formData;
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		
-		reset_password(email);
-    	setRequestSent(true);
+
+		// reset_password_confirm(uid, token, new_password, re_new_password);
+    setRequestSent(true);
 	};
 
 	const classes = useStyles();
@@ -69,7 +73,7 @@ const ResetPassword = ({ reset_password }) => {
 			<CssBaseline />
 			<div className={classes.paper}>
 				<Typography component="h1" variant="h5">
-					Request password request
+					Set new password
 				</Typography>
 				<form className={classes.form} noValidate>
 					<TextField
@@ -77,12 +81,23 @@ const ResetPassword = ({ reset_password }) => {
 						margin="normal"
 						required
 						fullWidth
-						id="email"
-						label="Email Address"
-						name="email"
-						value={email}
-						autoComplete="email"
-						autoFocus
+						name="new_password"
+            value={new_password}
+						label="New password"
+						type="password"
+						id="new_password"
+						onChange={handleChange}
+					/>
+          <TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="re_new_password"
+						label="Retype new assword"
+            value={re_new_password}
+						type="password"
+						id="re_new_password"
 						onChange={handleChange}
 					/>
 					<Button
@@ -93,7 +108,7 @@ const ResetPassword = ({ reset_password }) => {
 						className={classes.submit}
 						onClick={handleSubmit}
 					>
-						Reset
+						Confirm
 					</Button>
 				</form>
 			</div>
@@ -101,4 +116,5 @@ const ResetPassword = ({ reset_password }) => {
 	);
 }
 
-export default connect(null, { reset_password})(ResetPassword);
+
+export default ResetPasswordConfirm;

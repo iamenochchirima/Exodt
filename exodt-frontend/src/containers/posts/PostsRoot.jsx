@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PostsList from './PostsList'
 import PostLoadingComponent from './PostLoading';
-import axiosInstance from '../../Axios';
-import { connect } from 'react-redux'
-import { load_posts } from '../../redux/actions/auth';
+// import axiosInstance from '../../Axios';
+// import { connect } from 'react-redux'
+// import { load_posts } from '../../redux/actions/auth';
 
 
 function Post({ load_posts, posts }) {
@@ -15,7 +15,7 @@ function Post({ load_posts, posts }) {
 
   useEffect(() => {
     setAppState({ loading: true });
-		load_posts();
+		// load_posts();
     console.log(posts, 'Here!!!!!!!!!!!!!!!!!!!!!!!!!');
     setAppState({ loading: false, posts: posts });
  
@@ -31,8 +31,8 @@ function Post({ load_posts, posts }) {
 }
 
 
-const mapStateToProps = state => ({
-	isAuthenticated: state.auth.isAuthenticated
-});
+// const mapStateToProps = state => ({
+// 	isAuthenticated: state.auth.isAuthenticated
+// });
 
-export default connect(mapStateToProps, { load_posts })(Post);
+export default Post;

@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux'
-import { signup } from '../../redux/actions/auth';
+import { useState, useEffect } from 'react';
+import { NavLink, Link, Navigate, useNavigate} from 'react-router-dom';
+
+import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
+import Error from '../../components/Error'
+import Spinner from '../../components/Spinner'
+import { registerUser } from '../../redux/features/auth/authActions'
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -9,7 +14,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { NavLink, Link, Navigate} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -35,9 +39,24 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const SignUp = ({ signup, isAuthenticated }) => {
+const SignUp = () => {
+	const classes = useStyles();
+	const navigate = useNavigate();
 
-	const [accountCreated, setAccountCreated] = useState(false);
+	const { loading, userInfo, error, success } = useSelector(
+		(state) => state.auth
+	  );
+	const dispatch = useDispatch();
+	const { register, handleSubmit } = useForm();
+
+	const submitForm = (data) => {
+		// check if passwords match
+		if (data.password !== data.re_password) {
+		  alert('Password mismatch')
+		}
+    	dispatch(registerUser(data))
+	}
+	// const [accountCreated, setAccountCreated] = useState(false);
 
 	const initialFormData = Object.freeze({
 		first_name: '',
@@ -55,24 +74,22 @@ const SignUp = ({ signup, isAuthenticated }) => {
 
 	const {first_name, last_name, email, password, re_password} = formData;
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
+	// const handleSubmit = (e) => {
+	// 	e.preventDefault();
 
-		if (password === re_password) {
-			signup(first_name, last_name, email, password, re_password);
-			setAccountCreated(true);
-		}
+	// 	// if (password === re_password) {
+	// 	// 	signup(first_name, last_name, email, password, re_password);
+	// 	// 	setAccountCreated(true);
+	// 	// }
 	
-	};
+	// };
 
-	const classes = useStyles();
-
-	if (isAuthenticated) {
-        return <Navigate to='/' />
-    }
-    if (accountCreated) {
-        return <Navigate to='/login' />
-    }
+    useEffect(() => {
+		// redirect user to login page if registration was successful
+		if (success) navigate('/login')
+		// redirect authenticated user to profile screen
+		if (userInfo) navigate('/profiles' + userInfo.id)
+	  }, [navigate, userInfo, success])
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -91,6 +108,7 @@ const SignUp = ({ signup, isAuthenticated }) => {
 							id="first_name"
 							label="Firstname"
 							name="first_name"
+							{...register('first_name')}
 							value={first_name}
 							autoComplete="first_name"
 							onChange={handleChange}
@@ -103,6 +121,7 @@ const SignUp = ({ signup, isAuthenticated }) => {
 						id="last_name"
 						label="Lastname"
 						name="last_name"
+						{...register('last_name')}
 						value={last_name}
 						autoComplete="last_name"
 						onChange={handleChange}
@@ -115,6 +134,7 @@ const SignUp = ({ signup, isAuthenticated }) => {
 						id="email"
 						label="Email Address"
 						name="email"
+						{...register('email')}
 						value={email}
 						autoComplete="email"
 						autoFocus
@@ -128,6 +148,7 @@ const SignUp = ({ signup, isAuthenticated }) => {
 						name="password"
 						label="Password"
 						type="password"
+						{...register('password')}
 						value={password}
 						id="password"
 						onChange={handleChange}
@@ -140,6 +161,7 @@ const SignUp = ({ signup, isAuthenticated }) => {
 						name="re_password"
 						label="Retype password"
 						type="password"
+						{...register('re_password')}
 						value={re_password}
 						id="re_password"
 						onChange={handleChange}
@@ -153,10 +175,11 @@ const SignUp = ({ signup, isAuthenticated }) => {
 						fullWidth
 						variant="contained"
 						color="primary"
+						disabled={loading}
 						className={classes.submit}
-						onClick={handleSubmit}
+						onClick={handleSubmit(submitForm)}
 					>
-						Sign up
+						{loading ? <Spinner /> : 'Sign up'}
 					</Button>
 					<Grid container>
 						<Grid item>
@@ -174,8 +197,4 @@ const SignUp = ({ signup, isAuthenticated }) => {
 	);
 }
 
-const mapStateToProps = state => ({
-	isAuthenticated: state.auth.isAuthenticated
-});
-
-export default connect(mapStateToProps, { signup })(SignUp);
+export default SignUp;

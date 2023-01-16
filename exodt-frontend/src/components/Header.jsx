@@ -16,13 +16,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SearchBar from 'material-ui-search-bar';
 import { Button } from '@material-ui/core';
+import { useNavigate, NavLink, Link, Navigate } from 'react-router-dom';
 
-import { NavLink } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
-import { Link, Navigate } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { logout } from '../redux/actions/auth';
+import { useSelector, useDispatch} from 'react-redux';
+import { useGetUserDetailsQuery } from '../redux/features/api/authApi'; 
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -90,58 +87,49 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Header = ({ logout, isAuthenticated }) => {
+const Header = () => {
 
-  const [redirect, setRedirect] = useState(false);
+  const { userInfo } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
 
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-  };
+  const { data, isFetching } = useGetUserDetailsQuery('userDetails', {
+    // perform a refetch every 15mins
+      pollingInterval: 900000,
+    })
+ 
 
-  const guestLinks = () => (
-      <Fragment>
-          <Link
-							component={NavLink}
-							to="/signup"
-							underline="none"
-							color="textPrimary"
-						>
-						<Button color="white">Signup</Button>
-						</Link>
-            <Link
-							to="/login"
-							underline="none"
-							color="textPrimary"
-						>
-						<Button color="white">Login</Button>
-						</Link>
-      </Fragment>
-  );
+  // const [redirect, setRedirect] = useState(false);
 
-  const authLinks = () => (
-      <Link
-      onClick={logout_user}
-      underline="none"
-      color="inherit"
-      >
-      <Button color="white">Logout</Button>
-      </Link>
-  );
+
+
+  // const logout_user = () => {
+  //     logout();
+  //     setRedirect(true);
+  // };
+
+  // const guestLinks = () => (
+  //     <Fragment>
+          
+  //     </Fragment>
+  // );
+
+  // const authLinks = () => (
+      
+  // );
 
 
 	const classes = useStyles();
 
-  let navigate = useNavigate();
-	const [data, setData] = useState({ search: '' });
+  const navigate = useNavigate();
+	// const [data, setData] = useState({ search: '' });
 
-	const goSearch = (e) => {
-		navigate({
-			pathname: '/search/',
-			search: '?search=' + data.search,
-		});
-		window.location.reload();
-	};
+	// const goSearch = (e) => {
+	// 	navigate({
+	// 		pathname: '/search/',
+	// 		search: '?search=' + data.search,
+	// 	});
+	// 	window.location.reload();
+	// };
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -239,9 +227,9 @@ const Header = ({ logout, isAuthenticated }) => {
             EXODT
           </Typography>
           <SearchBar
-						value={data.search}
-						onChange={(newValue) => setData({ search: newValue })}
-						onRequestSearch={() => goSearch(data.search)}
+						// value={data.search}
+						// onChange={(newValue) => setData({ search: newValue })}
+						// onRequestSearch={() => goSearch(data.search)}
 					/>
           <div className={classes.grow} >
           <Link
@@ -251,8 +239,28 @@ const Header = ({ logout, isAuthenticated }) => {
 						>
 							Home
 						</Link>
-
-            {isAuthenticated ? authLinks() : guestLinks()}
+            <Link
+							component={NavLink}
+							to="/signup"
+							underline="none"
+							color="textPrimary"
+						>
+						<Button color="white">Signup</Button>
+						</Link>
+            <Link
+							to="/login"
+							underline="none"
+							color="textPrimary"
+						>
+						<Button color="white">Login</Button>
+						</Link>
+            <Link
+          // onClick={logout_user}
+            underline="none"
+            color="inherit"
+            >
+            <Button color="white">Logout</Button>
+            </Link>
 
           </div>
           <div className={classes.sectionDesktop}>
@@ -296,8 +304,5 @@ const Header = ({ logout, isAuthenticated }) => {
   );
 }
 
-const mapStateToProps = state => ({
-	isAuthenticated: state.auth.isAuthenticated
-});
 
-export default connect(mapStateToProps, { logout })(Header);
+export default Header;
