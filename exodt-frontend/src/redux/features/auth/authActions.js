@@ -15,12 +15,10 @@ export const userLogin = createAsyncThunk(
         },
       }
 
-      const { data } = await axios.post(
-        `${backendURL}/auth/jwt/create/`,
-        { email, password },
-        config
-      )
+      const body = JSON.stringify({ email, password });
 
+      const { data } = await axios.post(
+        `${backendURL}/auth/jwt/create/`, body, config )
       // store user's token in local storage
       localStorage.setItem('accessToken', data.access)
       localStorage.setItem('refreshToken', data.refresh)
