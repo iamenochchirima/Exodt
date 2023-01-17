@@ -28,8 +28,8 @@ class PostDetail(generics.RetrieveAPIView):
     serializer_class = PostSerializer
 
     def get_object(self, queryset=None, **kwargs):
-        slug = self.kwargs.get('pk')
-        return get_object_or_404(Post, slug=slug)
+        id = self.kwargs.get('pk')
+        return get_object_or_404(Post, id=id)
 
 class PostListDetailFilter(generics.ListAPIView):
     queryset = Post.objects.all()

@@ -45,7 +45,7 @@ const Login = () => {
 	const navigate = useNavigate()
 
 	const dispatch = useDispatch();
-	const { loading, userInfo, error } = useSelector((state) => state.auth);
+	const { success, error } = useSelector((state) => state.auth);
 
 	const initialFormData = Object.freeze({
 		email: '',
@@ -63,12 +63,13 @@ const Login = () => {
 
 	const submitForm = (data) => {
 		dispatch(userLogin(data))
+		console.log(data)
 	  };
-	// useEffect(() => {
-	// if (userInfo) {
-	// 	navigate('/profiles')
-	// }
-	// }, [navigate, userInfo])
+	useEffect(() => {
+	if (success) {
+		navigate('/')
+	}
+	}, [navigate, success])
 
 	return (
 

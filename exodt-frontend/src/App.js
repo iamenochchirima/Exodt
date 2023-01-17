@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Post from './containers/posts/PostsRoot';
+import PostList from './containers/posts/PostsList';
 import { Routes, Route } from "react-router-dom";
 import SignUp from './containers/auth/SignUp';
 import Login from './containers/auth/LogIn';
@@ -21,11 +21,11 @@ function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<Post />} />
+        <Route path="/" element={<PostList />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<LogOut />} />
-        <Route path="/post/:slug" element={<PostView />} />
+        <Route path="/post/:id" element={<PostView />} />
         <Route path="/search" element={<Search/>} />
         {/* <Route exact path="/admin" element={<Admin/>} /> */}
 				{/* <Route exact path="/admin/create" element={<Create/>} /> */}

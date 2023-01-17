@@ -7,17 +7,30 @@ const accessToken = localStorage.getItem('accessToken')
 
 const initialState = {
   loading: false,
-  userInfo: {}, // for user object
+  userInfo: null, // for user object
   error: null,
   success: false, // for monitoring the registration process.
-  accessToken: null,
-  refreshToken: null,
+  isAuthenticated: false,
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      localStorage.removeItem('accessToken') 
+      localStorage.removeItem('refreshToken')
+      state.loading = false
+      state.userInfo = null
+      state.success = false
+      state.error = null
+      state.isAuthenticated = false
+    },
+    setCredentials: (state, { payload }) => {
+      state.userInfo = payload
+      state.isAuthenticated = true
+    },
+  },
   extraReducers: (builder) => {
     builder
     // Signup user
@@ -40,8 +53,7 @@ const authSlice = createSlice({
       })
       .addCase(userLogin.fulfilled, (state, { payload }) => {
         state.loading = false
-        state.userInfo = payload
-        state.accessToken = payload.accessToken
+        state.success = true
       })
       .addCase(userLogin.rejected, (state, { payload }) => {
         state.loading = false
@@ -51,4 +63,5 @@ const authSlice = createSlice({
     }
 })
 
+export const { logout, setCredentials } = authSlice.actions
 export default authSlice.reducer

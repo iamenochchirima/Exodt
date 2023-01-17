@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect} from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,6 +20,7 @@ import { useNavigate, NavLink, Link, Navigate } from 'react-router-dom';
 
 import { useSelector, useDispatch} from 'react-redux';
 import { useGetUserDetailsQuery } from '../redux/features/api/authApi'; 
+import { logout, setCredentials } from '../redux/features/auth/authSlice'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -88,14 +89,19 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Header = () => {
-
-  const { userInfo } = useSelector((state) => state.auth)
+  const classes = useStyles();
   const dispatch = useDispatch()
 
   const { data, isFetching } = useGetUserDetailsQuery('userDetails', {
     // perform a refetch every 15mins
       pollingInterval: 900000,
     })
+
+  useEffect(() => {
+    if (data) dispatch(setCredentials(data));
+  }, [data, dispatch])
+
+  const { userInfo } = useSelector((state) => state.auth)
  
 
   // const [redirect, setRedirect] = useState(false);
@@ -116,9 +122,6 @@ const Header = () => {
   // const authLinks = () => (
       
   // );
-
-
-	const classes = useStyles();
 
   const navigate = useNavigate();
 	// const [data, setData] = useState({ search: '' });
@@ -232,6 +235,13 @@ const Header = () => {
 						// onRequestSearch={() => goSearch(data.search)}
 					/>
           <div className={classes.grow} >
+          <span>
+          {isFetching
+            ? `Fetching your profile...`
+            : userInfo !== null
+            ? `Logged in as ${userInfo.email}`
+            : "You're not logged in"}
+        </span>
           <Link
 							to="/"
 							underline="none"
@@ -255,7 +265,8 @@ const Header = () => {
 						<Button color="white">Login</Button>
 						</Link>
             <Link
-          // onClick={logout_user}
+            onClick={() => dispatch(logout())
+            }
             underline="none"
             color="inherit"
             >
@@ -303,6 +314,4 @@ const Header = () => {
     </div>
   );
 }
-
-
 export default Header;

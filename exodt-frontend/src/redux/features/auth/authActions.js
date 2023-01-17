@@ -8,7 +8,6 @@ export const userLogin = createAsyncThunk(
   'user/login',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      // configure header's Content-Type as JSON
       const config = {
         headers: {
           'Content-Type': 'application/json',
