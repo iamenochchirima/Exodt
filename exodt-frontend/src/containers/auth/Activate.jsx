@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-// import { connect } from 'react-redux';
-// import { verify } from '../../redux/actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { useVerifyUserMutation } from '../../redux/features/api/authApi';
+
 
 const Activate = () => {
-    const [verified, setVerified] = useState(false);
+    const { verified } = useSelector((state) => state.auth);
     const {uid, token } = useParams();
+    const dispatch = useDispatch();
 
-    const verify_account = e => {
-      
-        // verify(uid, token);
-        setVerified(true);
+    const [verifyUser, { isLoading}] = useVerifyUserMutation()
+    const body = { uid, token };
+
+    const handleSubmit = async () => {
+        if(body) {
+            console.log(body, 'clicked')
+            try {
+                await verifyUser(body)
+                .unwrap()
+                .then((payload) => console.log('fulfilled', payload))
+            } catch (err) {
+                console.error('Failed to save the post: ', err)
+              }
+        }
     };
 
     if (verified) {
-        return <Navigate to='/' />
+        return <Navigate to='/login' />
     }
 
     return (
@@ -25,7 +37,7 @@ const Activate = () => {
             >
                 <h1>Verify your Account:</h1>
                 <button
-                    onClick={verify_account}
+                    onClick={handleSubmit}
                     style={{ marginTop: '50px' }}
                     type='button'
                     className='btn btn-primary'

@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import { useSelector, useDispatch} from 'react-redux';
 
 import { useGetPostsQuery } from '../../redux/features/api/authApi';
 import Spinner from '../../components/Spinner';
@@ -39,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PostList = () => {
+
+	const { userInfo, success, isAuthenticated } = useSelector((state) => state.auth)
+	
 	
 	const {
 		data: posts,

@@ -50,13 +50,11 @@ const SignUp = () => {
 	const { register, handleSubmit } = useForm();
 
 	const submitForm = (data) => {
-		// check if passwords match
 		if (data.password !== data.re_password) {
 		  alert('Password mismatch')
 		}
     	dispatch(registerUser(data))
 	}
-	// const [accountCreated, setAccountCreated] = useState(false);
 
 	const initialFormData = Object.freeze({
 		first_name: '',
@@ -86,7 +84,7 @@ const SignUp = () => {
 
     useEffect(() => {
 		// redirect user to login page if registration was successful
-		if (success) navigate('/login')
+		if (success) navigate('/signup-redirect')
 		// redirect authenticated user to profile screen
 		if (userInfo) navigate('/profiles' + userInfo.id)
 	  }, [navigate, userInfo, success])

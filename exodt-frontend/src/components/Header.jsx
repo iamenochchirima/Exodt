@@ -92,6 +92,8 @@ const Header = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
 
+  const { userInfo, isAuthenticated, success } = useSelector((state) => state.auth)
+
   const { data, isFetching } = useGetUserDetailsQuery('userDetails', {
     // perform a refetch every 15mins
       pollingInterval: 900000,
@@ -100,28 +102,36 @@ const Header = () => {
   useEffect(() => {
     if (data) dispatch(setCredentials(data));
   }, [data, dispatch])
-
-  const { userInfo } = useSelector((state) => state.auth)
  
+  const guestLinks = () => (
+    <Fragment>
+        <Link
+            component={NavLink}
+            to="/signup"
+            underline="none"
+            color="textPrimary"
+          >
+          <Button color="white">Signup</Button>
+          </Link>
+          <Link
+            to="/login"
+            underline="none"
+            color="textPrimary"
+          >
+          <Button color="white">Login</Button>
+          </Link>
+    </Fragment>
+);
 
-  // const [redirect, setRedirect] = useState(false);
-
-
-
-  // const logout_user = () => {
-  //     logout();
-  //     setRedirect(true);
-  // };
-
-  // const guestLinks = () => (
-  //     <Fragment>
-          
-  //     </Fragment>
-  // );
-
-  // const authLinks = () => (
-      
-  // );
+const authLinks = () => (
+    <Link
+    to="/logout"
+    underline="none"
+    color="inherit"
+    >
+    <Button color="white">Logout</Button>
+    </Link>
+);
 
   const navigate = useNavigate();
 	// const [data, setData] = useState({ search: '' });
@@ -249,30 +259,7 @@ const Header = () => {
 						>
 							Home
 						</Link>
-            <Link
-							component={NavLink}
-							to="/signup"
-							underline="none"
-							color="textPrimary"
-						>
-						<Button color="white">Signup</Button>
-						</Link>
-            <Link
-							to="/login"
-							underline="none"
-							color="textPrimary"
-						>
-						<Button color="white">Login</Button>
-						</Link>
-            <Link
-            onClick={() => dispatch(logout())
-            }
-            underline="none"
-            color="inherit"
-            >
-            <Button color="white">Logout</Button>
-            </Link>
-
+          {isAuthenticated ? authLinks() : guestLinks()}
           </div>
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">

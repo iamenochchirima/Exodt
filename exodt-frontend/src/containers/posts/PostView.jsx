@@ -22,7 +22,7 @@ export default function Post() {
 	const { id } = useParams();
 	const classes = useStyles();
 
-	const { data: post, isFetching, isSuccess, isError, error  } = useGetPostQuery(id)
+	const { data: post, isFetching, isSuccess, isError, error  } = useGetPostQuery(id);
 
 	let content
 

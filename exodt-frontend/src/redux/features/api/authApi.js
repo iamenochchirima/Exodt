@@ -7,7 +7,6 @@ export const authApi = createApi({
     prepareHeaders: (headers, { getState }) => {
       const token = localStorage.getItem('accessToken')
       if (token) {
-       // include token in req header
         headers.set('authorization', `JWT ${token}`)  
         return headers
       }
@@ -15,18 +14,26 @@ export const authApi = createApi({
   }),
   endpoints: (builder) => ({
     getUserDetails: builder.query({
-      query: () => ({
-        url: '/auth/users/me/',
-        method: 'GET',
-      }),
+      query: () => '/auth/users/me/'
     }),
     getPosts: builder.query({
       query: () => '/api/'
     }),
     getPost: builder.query({
-      query: id => `/api/post/${id}`
+      query: id => `/api/post/${id}/`
     }),
+    verifyUser: builder.mutation({
+      query: (body) => ({
+        url: '/auth/users/activation/',
+        method: 'POST',
+        body,
+      })
+    })
   }),
 })
 
-export const { useGetUserDetailsQuery, useGetPostsQuery, useGetPostQuery} = authApi
+export const { 
+  useGetUserDetailsQuery, 
+  useGetPostsQuery, 
+  useGetPostQuery,
+  useVerifyUserMutation} = authApi

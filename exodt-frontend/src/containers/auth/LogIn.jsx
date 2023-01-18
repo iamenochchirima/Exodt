@@ -63,7 +63,6 @@ const Login = () => {
 
 	const submitForm = (data) => {
 		dispatch(userLogin(data))
-		console.log(data)
 	  };
 	useEffect(() => {
 	if (success) {
