@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
-import { NavLink, Link, Navigate, useNavigate} from 'react-router-dom';
-
-import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import Error from '../../components/Error'
+import { NavLink, Link, useNavigate} from 'react-router-dom';
 import Spinner from '../../components/Spinner'
-import { registerUser } from '../../redux/features/auth/authActions'
+import { useSignUpMutation } from '../../redux/features/api/authApi';
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -43,18 +39,7 @@ const SignUp = () => {
 	const classes = useStyles();
 	const navigate = useNavigate();
 
-	const { loading, userInfo, error, success } = useSelector(
-		(state) => state.auth
-	  );
-	const dispatch = useDispatch();
-	const { register, handleSubmit } = useForm();
-
-	const submitForm = (data) => {
-		if (data.password !== data.re_password) {
-		  alert('Password mismatch')
-		}
-    	dispatch(registerUser(data))
-	}
+	const [signUp, { isLoading, isSuccess}] = useSignUpMutation()
 
 	const initialFormData = Object.freeze({
 		first_name: '',
@@ -71,23 +56,42 @@ const SignUp = () => {
 	};
 
 	const {first_name, last_name, email, password, re_password} = formData;
-
-	// const handleSubmit = (e) => {
-	// 	e.preventDefault();
-
-	// 	// if (password === re_password) {
-	// 	// 	signup(first_name, last_name, email, password, re_password);
-	// 	// 	setAccountCreated(true);
-	// 	// }
-	
-	// };
-
     useEffect(() => {
-		// redirect user to login page if registration was successful
-		if (success) navigate('/signup-redirect')
-		// redirect authenticated user to profile screen
-		if (userInfo) navigate('/profiles' + userInfo.id)
-	  }, [navigate, userInfo, success])
+		if (isSuccess) navigate('')
+	  }, [navigate, isSuccess])
+
+	console.log(isSuccess, 'HERE')
+	useEffect(() => {
+		if (isSuccess) {
+			navigate('/signup-redirect')
+		}
+		}, [navigate, isSuccess])
+
+	const body = {
+		first_name: formData.first_name, 
+		last_name: formData.last_name,
+		email: formData.email,
+		password: formData.password,
+		re_password: formData.re_password
+	}
+
+
+	const handleSubmit = async (e) =>  {
+		e.preventDefault();
+		if (body) {
+			try {
+				if (body.password !== body.re_password) {
+					alert('Password mismatch')
+				  };
+				  
+				await signUp(body)
+				.unwrap()
+				.then((payload) => console.log('fulfilled', payload))
+			} catch (err) {
+				console.error('Failed to verify: ', err)
+			}
+		}
+	}
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -106,7 +110,6 @@ const SignUp = () => {
 							id="first_name"
 							label="Firstname"
 							name="first_name"
-							{...register('first_name')}
 							value={first_name}
 							autoComplete="first_name"
 							onChange={handleChange}
@@ -119,7 +122,6 @@ const SignUp = () => {
 						id="last_name"
 						label="Lastname"
 						name="last_name"
-						{...register('last_name')}
 						value={last_name}
 						autoComplete="last_name"
 						onChange={handleChange}
@@ -132,7 +134,6 @@ const SignUp = () => {
 						id="email"
 						label="Email Address"
 						name="email"
-						{...register('email')}
 						value={email}
 						autoComplete="email"
 						autoFocus
@@ -146,7 +147,6 @@ const SignUp = () => {
 						name="password"
 						label="Password"
 						type="password"
-						{...register('password')}
 						value={password}
 						id="password"
 						onChange={handleChange}
@@ -159,7 +159,6 @@ const SignUp = () => {
 						name="re_password"
 						label="Retype password"
 						type="password"
-						{...register('re_password')}
 						value={re_password}
 						id="re_password"
 						onChange={handleChange}
@@ -173,11 +172,11 @@ const SignUp = () => {
 						fullWidth
 						variant="contained"
 						color="primary"
-						disabled={loading}
+						disabled={isLoading}
 						className={classes.submit}
-						onClick={handleSubmit(submitForm)}
+						onClick={handleSubmit}
 					>
-						{loading ? <Spinner /> : 'Sign up'}
+						{isLoading ? <Spinner /> : 'Sign up'}
 					</Button>
 					<Grid container>
 						<Grid item>

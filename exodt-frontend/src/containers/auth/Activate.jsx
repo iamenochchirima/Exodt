@@ -1,33 +1,31 @@
-import React, { useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useVerifyUserMutation } from '../../redux/features/api/authApi';
+import Spinner from '../../components/Spinner'
 
 
 const Activate = () => {
-    const { verified } = useSelector((state) => state.auth);
     const {uid, token } = useParams();
-    const dispatch = useDispatch();
-
-    const [verifyUser, { isLoading}] = useVerifyUserMutation()
+    const navigate = useNavigate();
+    const [verifyUser, { isLoading, isSuccess}] = useVerifyUserMutation()
     const body = { uid, token };
 
     const handleSubmit = async () => {
         if(body) {
-            console.log(body, 'clicked')
             try {
                 await verifyUser(body)
                 .unwrap()
                 .then((payload) => console.log('fulfilled', payload))
             } catch (err) {
-                console.error('Failed to save the post: ', err)
+                console.error('Failed to verify: ', err)
               }
         }
     };
-
-    if (verified) {
-        return <Navigate to='/login' />
-    }
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/login')
+        }
+        }, [navigate, isSuccess])
 
     return (
         <div className='container'>
@@ -42,7 +40,7 @@ const Activate = () => {
                     type='button'
                     className='btn btn-primary'
                 >
-                    Verify
+                    {isLoading ? <Spinner /> : 'Verify'}
                 </button>
             </div>
         </div>

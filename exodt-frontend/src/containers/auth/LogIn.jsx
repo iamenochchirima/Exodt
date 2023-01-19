@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useDispatch, useSelector } from 'react-redux'
-import { userLogin } from '../../redux/features/auth/authActions';
-
-import { useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
+import { useLogInMutation } from '../../redux/features/api/authApi';
+import { setTokens } from '../../redux/features/auth/authSlice'
+import Spinner from '../../components/Spinner'
 
 
 //MaterialUI
@@ -14,7 +14,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { NavLink, Link, Navigate} from 'react-router-dom';
+import { NavLink, Link} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,32 +43,41 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
 	const classes = useStyles();
 	const navigate = useNavigate()
-
 	const dispatch = useDispatch();
-	const { success, error } = useSelector((state) => state.auth);
-
 	const initialFormData = Object.freeze({
 		email: '',
 		password: '',
 	});
 	const [formData, updateFormData] = useState(initialFormData);
-	
 	const handleChange = (e) => {
 		updateFormData({...formData, [e.target.name]: e.target.value.trim(), });
 	};
-
 	const {email, password} = formData;
-
-	const { register, handleSubmit } = useForm();
-
-	const submitForm = (data) => {
-		dispatch(userLogin(data))
+	const [logIn, { data, isLoading, isSuccess}] = useLogInMutation()
+	const body = {email: formData.email, password: formData.password}
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (body){
+			console.log(body);
+			try {
+				await logIn(body).unwrap()
+				.then((payload) => console.log('fulfilled', payload))
+			} catch (err) {
+				console.error('Failed to login: ', err)
+			}
+		}
+		
 	  };
 	useEffect(() => {
-	if (success) {
-		navigate('/')
+	if (data) dispatch(setTokens(data));
+	}, [data, dispatch]);
+
+	useEffect(() => {
+	if (isSuccess) {
+		navigate('/');
+		window.location.reload();
 	}
-	}, [navigate, success])
+	}, [navigate, isSuccess])
 
 	return (
 
@@ -88,7 +97,6 @@ const Login = () => {
 						id="email"
 						label="Email Address"
 						name="email"
-						{...register('email')}
 						value={email}
 						autoComplete="email"
 						autoFocus
@@ -102,7 +110,6 @@ const Login = () => {
 						name="password"
 						label="Password"
 						type="password"
-						{...register('password')}
 						value={password}
 						id="password"
 						autoComplete="current-password"
@@ -118,9 +125,9 @@ const Login = () => {
 						variant="contained"
 						color="primary"
 						className={classes.submit}
-						onClick={handleSubmit(submitForm)}
+						onClick={handleSubmit}
 					>
-						Sign In
+						{isLoading ? <Spinner /> : 'Sign in'}
 					</Button>
 					<Grid container>
 						<Grid item xs>

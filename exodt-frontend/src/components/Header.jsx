@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect} from 'react';
+import React, { Fragment, useEffect} from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,11 +16,11 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SearchBar from 'material-ui-search-bar';
 import { Button } from '@material-ui/core';
-import { useNavigate, NavLink, Link, Navigate } from 'react-router-dom';
+import { useNavigate, NavLink, Link} from 'react-router-dom';
 
 import { useSelector, useDispatch} from 'react-redux';
-import { useGetUserDetailsQuery } from '../redux/features/api/authApi'; 
-import { logout, setCredentials } from '../redux/features/auth/authSlice'
+import { useGetUserDetailsQuery } from '../redux/features/api/authApi';
+import { setCredentials } from '../redux/features/auth/authSlice'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -92,10 +92,9 @@ const Header = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
 
-  const { userInfo, isAuthenticated, success } = useSelector((state) => state.auth)
+  const { userInfo, isAuthenticated} = useSelector((state) => state.auth)
 
   const { data, isFetching } = useGetUserDetailsQuery('userDetails', {
-    // perform a refetch every 15mins
       pollingInterval: 900000,
     })
 

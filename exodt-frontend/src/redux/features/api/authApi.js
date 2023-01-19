@@ -4,7 +4,7 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.REACT_APP_API_URL}`,
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers) => {
       const token = localStorage.getItem('accessToken')
       if (token) {
         headers.set('authorization', `JWT ${token}`)  
@@ -28,7 +28,21 @@ export const authApi = createApi({
         method: 'POST',
         body,
       })
-    })
+    }),
+    signUp: builder.mutation({
+      query: (body) => ({
+        url: '/auth/users/',
+        method: 'POST',
+        body,
+      })
+    }),
+    logIn: builder.mutation({
+      query: (body) => ({
+        url: '/auth/jwt/create/',
+        method: 'POST',
+        body,
+      })
+    }),
   }),
 })
 
@@ -36,4 +50,7 @@ export const {
   useGetUserDetailsQuery, 
   useGetPostsQuery, 
   useGetPostQuery,
-  useVerifyUserMutation} = authApi
+  useVerifyUserMutation,
+  useSignUpMutation,
+  useLogInMutation,
+} = authApi
