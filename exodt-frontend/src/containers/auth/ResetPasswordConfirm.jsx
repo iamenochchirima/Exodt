@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-// import { connect } from 'react-redux'
-// import { reset_password_confirm } from '../../redux/actions/auth';
-// import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useResetPasswordConfirmMutation } from '../../redux/features/api/authApi';
+import Spinner from '../../components/Spinner'
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -37,16 +38,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ResetPasswordConfirm = () => {
+	const classes = useStyles();
+	const navigate = useNavigate();
 
-//   const { uid, token } = useParams();
-
-  const [requestSent, setRequestSent] = useState(false);
+  	const { uid, token } = useParams();
 
 	const initialFormData = Object.freeze({
 		new_password: '',
 		re_new_password: '',
 	});
-
 	const [formData, updateFormData] = useState(initialFormData);
 
 	const handleChange = (e) => {
@@ -55,18 +55,31 @@ const ResetPasswordConfirm = () => {
 
 	const {new_password, re_new_password} = formData;
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
+	const body = {uid, token, new_password: formData.new_password, re_new_password: formData.re_new_password}
+	console.log(body, 'the')
 
-		// reset_password_confirm(uid, token, new_password, re_new_password);
-    setRequestSent(true);
+	const [resetConfirm, {isLoading, isSuccess}] = useResetPasswordConfirmMutation();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (body) {
+			try {
+				if (body.new_password !== body.re_new_password) {
+					alert('Password mismatch')
+				  };
+				await resetConfirm(body).unwrap()
+				.then((payload) => console.log('fulfilled', payload))
+			} catch (err) {
+				console.error('Failed to confirm rest: ', err)
+			}
+		}
 	};
 
-	const classes = useStyles();
-
-	if (requestSent) {
-		return <Navigate to='/'/>
-	}
+	useEffect(() => {
+		if (isSuccess) {
+			navigate('/login');
+		}
+		}, [navigate, isSuccess])
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -108,7 +121,7 @@ const ResetPasswordConfirm = () => {
 						className={classes.submit}
 						onClick={handleSubmit}
 					>
-						Confirm
+						{isLoading ? <Spinner /> : 'Confirm'}
 					</Button>
 				</form>
 			</div>

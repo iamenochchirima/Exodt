@@ -37,9 +37,8 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUp = () => {
 	const classes = useStyles();
-	const navigate = useNavigate();
 
-	const [signUp, { isLoading, isSuccess}] = useSignUpMutation()
+	const [signUp, { isLoading, isSuccess, isError}] = useSignUpMutation()
 
 	const initialFormData = Object.freeze({
 		first_name: '',
@@ -56,16 +55,6 @@ const SignUp = () => {
 	};
 
 	const {first_name, last_name, email, password, re_password} = formData;
-    useEffect(() => {
-		if (isSuccess) navigate('')
-	  }, [navigate, isSuccess])
-
-	console.log(isSuccess, 'HERE')
-	useEffect(() => {
-		if (isSuccess) {
-			navigate('/signup-redirect')
-		}
-		}, [navigate, isSuccess])
 
 	const body = {
 		first_name: formData.first_name, 
@@ -74,7 +63,6 @@ const SignUp = () => {
 		password: formData.password,
 		re_password: formData.re_password
 	}
-
 
 	const handleSubmit = async (e) =>  {
 		e.preventDefault();
@@ -88,110 +76,128 @@ const SignUp = () => {
 				.unwrap()
 				.then((payload) => console.log('fulfilled', payload))
 			} catch (err) {
-				console.error('Failed to verify: ', err)
+				console.error('Failed to signup: ', err)
 			}
 		}
 	}
 
-	return (
-		<Container component="main" maxWidth="xs">
-			<CssBaseline />
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}></Avatar>
-				<Typography component="h1" variant="h5">
-					Create your account
-				</Typography>
-				<form className={classes.form} noValidate>
-					<Grid item xs={12}>
+	let content
+
+	if (isSuccess) {
+		content = (
+			<div>
+        		<p>Check your email and very your email. Return here when you're done</p>
+    		</div>
+		)
+	} else if (isError) {
+		content = (
+			<div>
+        		<p>Something went wrong</p>
+    		</div>
+		)
+	} else {
+		content = (
+			<Container component="main" maxWidth="xs">
+				<CssBaseline />
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}></Avatar>
+					<Typography component="h1" variant="h5">
+						Create your account
+					</Typography>
+					<form className={classes.form} noValidate>
+						<Grid item xs={12}>
+							<TextField
+								variant="outlined"
+								required
+								fullWidth
+								id="first_name"
+								label="Firstname"
+								name="first_name"
+								value={first_name}
+								autoComplete="first_name"
+								onChange={handleChange}
+							/>
+						</Grid>
 						<TextField
 							variant="outlined"
 							required
 							fullWidth
-							id="first_name"
-							label="Firstname"
-							name="first_name"
-							value={first_name}
-							autoComplete="first_name"
+							id="last_name"
+							label="Lastname"
+							name="last_name"
+							value={last_name}
+							autoComplete="last_name"
 							onChange={handleChange}
 						/>
-					</Grid>
-					<TextField
-						variant="outlined"
-						required
-						fullWidth
-						id="last_name"
-						label="Lastname"
-						name="last_name"
-						value={last_name}
-						autoComplete="last_name"
-						onChange={handleChange}
-					/>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						id="email"
-						label="Email Address"
-						name="email"
-						value={email}
-						autoComplete="email"
-						autoFocus
-						onChange={handleChange}
-					/>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						name="password"
-						label="Password"
-						type="password"
-						value={password}
-						id="password"
-						onChange={handleChange}
-					/>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						name="re_password"
-						label="Retype password"
-						type="password"
-						value={re_password}
-						id="re_password"
-						onChange={handleChange}
-					/>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
-						label="Remember me"
-					/>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						disabled={isLoading}
-						className={classes.submit}
-						onClick={handleSubmit}
-					>
-						{isLoading ? <Spinner /> : 'Sign up'}
-					</Button>
-					<Grid container>
-						<Grid item>
-							<Link 
-								component={NavLink}
-								to="/login"
-							>
-								Already have an account? Sign in
-							</Link>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							id="email"
+							label="Email Address"
+							name="email"
+							value={email}
+							autoComplete="email"
+							autoFocus
+							onChange={handleChange}
+						/>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							name="password"
+							label="Password"
+							type="password"
+							value={password}
+							id="password"
+							onChange={handleChange}
+						/>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							name="re_password"
+							label="Retype password"
+							type="password"
+							value={re_password}
+							id="re_password"
+							onChange={handleChange}
+						/>
+						<FormControlLabel
+							control={<Checkbox value="remember" color="primary" />}
+							label="Remember me"
+						/>
+						<Button
+							type="submit"
+							fullWidth
+							variant="contained"
+							color="primary"
+							disabled={isLoading}
+							className={classes.submit}
+							onClick={handleSubmit}
+						>
+							{isLoading ? <Spinner /> : 'Sign up'}
+						</Button>
+						<Grid container>
+							<Grid item>
+								<Link 
+									component={NavLink}
+									to="/login"
+								>
+									Already have an account? Sign in
+								</Link>
+							</Grid>
 						</Grid>
-					</Grid>
-				</form>
-			</div>
-		</Container>
-	);
+					</form>
+				</div>
+			</Container>
+		);
+	}
+
+	return content;
 }
 
 export default SignUp;

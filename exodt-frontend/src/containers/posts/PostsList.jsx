@@ -40,9 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PostList = () => {
-
-	const { userInfo, success, isAuthenticated } = useSelector((state) => state.auth)
-	
+	const classes = useStyles();
 	
 	const {
 		data: posts,
@@ -51,11 +49,6 @@ const PostList = () => {
 		isError,
 		error
 	  } = useGetPostsQuery()
-
-	const classes = useStyles();
-
-	console.log(posts)
-
 	let content
 
 	if (isLoading) {

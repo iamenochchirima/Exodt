@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
 
 				if (tokenParts.exp > now) {
 					return axiosInstance
-						.post('/token/refresh/', {
+						.post('/jwt/refresh/', {
 							refresh: refreshToken,
 						})
 						.then((response) => {

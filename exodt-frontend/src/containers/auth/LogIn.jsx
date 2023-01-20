@@ -6,7 +6,6 @@ import { useLogInMutation } from '../../redux/features/api/authApi';
 import { setTokens } from '../../redux/features/auth/authSlice'
 import Spinner from '../../components/Spinner'
 
-
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -58,7 +57,6 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (body){
-			console.log(body);
 			try {
 				await logIn(body).unwrap()
 				.then((payload) => console.log('fulfilled', payload))

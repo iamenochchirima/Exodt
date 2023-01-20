@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-// import { reset_password } from '../../redux/actions/auth';
+import { useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useResetPasswordMutation } from '../../redux/features/api/authApi';
+import Spinner from '../../components/Spinner'
 
 //MaterialUI
 import Avatar from '@material-ui/core/Avatar';
@@ -8,8 +10,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { NavLink, Link, Navigate} from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -35,13 +35,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ResetPassword = () => {
-
-  const [requestSent, setRequestSent] = useState(false);
-
+	const classes = useStyles();
+	const navigate = useNavigate()
 	const initialFormData = Object.freeze({
 		email: '',
 	});
-
 	const [formData, updateFormData] = useState(initialFormData);
 
 	const handleChange = (e) => {
@@ -50,54 +48,86 @@ const ResetPassword = () => {
 
 	const {email} = formData;
 
-	const handleSubmit = (e) => {
+	const body = {email: formData.email}
+
+	const [resetPassword, {isLoading, isSuccess, isError }] = useResetPasswordMutation();
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		
-		// reset_password(email);
-    	setRequestSent(true);
+		if (body) {
+			try {
+				await resetPassword(body).unwrap()
+				.then((payload) => console.log('fulfilled', payload))
+			} catch (err) {
+				console.error('Failed to reset: ', err)
+			}
+		}
 	};
 
-	const classes = useStyles();
+	let content;
 
-	if (requestSent) {
-		return <Navigate to='/'/>
+	if (isSuccess) {
+		content = (
+			<Container component="main" maxWidth="xs">
+				<CssBaseline />
+				<div className={classes.paper}>
+					<Typography component="h1" variant="h5">
+						Your request for password reset was successfull. 
+						You can now close this page and check your email then the link we to confirm your password reset
+					</Typography>
+				</div>
+			</Container>
+		)
+	} else if (isError) {
+		content = (
+			<Container component="main" maxWidth="xs">
+				<CssBaseline />
+				<div className={classes.paper}>
+					<Typography component="h1" variant="h5">
+						Soomething went wrong
+					</Typography>
+				</div>
+			</Container>
+		)
+	} else {
+		content = (
+			<Container component="main" maxWidth="xs">
+				<CssBaseline />
+				<div className={classes.paper}>
+					<Typography component="h1" variant="h5">
+						Enter your email to request password reset
+					</Typography>
+					<form className={classes.form} noValidate>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							id="email"
+							label="Email Address"
+							name="email"
+							value={email}
+							autoComplete="email"
+							autoFocus
+							onChange={handleChange}
+						/>
+						<Button
+							type="submit"
+							fullWidth
+							variant="contained"
+							color="primary"
+							className={classes.submit}
+							onClick={handleSubmit}
+						>
+							{isLoading ? <Spinner /> : 'Reset'}
+						</Button>
+					</form>
+				</div>
+			</Container>
+		);
 	}
 
-	return (
-		<Container component="main" maxWidth="xs">
-			<CssBaseline />
-			<div className={classes.paper}>
-				<Typography component="h1" variant="h5">
-					Request password request
-				</Typography>
-				<form className={classes.form} noValidate>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						id="email"
-						label="Email Address"
-						name="email"
-						value={email}
-						autoComplete="email"
-						autoFocus
-						onChange={handleChange}
-					/>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						className={classes.submit}
-						onClick={handleSubmit}
-					>
-						Reset
-					</Button>
-				</form>
-			</div>
-		</Container>
-	);
+	return content;
 }
 
 export default ResetPassword;

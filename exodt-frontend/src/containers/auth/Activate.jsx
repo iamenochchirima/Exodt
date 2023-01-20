@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useVerifyUserMutation } from '../../redux/features/api/authApi';
+import { useVerifyEmailMutation } from '../../redux/features/api/authApi';
 import Spinner from '../../components/Spinner'
 
 
 const Activate = () => {
     const {uid, token } = useParams();
     const navigate = useNavigate();
-    const [verifyUser, { isLoading, isSuccess}] = useVerifyUserMutation()
+    const [verifyUser, { isLoading, isSuccess}] = useVerifyEmailMutation()
     const body = { uid, token };
 
     const handleSubmit = async () => {
@@ -33,7 +33,7 @@ const Activate = () => {
                 className='d-flex flex-column justify-content-center align-items-center'
                 style={{ marginTop: '200px' }}
             >
-                <h1>Verify your Account:</h1>
+                <h1>Verify your Email:</h1>
                 <button
                     onClick={handleSubmit}
                     style={{ marginTop: '50px' }}

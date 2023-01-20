@@ -1,17 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { apiSlice } from './apiSlice'
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.REACT_APP_API_URL}`,
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem('accessToken')
-      if (token) {
-        headers.set('authorization', `JWT ${token}`)  
-        return headers
-      }
-    },
-  }),
+export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserDetails: builder.query({
       query: () => '/auth/users/me/'
@@ -22,7 +11,7 @@ export const authApi = createApi({
     getPost: builder.query({
       query: id => `/api/post/${id}/`
     }),
-    verifyUser: builder.mutation({
+    verifyEmail: builder.mutation({
       query: (body) => ({
         url: '/auth/users/activation/',
         method: 'POST',
@@ -43,6 +32,20 @@ export const authApi = createApi({
         body,
       })
     }),
+    resetPassword: builder.mutation({
+      query: (body) => ({
+        url: '/auth/users/reset_password/',
+        method: 'POST',
+        body,
+      })
+    }),
+    resetPasswordConfirm: builder.mutation({
+      query: (body) => ({
+        url: '/auth/users/reset_password_confirm/',
+        method: 'POST',
+        body,
+      })
+    }),
   }),
 })
 
@@ -50,7 +53,9 @@ export const {
   useGetUserDetailsQuery, 
   useGetPostsQuery, 
   useGetPostQuery,
-  useVerifyUserMutation,
+  useVerifyEmailMutation,
   useSignUpMutation,
   useLogInMutation,
+  useResetPasswordMutation,
+  useResetPasswordConfirmMutation,
 } = authApi
