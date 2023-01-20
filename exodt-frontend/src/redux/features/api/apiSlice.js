@@ -15,7 +15,7 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions)
-    console.log(result, 'Here~!!!!!!!')
+    console.log(result)
     // const refreshToken = localStorage.getItem('refreshToken');
     // if (result?.error?.status === 401 &&
     //     refreshToken === null

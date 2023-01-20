@@ -86,7 +86,7 @@ const SignUp = () => {
 	if (isSuccess) {
 		content = (
 			<div>
-        		<p>Check your email and very your email. Return here when you're done</p>
+        		<p>You have successfully signed up, check your email and very your email. Return here when you're done</p>
     		</div>
 		)
 	} else if (isError) {
