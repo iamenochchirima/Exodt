@@ -248,7 +248,7 @@ const authLinks = () => (
           {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
-            ? `Logged in as ${userInfo.email}`
+            ? `Logged in as ${userInfo.username}`
             : "You're not logged in"}
         </span>
           <Link

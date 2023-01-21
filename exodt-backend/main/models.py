@@ -35,7 +35,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(default="No bio", max_length=300)
     profile_picture = models.ImageField(default="profile_pic.jpg", upload_to="profile_pictures/")
-    connections = models.ManyToManyField(User, blank=True, related_name="friends")
+    connections = models.ManyToManyField(User, blank=True, related_name="connections")
     country = models.CharField(max_length=225, blank=False)
     fav_field_os = models.CharField(max_length=225, blank=True)
     followers = models.CharField(max_length=225, blank=True)

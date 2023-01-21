@@ -8,6 +8,7 @@ import LogOut from './containers/auth/LogOut';
 import PostView from './containers/posts/PostView';
 import ProfileView from './containers/profile/ProfileView';
 import Search from './containers/posts/Search';
+import Chat from './containers/chat/Chat';
 // import Admin from './Admin';
 // import Create from './redux/admin/Create';
 // import Edit from './redux/admin/Edit';
@@ -27,6 +28,7 @@ function App() {
         <Route path="/logout" element={<LogOut />} />
         <Route path="/post/:id" element={<PostView />} />
         <Route path="/search" element={<Search/>} />
+        <Route path="/chat" element={<Chat/>} />
         {/* <Route exact path="/admin" element={<Admin/>} /> */}
 				{/* <Route exact path="/admin/create" element={<Create/>} /> */}
 				{/* <Route exact path="/admin/delete" element={<Delete/>} /> */}

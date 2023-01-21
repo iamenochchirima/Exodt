@@ -43,6 +43,7 @@ const SignUp = () => {
 	const initialFormData = Object.freeze({
 		first_name: '',
 		last_name: '',
+		username: '',
 		email: '',
 		password: '',
 		re_password: '',
@@ -54,11 +55,12 @@ const SignUp = () => {
 		updateFormData({...formData, [e.target.name]: e.target.value.trim(), });
 	};
 
-	const {first_name, last_name, email, password, re_password} = formData;
+	const {first_name, last_name, username, email, password, re_password} = formData;
 
 	const body = {
 		first_name: formData.first_name, 
 		last_name: formData.last_name,
+		username: formData.username,
 		email: formData.email,
 		password: formData.password,
 		re_password: formData.re_password
@@ -105,18 +107,18 @@ const SignUp = () => {
 						Create your account
 					</Typography>
 					<form className={classes.form} noValidate>
-						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								id="first_name"
-								label="Firstname"
-								name="first_name"
-								value={first_name}
-								autoComplete="first_name"
-								onChange={handleChange}
-							/>
+					<Grid item xs={12}>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							id="first_name"
+							label="Firstname"
+							name="first_name"
+							value={first_name}
+							autoComplete="first_name"
+							onChange={handleChange}
+						/>
 						</Grid>
 						<TextField
 							variant="outlined"
@@ -127,6 +129,16 @@ const SignUp = () => {
 							name="last_name"
 							value={last_name}
 							autoComplete="last_name"
+							onChange={handleChange}
+						/>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							id="username"
+							label="Username"
+							name="username"
+							value={username}
 							onChange={handleChange}
 						/>
 						<TextField
