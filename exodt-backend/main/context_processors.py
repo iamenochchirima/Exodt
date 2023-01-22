@@ -1,17 +1,17 @@
-from . models import Profile, Connection
+from . models import UserProfile, Connection
 
 def profile_pic(request):
     if request.user.is_authenticated:
-        profiles = Profile.objects.all().count()
+        profiles = UserProfile.objects.all().count()
         print(profiles)
-        profile = Profile.objects.get(user=request.user)
-        picture = profile.profile_picture
+        profile = UserProfile.objects.get(user=request.user)
+        picture = profile.profile_image
         return {'pic':picture}
     return {}
 
 def invitations_recieved_count(request):
     if request.user.is_authenticated:
-        profile = Profile.objects.get(user=request.user)
+        profile = UserProfile.objects.get(user=request.user)
         query_set_count = Connection.objects.invitations_recieved(profile).count()
         return {'invites_num': query_set_count}
     return {}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Post, Like
-from main.models import Profile
+from main.models import UserProfile
 from django.http import JsonResponse
 from .forms import PostModelForm, CommentModelForm
 from django.views.generic import UpdateView, DeleteView
@@ -12,7 +12,7 @@ from django.contrib import messages
 @login_required
 def main_post_view(request):
     query_set = Post.objects.all()
-    profile = Profile.objects.get(user=request.user)
+    profile = UserProfile.objects.get(user=request.user)
 
     post_added = False
     comment_sent = False
@@ -54,7 +54,7 @@ def like_unlike_post(request):
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
         post = Post.objects.get(id=post_id)
-        profile = Profile.objects.get(user=user)
+        profile = UserProfile.objects.get(user=user)
 
         if profile in post.liked.all():
             post.liked.remove(profile)
@@ -104,7 +104,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('posts:main_post_view')
 
     def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
+        profile = UserProfile.objects.get(user=self.request.user)
         if form.instance.author == profile:
             return super().form_valid(form)
         else:

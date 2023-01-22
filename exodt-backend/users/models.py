@@ -11,6 +11,7 @@ class CustomAccountManager(BaseUserManager):
         other_fields.setdefault('is_superuser', True)
         other_fields.setdefault('is_active', True)
         other_fields.setdefault('is_verified', True)
+        other_fields.setdefault('is_admin', True)
 
         if other_fields.get('is_staff') is not True:
             raise ValueError(
@@ -29,14 +30,8 @@ class CustomAccountManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, first_name=first_name, last_name= last_name, username = username, **other_fields)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
-
-def get_profile_image_filepath(self, filename):
-	return 'profile_images/' + str(self.pk) + '/profile_image.png'
-
-def get_default_profile_image():
-	return "exodt/default_profile_image.png"
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
 
@@ -44,9 +39,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     username = models.CharField(max_length=50, unique=True)
-    profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=get_default_profile_image)
-    bio = models.TextField(max_length=255, blank=True)
     start_date = models.DateTimeField(default=timezone.now)
+    is_admin = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -54,18 +48,26 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     date_joined	= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
-    hide_email = models.BooleanField(default=True)
 
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username' ]
 
+    def __str__(self):
+        return self.username
+
     def get_full_name(self):
         return f"{self.first_name}-{self.last_name}" 
 
     def get_username(self):
-        return self.username
-
-    def __str__(self):
         return self.email
+    
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return True
+    
+    # def get_profile_image_filename(self):
+	# 	return str(self.profile_image)[str(self.profile_image).index('profile_images/' + str(self.pk) + "/"):]

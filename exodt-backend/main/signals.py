@@ -1,14 +1,16 @@
 from django.db.models.signals import post_save, pre_delete
 from users.models import UserAccount
 from django.dispatch import receiver
-from .models import Profile, Connection
+from .models import UserProfile, Connection
 
 @receiver(post_save, sender=UserAccount)
 def post_save_profile_create(sender, instance, created, **kwargs):
-
-    print(instance)
-    if created:
-        Profile.objects.create(user=instance)
+    profile, created = UserProfile.objects.get_or_create(user=instance)
+    profile.first_name = instance.first_name
+    profile.last_name = instance.last_name
+    profile.username = instance.username
+    profile.email = instance.email
+    profile.save()
 
 @receiver(post_save, sender=Connection)
 def post_save_add_connection(sender, instance, created, **kwargs):

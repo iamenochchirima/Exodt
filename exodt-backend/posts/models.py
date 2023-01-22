@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from main.models import Profile
+from main.models import UserProfile
 from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
@@ -26,14 +26,14 @@ class Post(models.Model):
     title = models.CharField(max_length=250)
     content = models.TextField()
     image = models.ImageField(_('Image'), upload_to=upload_to, blank=True, default='posts/default.jpg', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
-    liked = models.ManyToManyField(Profile, default=None, related_name='liked', blank=True)
+    liked = models.ManyToManyField(UserProfile, default=None, related_name='liked', blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
     excerpt = models.TextField(null=True)
     slug = models.SlugField(max_length=250, unique_for_date='created')
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=options, default='published')
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='posts')
+    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='posts')
 
     postobjects = PostObjects()
     objects = models.Manager()
@@ -51,7 +51,7 @@ class Post(models.Model):
         ordering = ('-created',)
 
 class Comment(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     body = models.TextField(max_length=300)
     created = models.DateTimeField(auto_now_add=True)
@@ -66,7 +66,7 @@ LIKE_CHOICES = (
 )
 
 class Like(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     value = models.CharField(choices=LIKE_CHOICES, max_length=8)
     created = models.DateTimeField(auto_now_add=True)

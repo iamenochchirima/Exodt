@@ -10,8 +10,8 @@ User = get_user_model()
 class ProfileManager(models.Manager):
 
     def get_all_unconnected_profiles(self, sender):
-        profiles = Profile.objects.all().exclude(user=sender)
-        profile = Profile.objects.get(user=sender)
+        profiles = UserProfile.objects.all().exclude(user=sender)
+        profile = UserProfile.objects.get(user=sender)
         query_set = Connection.objects.filter(Q(sender=profile) | Q(receiver=profile))
         
         accepted = set([])
@@ -25,25 +25,32 @@ class ProfileManager(models.Manager):
         return available
 
     def get_all_profiles(self, me):
-        profiles = Profile.objects.all().exclude(user=me)
+        profiles = UserProfile.objects.all().exclude(user=me)
         return profiles
 
-class Profile(models.Model):
+def get_profile_image_filepath(self, filename):
+	return 'profile_images/' + str(self.pk) + '/profile_image.png'
+
+def get_default_profile_image():
+	return "exodt/default_profile_image.png"
+
+class UserProfile(models.Model):
     first_name = models.CharField(max_length=225, blank=True)
     last_name = models.CharField(max_length=225, blank=True)
-    email = models.EmailField(max_length=200, blank=False)
+    email = models.EmailField(max_length=200, unique=True ,blank=True)
+    username = models.CharField(max_length=50, unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(default="No bio", max_length=300)
-    profile_picture = models.ImageField(default="profile_pic.jpg", upload_to="profile_pictures/")
+    bio = models.TextField(default="No bio", max_length=300, blank = True)
+    profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=get_default_profile_image)
     connections = models.ManyToManyField(User, blank=True, related_name="connections")
-    country = models.CharField(max_length=225, blank=False)
+    country = models.CharField(max_length=225, blank=True)
     fav_field_os = models.CharField(max_length=225, blank=True)
     followers = models.CharField(max_length=225, blank=True)
     following = models.CharField(max_length=225, blank=True)
-    slug = models.SlugField(unique=True, blank=True)
     profile_type = models.CharField(max_length=200, blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    hide_email = models.BooleanField(default=True)
 
     objects = ProfileManager()
 
@@ -81,30 +88,6 @@ class Profile(models.Model):
                 total_likes += item.liked.all().count()
         return total_likes
 
-    __initial_first_name = None
-    __initial_last_name = None
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.__initial_first_name = self.first_name
-        self.__initial_last_name = self.last_name
-
-
-    def save(self, *args, **kwargs):
-        available = False
-        to_slug = self.slug
-        if self.first_name != self.__initial_first_name or self.last_name != self.__initial_last_name or self.slug == None:
-            if self.first_name and self.last_name:
-                to_slug = slugify(str(self.first_name) + " " + str(self.last_name))
-                available = Profile.objects.filter(slug=to_slug).exists()
-                while available:
-                    to_slug = slugify(to_slug + " " + str(get_random_value()))
-                    available = Profile.objects.filter(slug=to_slug).exists()
-        else:
-            to_slug = str(self.user)
-        self.slug = to_slug
-        super().save(*args, **kwargs)
-
 STATUS_CHOICES = (
     ('send', 'Send'),
     ('accepted', 'Accepted')
@@ -117,8 +100,8 @@ class ConnectionManager(models.Manager):
         return query_set
 
 class Connection(models.Model):
-    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="sender")
-    receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="receiver")
+    sender = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="sender")
+    receiver = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="receiver")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)

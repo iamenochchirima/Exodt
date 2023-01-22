@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .models import Profile, Connection
-from .forms import ProfileModelForm
+from .models import UserProfile, Connection
+from .forms import UserProfileModelForm
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -10,8 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 @login_required
 def profile_view(request):
     
-    user_profile = Profile.objects.get(user=request.user)
-    form = ProfileModelForm(request.POST or None, request.FILES or None, instance=user_profile)
+    user_profile = UserProfile.objects.get(user=request.user)
+    form = UserProfileModelForm(request.POST or None, request.FILES or None, instance=user_profile)
     confirm = False
 
     if request.method == 'POST':
@@ -27,7 +27,7 @@ def profile_view(request):
 
 @login_required
 def invites_recieved_view(request):
-    user_profile = Profile.objects.get(user=request.user)
+    user_profile = UserProfile.objects.get(user=request.user)
     query_set = Connection.objects.invitations_recieved(user_profile)
     result = list(map(lambda x: x.sender, query_set))
     is_empty = False
@@ -42,8 +42,8 @@ def invites_recieved_view(request):
 def accept_invitation(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')
-        sender = Profile.objects.get(pk=pk)
-        receiver = Profile.objects.get(user=request.user)
+        sender = UserProfile.objects.get(pk=pk)
+        receiver = UserProfile.objects.get(user=request.user)
         con = get_object_or_404(Connection, sender=sender, receiver=receiver)
 
         if con.status == 'send':
@@ -55,8 +55,8 @@ def accept_invitation(request):
 def decline_invitation(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')
-        sender = Profile.objects.get(pk=pk)
-        receiver = Profile.objects.get(user=request.user)
+        sender = UserProfile.objects.get(pk=pk)
+        receiver = UserProfile.objects.get(user=request.user)
         con = get_object_or_404(Connection, sender=sender, receiver=receiver)
         con.delete()
     return redirect('main:invites')
@@ -64,20 +64,20 @@ def decline_invitation(request):
 @login_required
 def invite_profile_list_view(request):
     user = request.user
-    query_set = Profile.objects.get_all_unconnected_profiles(user)
+    query_set = UserProfile.objects.get_all_unconnected_profiles(user)
 
     return render(request, 'main/toinvite_list.html', {
         'qs': query_set
     })
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
-    model = Profile
+    model = UserProfile
     template_name = 'main/profile_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = User.objects.get(username__iexact=self.request.user.username)
-        profile = Profile.objects.get(user=user)
+        profile = UserProfile.objects.get(user=user)
         con_reciever = Connection.objects.filter(sender=profile)
         con_sender = Connection.objects.filter(receiver=profile)
         con_r = []
@@ -96,17 +96,17 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
 
 class ProfileListView(LoginRequiredMixin, ListView):
-    model = Profile
+    model = UserProfile
     template_name = 'main/profile_list.html'
 
     def get_queryset(self):
-        query_set = Profile.objects.get_all_profiles(self.request.user)
+        query_set = UserProfile.objects.get_all_profiles(self.request.user)
         return query_set
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = User.objects.get(username__iexact=self.request.user.username)
-        profile = Profile.objects.get(user=user)
+        profile = UserProfile.objects.get(user=user)
         con_reciever = Connection.objects.filter(sender=profile)
         con_sender = Connection.objects.filter(receiver=profile)
         con_r = []
@@ -130,8 +130,8 @@ def send_invitation(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')
         user = request.user
-        sender = Profile.objects.get(user=user)
-        receiver = Profile.objects.get(pk=pk)
+        sender = UserProfile.objects.get(user=user)
+        receiver = UserProfile.objects.get(pk=pk)
 
         con = Connection.objects.create(sender=sender, receiver=receiver, status='send')
 
@@ -144,8 +144,8 @@ def remove_from_connections(request):
     if request.method == 'POST':
         pk = request.POST.get('profile_pk')
         user = request.user
-        sender = Profile.objects.get(user=user)
-        receiver = Profile.objects.get(pk=pk)
+        sender = UserProfile.objects.get(user=user)
+        receiver = UserProfile.objects.get(pk=pk)
 
         con = Connection.objects.get(Q(sender=sender) & Q(receiver=receiver) | Q(sender=receiver) & Q(receiver=sender))
 

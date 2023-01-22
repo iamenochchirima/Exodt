@@ -1,7 +1,7 @@
 from rest_framework import generics
 from posts.models import Post
-from main.models import Profile
-from . serializers import PostSerializer, ProfileSerializer
+from main.models import UserProfile
+from . serializers import PostSerializer, UserProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, BasePermission, IsAuthenticatedOrReadOnly
@@ -68,13 +68,13 @@ class DeletePost(generics.RetrieveDestroyAPIView):
 
 class ProfileList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all()
 
 class ProfileDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ProfileSerializer
+    serializer_class = UserProfileSerializer
 
     def get_object(self, queryset=None, **kwargs):
         id = self.kwargs.get('pk')
-        return get_object_or_404(Profile, id=id)
+        return get_object_or_404(UserProfile, id=id)
