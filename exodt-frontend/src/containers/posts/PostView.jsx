@@ -1,12 +1,16 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 //MaterialUI
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Button from '@material-ui/core/Button';
 
-import { useGetPostDetailsQuery } from '../../redux/features/api/postsApi';
+import { useGetPostDetailsQuery, useDeletePostMutation } from '../../redux/features/api/postsApi';
 import Spinner from '../../components/Spinner';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
 		flexDirection: 'column',
 		alignItems: 'center',
 	},
+	button: {
+		margin: theme.spacing(1),
+	  },	
 }));
 
 export default function Post() {
@@ -23,7 +30,48 @@ export default function Post() {
 	const classes = useStyles();
 
 	const { data: post, isFetching, isSuccess, isError, error  } = useGetPostDetailsQuery(id);
+	const { userProfileDetails} = useSelector((state) => state.auth);
 
+	let isAuthor = false
+
+	if (userProfileDetails) {
+		if (userProfileDetails.user === post.author) {
+			isAuthor = true
+		}
+	}
+
+	const authorActions = () => (
+		<Fragment>
+			<Link
+				color="textPrimary"
+				to={'/edit-post/' + post.id}
+				className={classes.link}
+				label="Edit"
+			>
+				<Button 
+					variant="contained" 
+					color="primary"
+					className={classes.button}
+					startIcon={<EditIcon />}
+				>
+					Edit
+				</Button>
+			</Link>
+			<Button 
+					variant="contained" 
+					color="primary"
+					className={classes.button}
+					startIcon={<DeleteIcon />}
+					onClick={handleDelete}
+				>
+					Delete
+				</Button>
+		</Fragment>
+	)
+
+	const handleDelete = () => {
+
+	}
 	let content
 
 	if (isFetching) {
@@ -46,6 +94,7 @@ export default function Post() {
 						>
 							{post.content}
 						</Typography>
+						{isAuthor ? authorActions() : null }
 					</Container>
 				</div>
 			</Container>

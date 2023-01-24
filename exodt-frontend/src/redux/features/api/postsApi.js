@@ -15,6 +15,20 @@ export const postsApi = apiSlice.injectEndpoints({
             body,
           })
         }),
+        EditPost: builder.mutation({
+          query: ({id, body}) => ({
+            url: `/api/post/edit/${id}/`,
+            method: 'PUT',
+            body,
+          })
+        }),
+        DeletePost: builder.mutation({
+          query: (body) => ({
+            url: '/api/post/delete/',
+            method: 'DELETE',
+            body,
+          })
+        }),
     }),
 });
 
@@ -22,4 +36,6 @@ export const {
     useGetPostsQuery, 
     useGetPostDetailsQuery,
     useCreatePostMutation,
+    useEditPostMutation,
+    useDeletePostMutation
 } = postsApi

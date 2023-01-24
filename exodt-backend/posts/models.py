@@ -24,7 +24,7 @@ class Post(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return self.title
+        return self.content
 
     def num_likes(self):
         return self.liked.all().count()

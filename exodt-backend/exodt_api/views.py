@@ -38,7 +38,7 @@ class PostListDetailFilter(generics.ListAPIView):
     search_fields = ['^slug']
 
 class CreatePost(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):

@@ -39,10 +39,15 @@ const CreatePost = () => {
 	const classes = useStyles();
 	const navigate = useNavigate();
 
+	const clearData = () => {
+		setContent('');
+		setImage('null');
+	}
+
  	const [content, setContent] = useState('');
 	const [image, setImage] = useState(null);
 
-	const { userInfo, isAuthenticated, userProfileDetails} = useSelector((state) => state.auth);
+	const { userProfileDetails} = useSelector((state) => state.auth);
 
 	const [submitPost, {isLoading, isSuccess}] = useCreatePostMutation()
 
@@ -50,11 +55,12 @@ const CreatePost = () => {
 		e.preventDefault();
 		let formData = new FormData();
 
-		console.log('Before appending: ', formData);
-
 		formData.append('content', content);
 		formData.append('author', userProfileDetails.id)
-		formData.append('image', image);
+		
+		if (image) {
+			formData.append('image', image);
+		}
 
 		if (formData) {
 			try {
@@ -64,7 +70,7 @@ const CreatePost = () => {
 				console.error('Failed to post: ', err)
 			}
 		}
-		// window.location.reload();
+		clearData();
 	};
 
 	useEffect(() => {

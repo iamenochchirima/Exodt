@@ -11,7 +11,7 @@ import Search from './containers/posts/Search';
 import Chat from './containers/chat/Chat';
 import CreatePost from './containers/posts/CreatePost';
 // import Admin from './Admin';
-// import Edit from './redux/admin/Edit';
+import EditPost from './containers/posts/EditPost';
 // import Delete from './redux/admin/Delete';
 import Activate from './containers/auth/Activate';
 import ResetPassword from './containers/auth/ResetPassword';
@@ -29,10 +29,9 @@ function App() {
         <Route path="/post/:id" element={<PostView />} />
         <Route path="/search" element={<Search/>} />
         <Route path="/chat" element={<Chat/>} />
-        {/* <Route exact path="/admin" element={<Admin/>} /> */}
 				<Route exact path="create-post" element={<CreatePost/>} />
 				{/* <Route exact path="/admin/delete" element={<Delete/>} /> */}
-				{/* <Route exact path="/admin/edit/:id" element={<Edit/>} /> */}
+				<Route exact path="/edit-post/:id" element={<EditPost/>} />
 				<Route exact path="/reset-password" element={<ResetPassword/>} />
 				<Route exact path="/password/reset/confirm/:uid/:token" element={<ResetPasswordConfirm/>} />
 				<Route exact path="/activate/:uid/:token" element={<Activate/>} />
