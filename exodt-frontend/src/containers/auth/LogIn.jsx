@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux'
 import { useLogInMutation } from '../../redux/features/api/authApi';
-import { setTokens } from '../../redux/features/auth/authSlice'
+import { setTokens } from '../../redux/features/api/authSlice'
 import Spinner from '../../components/Spinner'
 
 //MaterialUI
@@ -54,6 +54,8 @@ const Login = () => {
 	const {email, password} = formData;
 	const [logIn, { data, isLoading, isSuccess}] = useLogInMutation()
 	const body = {email: formData.email, password: formData.password}
+
+	console.log(formData);
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (body){

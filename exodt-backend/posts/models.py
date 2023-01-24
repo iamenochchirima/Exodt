@@ -13,29 +13,14 @@ def upload_to(instance, filename):
     return 'posts/{filename}'.format(filename=filename)
 
 class Post(models.Model):
-
-    class PostObjects(models.Manager):
-        def get_queryset(self):
-            return super().get_queryset() .filter(status='published')
-
-    options = (
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-    )
-
-    title = models.CharField(max_length=250)
     content = models.TextField()
     image = models.ImageField(_('Image'), upload_to=upload_to, blank=True, default='posts/default.jpg', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
     liked = models.ManyToManyField(UserProfile, default=None, related_name='liked', blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
-    excerpt = models.TextField(null=True)
-    slug = models.SlugField(max_length=250, unique_for_date='created')
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=options, default='published')
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='posts')
-
-    postobjects = PostObjects()
+    
     objects = models.Manager()
 
     def __str__(self):

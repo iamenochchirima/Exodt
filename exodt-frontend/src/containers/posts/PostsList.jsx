@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { useSelector, useDispatch} from 'react-redux';
 
-import { useGetPostsQuery } from '../../redux/features/api/authApi';
+import { useGetPostsQuery } from '../../redux/features/api/postsApi';
 import Spinner from '../../components/Spinner';
 
 const useStyles = makeStyles((theme) => ({

@@ -4,7 +4,7 @@ from main.models import UserProfile
 from . serializers import PostSerializer, UserProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, BasePermission, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, AllowAny, BasePermission, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
@@ -38,7 +38,7 @@ class PostListDetailFilter(generics.ListAPIView):
     search_fields = ['^slug']
 
 class CreatePost(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):
@@ -76,5 +76,5 @@ class ProfileDetail(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
 
     def get_object(self, queryset=None, **kwargs):
-        id = self.kwargs.get('pk')
-        return get_object_or_404(UserProfile, id=id)
+        userId = self.kwargs.get('pk')
+        return get_object_or_404(UserProfile, id=userId)

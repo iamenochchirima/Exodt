@@ -5,11 +5,11 @@ export const authApi = apiSlice.injectEndpoints({
     getUserDetails: builder.query({
       query: () => '/auth/users/me/'
     }),
-    getPosts: builder.query({
-      query: () => '/api/'
+    getUserProfiles: builder.query({
+      query: () => '/api/profiles/'
     }),
-    getPost: builder.query({
-      query: id => `/api/post/${id}/`
+    getUserProfileDetails: builder.query({
+      query: id => `/api/profiles/${id}`
     }),
     verifyEmail: builder.mutation({
       query: (body) => ({
@@ -51,8 +51,8 @@ export const authApi = apiSlice.injectEndpoints({
 
 export const { 
   useGetUserDetailsQuery, 
-  useGetPostsQuery, 
-  useGetPostQuery,
+  useGetUserProfilesQuery,
+  useGetUserProfileDetailsQuery,
   useVerifyEmailMutation,
   useSignUpMutation,
   useLogInMutation,

@@ -1,7 +1,7 @@
 import React, {useEffect } from 'react';
 // import axiosInstance from '../../Axios';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../redux/features/auth/authSlice'
+import { logout } from '../../redux/features/api/authSlice'
 import { useDispatch} from 'react-redux';
 
 export default function SignUp() {

@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import { useGetPostQuery } from '../../redux/features/api/authApi';
+import { useGetPostDetailsQuery } from '../../redux/features/api/postsApi';
 import Spinner from '../../components/Spinner';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,7 @@ export default function Post() {
 	const { id } = useParams();
 	const classes = useStyles();
 
-	const { data: post, isFetching, isSuccess, isError, error  } = useGetPostQuery(id);
+	const { data: post, isFetching, isSuccess, isError, error  } = useGetPostDetailsQuery(id);
 
 	let content
 
@@ -37,22 +37,14 @@ export default function Post() {
 				<div className={classes.paper}></div>
 				<div className={classes.heroContent}>
 					<Container maxWidth="sm">
-						<Typography
-							component="h1"
-							variant="h2"
-							align="center"
-							color="textPrimary"
-							gutterBottom
-						>
-							{post.title}
-						</Typography>
+						
 						<Typography
 							variant="h5"
 							align="center"
 							color="textSecondary"
 							paragraph
 						>
-							{post.excerpt}
+							{post.content}
 						</Typography>
 					</Container>
 				</div>

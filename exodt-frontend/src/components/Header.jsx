@@ -2,6 +2,7 @@ import React, { Fragment, useEffect} from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import { Avatar } from '@mui/material';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
@@ -20,7 +21,8 @@ import { useNavigate, NavLink, Link} from 'react-router-dom';
 
 import { useSelector, useDispatch} from 'react-redux';
 import { useGetUserDetailsQuery } from '../redux/features/api/authApi';
-import { setCredentials } from '../redux/features/auth/authSlice'
+import { setCredentials, setUserProfileDetails } from '../redux/features/api/authSlice';
+import { useGetUserProfileDetailsQuery } from '../redux/features/api/authApi';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -93,6 +95,19 @@ const Header = () => {
   const dispatch = useDispatch()
 
   const { userInfo, isAuthenticated} = useSelector((state) => state.auth)
+
+  let id
+  if (userInfo) {
+    id = userInfo.id;
+  }
+
+  const {data: userProfileDetails} = useGetUserProfileDetailsQuery(id, {pollingInterval: 900000,
+    refetchOnMountOrArgChange: true,
+    skip: false,})
+
+    useEffect(() => {
+      if (userProfileDetails) dispatch(setUserProfileDetails(userProfileDetails));
+    }, [userProfileDetails, dispatch])
 
   const { data, isFetching } = useGetUserDetailsQuery('userDetails', {
       pollingInterval: 900000,
@@ -279,7 +294,15 @@ const authLinks = () => (
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              {userProfileDetails ? (
+                <Avatar
+                src={userProfileDetails.profile_image} 
+                alt="User Profile" 
+                sx={{ width: 24, height: 24 }}
+                />
+              ) : (
+                <AccountCircle />
+              )}
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

@@ -6,9 +6,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id','title','content','image','liked','category','excerpt','slug','updated','created','status','author')
+        fields = ('id','content','image','liked','updated','created','author')
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('id','first_name','last_name','email','user','bio','profile_picture','connections','country','fav_field_os','followers','following','slug','profile_type','updated','created')
+        fields = ('id','first_name','last_name','email','user','bio','profile_image','connections','country','fav_field_os','followers','following','profile_type','updated','created')
