@@ -32,7 +32,7 @@ def get_profile_image_filepath(self, filename):
 	return 'profile_images/' + str(self.pk) + '/profile_image.png'
 
 def get_default_profile_image():
-	return "exodt/default_profile_image.png"
+	return "default_image/default_profile_image.png"
 
 class UserProfile(models.Model):
     first_name = models.CharField(max_length=225, blank=True)
@@ -48,8 +48,8 @@ class UserProfile(models.Model):
     followers = models.CharField(max_length=225, blank=True)
     following = models.CharField(max_length=225, blank=True)
     profile_type = models.CharField(max_length=200, blank=True)
-    updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     hide_email = models.BooleanField(default=True)
 
     objects = ProfileManager()
@@ -57,9 +57,8 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.first_name}-{self.created}"
 
-    def get_absolute_url(self):
-        return reverse("main:profile_detail", kwargs={"slug": self.slug})
-    
+    def get_profile_image_filename(self):
+        return str(self.profile_image)[str(self.profile_image).index('profile_images/' + str(self.pk) + "/"):]
 
     def get_connections(self):
         return self.connections.all()

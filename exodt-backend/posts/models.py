@@ -9,12 +9,12 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-def upload_to(instance, filename):
-    return 'posts/{filename}'.format(filename=filename)
+def posts_images_upload_path(instance, filename):
+    return 'posts_images/{filename}'.format(filename=filename)
 
 class Post(models.Model):
     content = models.TextField()
-    image = models.ImageField(_('Image'), upload_to=upload_to, blank=True, default='posts/default.jpg', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
+    image = models.ImageField(_('Image'), upload_to=posts_images_upload_path, blank=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
     liked = models.ManyToManyField(UserProfile, default=None, related_name='liked', blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
     updated = models.DateTimeField(auto_now=True)
