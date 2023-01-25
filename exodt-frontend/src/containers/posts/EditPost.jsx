@@ -45,7 +45,6 @@ const EditPost = () => {
     const [post, setPost] = useState({});
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
-    const [error, setError] = useState(null);
 
 	const [editPost, {isLoading, isSuccess}] = useEditPostMutation()
     const {data} = useGetPostDetailsQuery(postId)
@@ -56,6 +55,7 @@ const EditPost = () => {
             setPost(data.post);
             setContent(data.content);
             setImage(data.image);
+            console.log(data.image, 'here');
         }
     }, [data]);
 
@@ -116,7 +116,7 @@ const EditPost = () => {
                             type="file"
                             onChange={e => setImage(e.target.files[0])}
                         />
-                        {data.image && <button onClick={handleRemoveImage}>Remove Image</button>}
+                        {image && <button onClick={handleRemoveImage}>Remove Image</button>}
                     </Grid>
                 </Grid>
                 <Button

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 //MaterialUI
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 
 import { useGetPostDetailsQuery, useDeletePostMutation } from '../../redux/features/api/postsApi';
 import Spinner from '../../components/Spinner';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -26,11 +27,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Post() {
+	const navigate = useNavigate();
 	const { id } = useParams();
 	const classes = useStyles();
 
 	const { data: post, isFetching, isSuccess, isError, error  } = useGetPostDetailsQuery(id);
 	const { userProfileDetails} = useSelector((state) => state.auth);
+	const [deletePost, {isLoading: deleteSuccess}] = useDeletePostMutation();
 
 	let isAuthor = false
 
@@ -39,6 +42,16 @@ export default function Post() {
 			isAuthor = true
 		}
 	}
+
+	const handleDelete = () => {
+		deletePost(id);
+	}
+
+	useEffect(() => {
+		if (deleteSuccess) {
+			navigate('/');
+		}
+	},[navigate, deleteSuccess])
 
 	const authorActions = () => (
 		<Fragment>
@@ -64,14 +77,10 @@ export default function Post() {
 					startIcon={<DeleteIcon />}
 					onClick={handleDelete}
 				>
-					Delete
+					{deleteSuccess? <Spinner/> : 'Delete'}
 				</Button>
 		</Fragment>
 	)
-
-	const handleDelete = () => {
-
-	}
 	let content
 
 	if (isFetching) {
