@@ -19,7 +19,7 @@ def get_messages_attachments_filepath(instance, filename):
 
 class MessageAttachment(models.Model):
     message = models.ForeignKey( Message, related_name="message_attachments", on_delete=models.CASCADE)
-    attachment = models.FileField( upload_to=get_messages_attachments_filepath)
+    attachment = models.FileField( upload_to=get_messages_attachments_filepath, blank=True)
     caption = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
