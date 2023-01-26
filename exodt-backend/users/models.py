@@ -45,6 +45,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
+    is_online = models.DateTimeField(default=timezone.now)
     date_joined	= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -68,6 +69,3 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return True
-    
-    # def get_profile_image_filename(self):
-	# 	return str(self.profile_image)[str(self.profile_image).index('profile_images/' + str(self.pk) + "/"):]

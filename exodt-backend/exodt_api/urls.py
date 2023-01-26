@@ -1,16 +1,16 @@
 from . import views
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+
+router = routers.DefaultRouter()
 
 app_name = 'exodt_api'
 
+router.register(r'messages', views.MessageView)
+router.register(r'posts', views.PostsView)
+router.register(r'profiles', views.UserProfileView)
+
 urlpatterns = [
-    path('', views.PostList.as_view(), name='listposts'),
-    path('profiles/', views.ProfileList.as_view(), name='listprofiles'),
-    path('profiles/<int:pk>/', views.ProfileDetail.as_view(), name='detailview'),
-    path('post/<int:pk>/', views.PostDetail.as_view(), name='detailcreate'),
-    path('search/', views.PostListDetailFilter.as_view(), name='postsearch'),
-    path('post/create/', views.CreatePost.as_view(), name='createpost'),
-    path('post/edit/postdetail/<int:pk>/', views.AdminPostDetail.as_view(), name='admindetailpost'),
-    path('post/edit/<int:pk>/', views.EditPost.as_view(), name='editpost'),
-    path('post/delete/<int:pk>/', views.DeletePost.as_view(), name='deletepost'),
+    path('', include(router.urls)),
+    # path('search/', views.PostListDetailFilter.as_view(), name='postsearch'),
 ]

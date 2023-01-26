@@ -8,11 +8,14 @@ class Message(models.Model):
     reciever = models.ForeignKey(User, related_name='message_reciever', on_delete=models.CASCADE)
     message = models.TextField(blank=True, null=True)
     is_read = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"message between {self.sender} and {self.reciever}"
+    
+    class Meta:
+        ordering = ("-created_at",)
 
 def get_messages_attachments_filepath(instance, filename):
     return 'messages_attachments/' + str(instance.message.pk) + '/' + filename

@@ -49,6 +49,8 @@ const PostList = () => {
 		isError,
 		error
 	  } = useGetPostsQuery()
+
+	console.log(posts, 'Here')
 	let content
 
 	if (isLoading) {

@@ -31,7 +31,7 @@ class ProfileManager(models.Manager):
 def get_profile_image_filepath(self, filename):
 	return 'profile_images/' + str(self.pk) + '/profile_image.png'
 
-def get_default_profile_image():
+def default_profile_image():
 	return "default_image/default_profile_image.png"
 
 class UserProfile(models.Model):
@@ -39,9 +39,9 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=225, blank=True)
     email = models.EmailField(max_length=200, unique=True ,blank=True)
     username = models.CharField(max_length=50, unique=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='user_profile', on_delete=models.CASCADE)
     bio = models.TextField(default="No bio", max_length=300, blank = True)
-    profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=get_default_profile_image)
+    profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=default_profile_image)
     connections = models.ManyToManyField(User, blank=True, related_name="connections")
     country = models.CharField(max_length=225, blank=True)
     fav_field_os = models.CharField(max_length=225, blank=True)
@@ -55,7 +55,7 @@ class UserProfile(models.Model):
     objects = ProfileManager()
 
     def __str__(self):
-        return f"{self.user.first_name}-{self.created}"
+        return f"{self.user}-{self.created}"
 
     def get_profile_image_filename(self):
         return str(self.profile_image)[str(self.profile_image).index('profile_images/' + str(self.pk) + "/"):]

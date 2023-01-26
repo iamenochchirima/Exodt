@@ -3,28 +3,34 @@ import { apiSlice } from './apiSlice'
 export const postsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getPosts: builder.query({
-          query: () => '/api/'
+          query: () => ({
+            url: '/api/posts',
+            method: 'GET',
+          })
         }),
         getPostDetails: builder.query({
-          query: id => `/api/post/${id}/`
+          query: (id) => ({
+            url: `/api/posts/${id}/`,
+            method: 'GET',
+          })
         }),
         createPost: builder.mutation({
           query: (body) => ({
-            url: '/api/post/create/',
+            url: '/api/posts/',
             method: 'POST',
             body,
           })
         }),
         EditPost: builder.mutation({
           query: ({id, body}) => ({
-            url: `/api/post/edit/${id}/`,
+            url: `/api/posts/${id}/`,
             method: 'PUT',
             body,
           })
         }),
         DeletePost: builder.mutation({
           query: (id) => ({
-            url: `/api/post/delete/${id}`,
+            url: `/api/posts/${id}`,
             method: 'DELETE',
           })
         }),
