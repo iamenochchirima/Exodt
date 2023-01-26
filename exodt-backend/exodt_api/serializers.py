@@ -15,7 +15,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class MessageAttachmentSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = MessageAttachment
         fields = "__all__"

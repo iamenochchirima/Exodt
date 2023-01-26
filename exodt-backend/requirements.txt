@@ -17,6 +17,7 @@ daphne==4.0.0
 defusedxml==0.7.1
 Deprecated==1.2.13
 Django==4.1.4
+django-cleanup==6.0.0
 django-cors-headers==3.13.0
 django-filter==22.1
 django-jquery==3.1.0

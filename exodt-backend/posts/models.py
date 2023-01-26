@@ -2,6 +2,8 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from main.models import UserProfile
 from django.utils.translation import gettext_lazy as _
+import uuid
+import string
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -10,7 +12,9 @@ class Category(models.Model):
         return self.name
 
 def posts_images_upload_path(instance, filename):
-    return 'posts_images/{filename}'.format(filename=filename)
+    ext = filename.split('.')[-1]
+    runique_name = uuid.uuid4().hex
+    return 'posts_images/exodtpost_{}.{}'.format(runique_name, ext)
 
 class Post(models.Model):
     content = models.TextField()
