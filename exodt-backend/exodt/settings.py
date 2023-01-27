@@ -178,6 +178,9 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media_root")
 TEMP = os.path.join(BASE_DIR, 'static_cdn/media_root/temp')
 
 REST_FRAMEWORK = {
+
+    'EXCEPTION_HANDLER': 'exodt.custom_methods.custom_exception_handler',
+
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
@@ -267,6 +270,19 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOW_HEADERS = (
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'accept-encoding',
+    'x-csrftoken',
+    'access-control-allow-origin',
+    'content-disposition'
+)
+CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')
+
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
@@ -281,5 +297,7 @@ CORS_ORIGIN_WHITELIST = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.UserAccount"
+
+SOCKET_SERVER = config("SOCKET_SERVER")
 
 # REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }

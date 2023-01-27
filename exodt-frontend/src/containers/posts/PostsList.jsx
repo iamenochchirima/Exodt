@@ -50,7 +50,6 @@ const PostList = () => {
 		error
 	  } = useGetPostsQuery()
 
-	console.log(posts, 'Here')
 	let content
 
 	if (isLoading) {

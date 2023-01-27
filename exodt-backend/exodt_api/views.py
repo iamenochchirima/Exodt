@@ -15,6 +15,8 @@ from rest_framework.response import Response
 import re
 from django.db.models import Q, Count, Subquery, OuterRef
 import json
+from exodt.settings import SOCKET_SERVER
+import requests
 
 class PostUserWritrPermission(BasePermission):
 
@@ -33,11 +35,16 @@ class PostsView(ModelViewSet):
     # search_fields = ['^slug']
 
 class UserProfileView(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedCustom]
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
 
-    def get_queryset(self):
+    def get_profile(self, request, pk=None):
+        user = get_object_or_404(UserProfile, pk=pk)
+        serializer = UserProfileSerializer(user)
+        return Response(serializer.data)
+
+    def get_search_query(self):
         if self.request.method.lower() != "get":
             return self.queryset
 

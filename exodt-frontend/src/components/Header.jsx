@@ -105,6 +105,8 @@ const Header = () => {
     refetchOnMountOrArgChange: true,
     skip: false,})
 
+    console.log(userProfileDetails, 'Profile data');
+
     useEffect(() => {
       if (userProfileDetails) dispatch(setUserProfileDetails(userProfileDetails));
     }, [userProfileDetails, dispatch])
