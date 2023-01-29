@@ -32,7 +32,7 @@ function App() {
 				<Route exact path="/reset-password" element={<ResetPassword/>} />
 				<Route exact path="/password/reset/confirm/:uid/:token" element={<ResetPasswordConfirm/>} />
 				<Route exact path="/activate/:uid/:token" element={<Activate/>} />
-				<Route exact path="/profiles/:pk" element={<ProfileView/>} />
+				<Route exact path="/user-profile" element={<ProfileView/>} />
         <Route exact path="socket-services" element={<SocketServices/>} />
       </Routes>
     </Layout>
