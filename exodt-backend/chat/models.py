@@ -5,7 +5,7 @@ User = get_user_model()
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='message_sender', on_delete=models.CASCADE)
-    reciever = models.ForeignKey(User, related_name='message_reciever', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='message_reciever', on_delete=models.CASCADE)
     message = models.TextField(blank=True, null=True)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -27,4 +27,4 @@ class MessageAttachment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ("created_at",)
+        ordering = ("-created_at",)
