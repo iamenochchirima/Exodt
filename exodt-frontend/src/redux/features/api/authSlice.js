@@ -7,6 +7,7 @@ const initialState = {
   success: false, 
   isAuthenticated: false,
   userProfileDetails: null,
+  profiles: null,
 }
 
 const authSlice = createSlice({
@@ -22,6 +23,9 @@ const authSlice = createSlice({
     },
     setUserProfileDetails: (state, {payload}) => {
       state.userProfileDetails = payload
+    },
+    setProfiles: (state, {payload}) => {
+      state.profiles = payload
     },
     logout: (state) => {
       localStorage.removeItem('accessToken') 
@@ -39,5 +43,7 @@ const authSlice = createSlice({
   },
 })
 
-export const { logout, setCredentials, setTokens, setUserProfileDetails } = authSlice.actions
+export const { logout, setCredentials, 
+  setTokens, setUserProfileDetails, 
+  setProfiles } = authSlice.actions
 export default authSlice.reducer

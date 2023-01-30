@@ -19,9 +19,9 @@ import { Button } from '@material-ui/core';
 import { useNavigate, NavLink, Link} from 'react-router-dom';
 
 import { useSelector, useDispatch} from 'react-redux';
-import { useGetUserDetailsQuery } from '../redux/features/api/authApi';
-import { setCredentials, setUserProfileDetails } from '../redux/features/api/authSlice';
-import { useGetUserProfileDetailsQuery } from '../redux/features/api/authApi';
+import { useGetUserDetailsQuery } from '../../redux/features/api/authApi';
+import { setCredentials, setUserProfileDetails } from '../../redux/features/api/authSlice';
+import { useGetUserProfileDetailsQuery } from '../../redux/features/api/authApi';
 
 import useStyles from './Styles';
 
@@ -117,6 +117,10 @@ const authLinks = () => (
 		setMobileMoreAnchorEl(event.currentTarget);
 	};
 
+  const handleMessageClick = (e) => {
+    navigate('/messages');
+  }
+
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
 		<Menu
@@ -147,7 +151,7 @@ const authLinks = () => (
 		>
 		<MenuItem>
 			<IconButton aria-label="show 4 new mails" color="inherit">
-			<Badge badgeContent={4} color="secondary">
+			<Badge badgeContent={userProfileDetails?.message_count} color="secondary">
 				<MailIcon />
 			</Badge>
 			</IconButton>
@@ -213,8 +217,8 @@ const authLinks = () => (
           {isAuthenticated ? authLinks() : guestLinks()}
           </div>
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
+            <IconButton aria-label="show number of new mails" color="inherit" onClick={handleMessageClick}>
+              <Badge badgeContent={userProfileDetails?.message_count} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
