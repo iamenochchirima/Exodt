@@ -11,8 +11,6 @@ class PostSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = CustomUserSerializer(read_only=True)
-    user_id = serializers.IntegerField(write_only=True)
     message_count = serializers.SerializerMethodField("get_message_count")
 
     class Meta:
@@ -26,6 +24,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             user_id = None
 
         message = Message.objects.filter(sender_id=obj.user.id, receiver_id=user_id, is_read=False).distinct()
+        # messages = Message.objects.filter(sender_id=obj.user.id, receiver_id=user_id, is_read=False)
+
+        # print(obj.user.id)
+        # print(message.count())
 
         return message.count()
 

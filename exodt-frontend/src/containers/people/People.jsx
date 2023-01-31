@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -6,20 +6,17 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { useGetMessagesQuery } from '../../redux/features/api/chatApi';
+import { useGetUserProfilesQuery } from '../../redux/features/api/authApi';
+import { setProfiles } from '../../redux/features/api/authSlice';
+import { useSelector } from 'react-redux';
 
-const Messages = () => {
+const People = () => {
 
-const dispatch = useDispatch();
-const navigate = useNavigate();
+  const {userProfileDetails} = useSelector((state) => state.auth)
 
-const { data: messages, isFetching } = useGetMessagesQuery('messages', {
-  pollingInterval: 900000,
-})
-
-const {userProfileDetails} = useSelector((state) => state.auth)
+  const { data: users } = useGetUserProfilesQuery('profiles', {
+    pollingInterval: 900000,
+  })
 
 
   return (
@@ -30,18 +27,16 @@ const {userProfileDetails} = useSelector((state) => state.auth)
                 color="text.primary"
                 alignSelf="center"
               >
-                Messages
+                All People
               </Typography>
-      {messages?.map((message) => {
-        console.log(message);
-        if (message.receiver?.id === userProfileDetails?.id || message.sender?.id === userProfileDetails?.id)
+      {users?.map((user) => {
         return (
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
-              <Avatar alt="profile image" src={message.profile_image} />
+              <Avatar alt="profile image" src={user.profile_image} />
             </ListItemAvatar>
             <ListItemText
-              primary={message.first_name + " " + message.last_name}
+              primary={user.first_name + " " + user.last_name}
               secondary={
                 <React.Fragment>
                   <Typography
@@ -50,7 +45,7 @@ const {userProfileDetails} = useSelector((state) => state.auth)
                     variant="body2"
                     color="text.primary"
                   >
-                    {"@"+message.username}
+                    {"@"+user.username}
                   </Typography>
                 </React.Fragment>
               }
@@ -63,4 +58,4 @@ const {userProfileDetails} = useSelector((state) => state.auth)
   )
 }
 
-export default Messages
+export default People

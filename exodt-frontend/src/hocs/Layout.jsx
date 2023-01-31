@@ -27,6 +27,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SearchBar from 'material-ui-search-bar';
+import PeopleIcon from '@mui/icons-material/People';
 import { Button } from '@material-ui/core';
 import { useNavigate, NavLink, Link} from 'react-router-dom';
 
@@ -41,6 +42,10 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    marginRight: theme.spacing(30)
+  },
+  listItem: {
+    paddingLeft: theme.spacing(4)
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -134,40 +139,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Layout = ({children }) => {
-  const { window } = children;
-  const classes = useStyles();
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
-  const container = window !== undefined ? () => window().document.body : undefined;
 
   const dispatch = useDispatch()
 
@@ -193,6 +165,72 @@ const Layout = ({children }) => {
   useEffect(() => {
     if (data) dispatch(setCredentials(data));
   }, [data, dispatch])
+
+  const { window } = children;
+  const classes = useStyles();
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+	const isMenuOpen = Boolean(anchorEl);
+	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+	const handleProfileMenuOpen = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleMobileMenuClose = () => {
+		setMobileMoreAnchorEl(null);
+	};
+
+	const handleMenuClose = () => {
+		setAnchorEl(null);
+		handleMobileMenuClose();
+	};
+
+	const handleMobileMenuOpen = (event) => {
+		setMobileMoreAnchorEl(event.currentTarget);
+	};
+
+  const handleMessageClick = (e) => {
+    navigate('/messages');
+  }
+
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <Divider />
+      <List>
+        <ListItem button onClick={handleMessageClick}>
+          <Badge badgeContent={userProfileDetails?.message_count} color="secondary">
+            <MailIcon />
+          </Badge>
+          <ListItemText primary="Messages" className={classes.listItem}/>
+        </ListItem>
+        <ListItem button>
+          <PeopleIcon />
+          <ListItemText primary="People" className={classes.listItem}/>
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
+
+  const container = window !== undefined ? () => window().document.body : undefined;
  
   const guestLinks = () => (
     <Fragment>
@@ -234,34 +272,6 @@ const authLinks = () => (
 	// 	});
 	// 	window.location.reload();
 	// };
-
-	const [anchorEl, setAnchorEl] = React.useState(null);
-	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
-	const isMenuOpen = Boolean(anchorEl);
-	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-	const handleProfileMenuOpen = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleMobileMenuClose = () => {
-		setMobileMoreAnchorEl(null);
-	};
-
-	const handleMenuClose = () => {
-		setAnchorEl(null);
-		handleMobileMenuClose();
-	};
-
-	const handleMobileMenuOpen = (event) => {
-		setMobileMoreAnchorEl(event.currentTarget);
-	};
-
-  const handleMessageClick = (e) => {
-    navigate('/messages');
-  }
-
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
 		<Menu
@@ -291,7 +301,7 @@ const authLinks = () => (
 		onClose={handleMobileMenuClose}
 		>
 		<MenuItem>
-			<IconButton aria-label="show 4 new mails" color="inherit">
+			<IconButton aria-label="shows number of new messages" color="inherit">
 			<Badge badgeContent={userProfileDetails?.message_count} color="secondary">
 				<MailIcon />
 			</Badge>
@@ -361,7 +371,7 @@ const authLinks = () => (
             {isAuthenticated ? authLinks() : guestLinks()}
             </div>
             <div className={classes.sectionDesktop}>
-                <IconButton aria-label="show number of new mails" color="inherit" onClick={handleMessageClick}>
+                <IconButton aria-label="show number of new messages" color="inherit" onClick={handleMessageClick}>
                 <Badge badgeContent={userProfileDetails?.message_count} color="secondary">
                     <MailIcon />
                 </Badge>

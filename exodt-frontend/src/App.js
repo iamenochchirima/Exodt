@@ -11,6 +11,7 @@ import Chat from './containers/chat/Chat';
 import Messages from './containers/chat/Messages';
 import CreatePost from './containers/posts/CreatePost';
 import EditPost from './containers/posts/EditPost';
+import People from './containers/people/People';
 import Activate from './containers/auth/Activate';
 import ResetPassword from './containers/auth/ResetPassword';
 import ResetPasswordConfirm from './containers/auth/ResetPasswordConfirm';
@@ -29,6 +30,7 @@ function App() {
         <Route path="/search" element={<Search/>} />
         <Route path="/chat" element={<Chat/>} />
         <Route path="/messages" element={<Messages/>} />
+        <Route path="/people" element={<People/>} />
 				<Route exact path="create-post" element={<CreatePost/>} />
 				<Route exact path="/edit-post/:id" element={<EditPost/>} />
 				<Route exact path="/reset-password" element={<ResetPassword/>} />
