@@ -30,6 +30,7 @@ const People = () => {
                 All People
               </Typography>
       {users?.map((user) => {
+        console.log(user.profile_image);
         return (
           <ListItem alignItems="flex-start">
             <ListItemAvatar>

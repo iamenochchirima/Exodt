@@ -202,6 +202,10 @@ const Layout = ({children }) => {
     navigate('/messages');
   }
 
+  const handlePeopleClick = (e) => {
+    navigate('/people');
+  }
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -213,7 +217,7 @@ const Layout = ({children }) => {
           </Badge>
           <ListItemText primary="Messages" className={classes.listItem}/>
         </ListItem>
-        <ListItem button>
+        <ListItem button onClick={handlePeopleClick}>
           <PeopleIcon />
           <ListItemText primary="People" className={classes.listItem}/>
         </ListItem>

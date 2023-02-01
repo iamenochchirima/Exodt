@@ -15,12 +15,11 @@ const Messages = () => {
 const dispatch = useDispatch();
 const navigate = useNavigate();
 
-const { data: messages, isFetching } = useGetMessagesQuery('messages', {
-  pollingInterval: 900000,
-})
+const mediaUrl = 'http://localhost:8000'
 
 const {userProfileDetails} = useSelector((state) => state.auth)
 
+  const conversation_list = userProfileDetails?.conversed_list
 
   return (
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -32,16 +31,15 @@ const {userProfileDetails} = useSelector((state) => state.auth)
               >
                 Messages
               </Typography>
-      {messages?.map((message) => {
-        console.log(message);
-        if (message.receiver?.id === userProfileDetails?.id || message.sender?.id === userProfileDetails?.id)
+      {conversation_list?.map((user) => {
+        console.log(user.profile_image);
         return (
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
-              <Avatar alt="profile image" src={message.profile_image} />
+              <Avatar alt="profile image" src={mediaUrl + user.profile_image} />
             </ListItemAvatar>
             <ListItemText
-              primary={message.first_name + " " + message.last_name}
+              primary={user.first_name + " " + user.last_name}
               secondary={
                 <React.Fragment>
                   <Typography
@@ -50,7 +48,7 @@ const {userProfileDetails} = useSelector((state) => state.auth)
                     variant="body2"
                     color="text.primary"
                   >
-                    {"@"+message.username}
+                    {"@"+user.username}
                   </Typography>
                 </React.Fragment>
               }

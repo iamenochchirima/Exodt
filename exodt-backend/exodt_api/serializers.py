@@ -3,6 +3,7 @@ from posts.models import Post
 from main.models import UserProfile
 from chat.models import Message, MessageAttachment
 from users.views import CustomUserSerializer
+from django.db.models import Q
 
 class PostSerializer(serializers.ModelSerializer):
 
@@ -12,10 +13,25 @@ class PostSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     message_count = serializers.SerializerMethodField("get_message_count")
+    conversed_list = serializers.SerializerMethodField("get_conversation_list")
 
     class Meta:
         model = UserProfile
         fields = "__all__"
+
+    def get_conversation_list(self, obj):
+
+        try:
+            user_id = self.context["request"].user.id
+        except Exception as e:
+            user_id = None
+
+        conversation_list = UserProfile.objects.filter(
+            Q(user__in=Message.objects.filter(sender=user_id).values("receiver")) | 
+            Q(user__in=Message.objects.filter(receiver=user_id).values("sender"))
+        ).distinct()
+
+        return UserProfileSerializer(conversation_list, many=True).data
 
     def get_message_count(self, obj):
         try:
@@ -23,13 +39,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         except Exception as e:
             user_id = None
 
-        message = Message.objects.filter(sender_id=obj.user.id, receiver_id=user_id, is_read=False).distinct()
-        # messages = Message.objects.filter(sender_id=obj.user.id, receiver_id=user_id, is_read=False)
-
-        # print(obj.user.id)
-        # print(message.count())
+        message = Message.objects.filter(receiver=user_id, is_read=False).distinct() 
 
         return message.count()
+
 
 class MessageAttachmentSerializer(serializers.ModelSerializer):
 

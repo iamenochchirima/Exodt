@@ -11,14 +11,14 @@ const SocketServices = () => {
   const dispatch = useDispatch();
   const {messageUserName} = useSelector((state) => state.chat)
 
-  useEffect(() => {
-    socket = io(SOCKET_URL);
-    socket.on('command', (data) => {
-      if (messageUserName !== data.reciever) return;
-      dispatch(setActiveChatData(data));
-      console.log(data);
-    });
-  }, [messageUserName]);
+  // useEffect(() => {
+  //   socket = io(SOCKET_URL);
+  //   socket.on('command', (data) => {
+  //     if (messageUserName !== data.reciever) return;
+  //     dispatch(setActiveChatData(data));
+  //     console.log(data);
+  //   });
+  // }, [messageUserName]);
 
   return (
     <></>
