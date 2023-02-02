@@ -14,10 +14,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { useGetMessagesQuery } from '../../redux/features/api/chatApi';
-
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -38,21 +34,16 @@ const useStyles = makeStyles({
   }
 });
 
-const Messages = () => {
+const ChatInterface = () => {
   const classes = useStyles();
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const mediaUrl = 'http://localhost:8000'
-
-  const {userProfileDetails} = useSelector((state) => state.auth)
-
-  const conversation_list = userProfileDetails?.conversed_list
-
 
   return (
       <div>
+        <Grid container>
+            <Grid item xs={12} >
+                <Typography variant="h5" className="header-message">ChatInterface</Typography>
+            </Grid>
+        </Grid>
         <Grid container component={Paper} className={classes.chatSection}>
             <Grid item xs={3} className={classes.borderRight500}>
                 <List>
@@ -69,18 +60,25 @@ const Messages = () => {
                 </Grid>
                 <Divider />
                 <List>
-                {conversation_list?.map((user) => {
-                console.log(user.profile_image);
-                return (
-                  <ListItem button key="RemySharp">
-                  <ListItemIcon>
-                      <Avatar alt="Avatar" src={mediaUrl + user.profile_image} />
-                  </ListItemIcon>
-                  <ListItemText primary={user.first_name + " " + user.last_name}></ListItemText>
-                  <ListItemText secondary="online" align="right"></ListItemText>
-                  </ListItem>
-                  )
-                })}
+                    <ListItem button key="RemySharp">
+                        <ListItemIcon>
+                            <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
+                        </ListItemIcon>
+                        <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
+                        <ListItemText secondary="online" align="right"></ListItemText>
+                    </ListItem>
+                    <ListItem button key="Alice">
+                        <ListItemIcon>
+                            <Avatar alt="Alice" src="https://material-ui.com/static/images/avatar/3.jpg" />
+                        </ListItemIcon>
+                        <ListItemText primary="Alice">Alice</ListItemText>
+                    </ListItem>
+                    <ListItem button key="CindyBaker">
+                        <ListItemIcon>
+                            <Avatar alt="Cindy Baker" src="https://material-ui.com/static/images/avatar/2.jpg" />
+                        </ListItemIcon>
+                        <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
+                    </ListItem>
                 </List>
             </Grid>
             <Grid item xs={9}>
@@ -121,7 +119,7 @@ const Messages = () => {
                     <Grid item xs={11}>
                         <TextField id="outlined-basic-email" label="Type Something" fullWidth />
                     </Grid>
-                    <Grid item xs={1} align="right">
+                    <Grid xs={1} align="right">
                         <Fab color="primary" aria-label="add"><SendIcon /></Fab>
                     </Grid>
                 </Grid>
@@ -131,58 +129,4 @@ const Messages = () => {
   );
 }
 
-export default Messages;
-
-
-
-
-
-
-
-
-
-
-// import React, {useEffect} from 'react';
-// import List from '@mui/material/List';
-// import ListItem from '@mui/material/ListItem';
-// import Divider from '@mui/material/Divider';
-// import ListItemText from '@mui/material/ListItemText';
-// import ListItemAvatar from '@mui/material/ListItemAvatar';
-// import { makeStyles } from '@material-ui/core/styles';
-// import Grid from '@material-ui/core/Grid';
-// import Avatar from '@mui/material/Avatar';
-// import Container from '@material-ui/core/Container';
-// import Typography from '@mui/material/Typography';
-// import Messages from './ChatBubble';
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-// }))
-
-// const Messages = () => {
-
-//   const classes = useStyles();
-
-
-//   return (
-//     <Grid container className={classes.root} spacing={2}>
-//       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-//         <Typography
-//                   component="span"
-//                   variant="h5"
-//                   color="text.primary"
-//                   alignSelf="center"
-//                 >
-//                   Messages
-                // </Typography>
-        
-//         <Divider variant="inset" component="li" />
-//       </List>
-//       <Messages/>
-//     </Grid>
-//   )
-// }
-
-// export default Messages;
+export default ChatInterface;

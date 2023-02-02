@@ -11,6 +11,7 @@ import { useSelector, useDispatch} from 'react-redux';
 
 import { useGetPostsQuery } from '../../redux/features/api/postsApi';
 import Spinner from '../../components/Spinner';
+import { Box } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
 	cardMedia: {
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const PostList = () => {
+const Feed = () => {
 	const classes = useStyles();
 	
 	const {
@@ -61,12 +62,12 @@ const PostList = () => {
 	} else if (isSuccess) {
 		content = (
 			<React.Fragment>
-				<Container maxWidth="md" component="main">
+				<Box flex={5}>
 					<Grid container spacing={5} alignItems="flex-end">
 						{posts.map((post) => {
 							return (
 								// Enterprise card is full width at sm breakpoint
-								<Grid item key={post.id} xs={12} md={4}>
+								<Grid item key={post.id} xs={12} md={12}>
 									<Card className={classes.card}>
 										<Link
 											color="textPrimary"
@@ -103,7 +104,7 @@ const PostList = () => {
 							);
 						})}
 					</Grid>
-				</Container>
+				</Box>
 			</React.Fragment>
 		);
 	}
@@ -111,4 +112,4 @@ const PostList = () => {
 
 	return content;
 };
-export default PostList;
+export default Feed;
