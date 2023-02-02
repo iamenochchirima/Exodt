@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 		textAlign: 'left',
 		marginBottom: theme.spacing(2),
 	},
+
 }));
 
 const Feed = () => {
@@ -62,6 +63,7 @@ const Feed = () => {
 	} else if (isSuccess) {
 		content = (
 			<React.Fragment>
+				<div className={classes.toolbar} />
 				<Box flex={5}>
 					<Grid container spacing={5} alignItems="flex-end">
 						{posts.map((post) => {

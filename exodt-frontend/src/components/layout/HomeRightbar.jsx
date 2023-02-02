@@ -3,7 +3,7 @@ import React from 'react'
 
 const HomeRightbar = () => {
   return (
-    <Box flex={2} sx={{ display: { xs: "none", sm: "block"}}}>
+    <Box flex={2} sx={{ display: { xs: "none", sm: "block"}}} position="sticky">
       HomeRightbar
       </Box>
   )

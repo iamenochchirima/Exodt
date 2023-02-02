@@ -28,7 +28,7 @@ class PostUserWritrPermission(BasePermission):
         return obj.author.user == request.user
 
 class PostsView(ModelViewSet):
-    permission_classes = [IsAuthenticatedCustom]
+    permission_classes = [IsAuthenticatedOrReadCustom]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     # filter_backends = [filters.SearchFilter]

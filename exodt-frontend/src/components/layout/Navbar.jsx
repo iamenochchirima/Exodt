@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect} from 'react';
+import React, { Fragment, useEffect, useState} from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -19,8 +19,7 @@ import { Button } from '@material-ui/core';
 import { useNavigate, NavLink, Link} from 'react-router-dom';
 
 import { useSelector, useDispatch} from 'react-redux';
-import { useGetUserDetailsQuery } from '../../redux/features/api/authApi';
-import { setCredentials, setUserProfileDetails } from '../../redux/features/api/authSlice';
+import { setUserProfileDetails } from '../../redux/features/api/authSlice';
 import { useGetUserProfileDetailsQuery } from '../../redux/features/api/authApi';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -29,8 +28,8 @@ import useStyles from './Styles';
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
-  justifyContent: "space-between"
-})
+  justifyContent: "space-between",
+});
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -74,6 +73,7 @@ const Search = styled('div')(({ theme }) => ({
 
 
 const Header = () => {
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const dispatch = useDispatch()
 
@@ -91,17 +91,10 @@ const Header = () => {
     useEffect(() => {
       if (userProfileDetails) dispatch(setUserProfileDetails(userProfileDetails));
     }, [userProfileDetails, dispatch])
-
-  const { data, isFetching } = useGetUserDetailsQuery('userDetails', {
-      pollingInterval: 900000,
-    })
-
-  useEffect(() => {
-    if (data) dispatch(setCredentials(data));
-  }, [data, dispatch])
  
   const guestLinks = () => (
     <Fragment>
+      <div>
         <Link
             component={NavLink}
             to="/signup"
@@ -116,7 +109,8 @@ const Header = () => {
             color="textPrimary"
           >
           <Button color="white">Login</Button>
-          </Link>
+        </Link>
+      </div>
     </Fragment>
 );
 
@@ -158,6 +152,14 @@ const Header = () => {
     navigate('/messages');
   }
 
+  const handleProfileClick = (e) => {
+    navigate('/user-profile')
+  }
+
+  const handleLogoutClick = (e) => {
+    navigate('/logout')
+  }
+
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
 		<Menu
@@ -169,8 +171,8 @@ const Header = () => {
 		open={isMenuOpen}
 		onClose={handleMenuClose}
 		>
-		<MenuItem onClick={handleMenuClose}><Link to="/user-profile">Profile</Link></MenuItem>
-		<MenuItem onClick={handleMenuClose}><Link to="/logout">Logout</Link></MenuItem>
+		<MenuItem onClick={() => {handleMenuClose(); handleProfileClick();}}>Profile</MenuItem>
+		<MenuItem onClick={() => {handleMenuClose(); handleLogoutClick();}}>Logout</MenuItem>
 		<MenuItem onClick={handleMenuClose}>My account</MenuItem>
 		</Menu>
 	);
@@ -186,8 +188,8 @@ const Header = () => {
 		open={isMobileMenuOpen}
 		onClose={handleMobileMenuClose}
 		>
-		<MenuItem>
-			<IconButton aria-label="show 4 new mails" color="inherit">
+		<MenuItem onClick={handleMessageClick}>
+			<IconButton aria-label="show number of new messages" color="inherit">
 			<Badge badgeContent={userProfileDetails?.message_count} color="secondary">
 				<MailIcon />
 			</Badge>
@@ -217,7 +219,6 @@ const Header = () => {
 	);
 
   return (
-    <div className={classes.grow}>
       <AppBar position="sticky">
         <StyledToolbar>
           <MenuIcon sx={{ display: { xs: "block", sm: "none"}}}/>
@@ -236,16 +237,8 @@ const Header = () => {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          <div className={classes.grow} >
-          <span>
-          {isFetching
-            ? `Fetching your profile...`
-            : userInfo !== null
-            ? `Logged in as ${userInfo.username}`
-            : "You're not logged in"}
-        </span>
-          {isAuthenticated ? null : guestLinks()}
-          </div>
+            {isAuthenticated ? null : guestLinks()}
+        
           {isAuthenticated ? (
             <div className={classes.sectionDesktop}>
             <IconButton aria-label="show number of new mails" color="inherit" onClick={handleMessageClick}>
@@ -290,10 +283,9 @@ const Header = () => {
             </IconButton>
           </div>
         </StyledToolbar>
-      </AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </div>
+      </AppBar>
   );
 }
 export default Header;
