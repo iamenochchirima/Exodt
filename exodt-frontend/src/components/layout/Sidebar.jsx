@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {AccountBox, Article, Group, Home, ModeNight, Person, Settings, Storefront } from "@mui/icons-material";
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Switch } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetUserDetailsQuery } from '../../redux/features/api/authApi';
 import { setCredentials, setUserProfileDetails } from '../../redux/features/api/authSlice';
@@ -9,6 +9,7 @@ import { setCredentials, setUserProfileDetails } from '../../redux/features/api/
 const Sidebar = ({mode,setMode}) => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const { userInfo, isAuthenticated} = useSelector((state) => state.auth)
 
@@ -16,31 +17,25 @@ const Sidebar = ({mode,setMode}) => {
     pollingInterval: 900000,
   })
 
+  const handleHomeClick = (e) => {
+    navigate('/')
+  }
+
   useEffect(() => {
     if (data) dispatch(setCredentials(data));
   }, [data, dispatch])
 
   return (
-    // <Box flex={3} sx={{ display: { xs: "none", sm: "block"}}} >
-    //   Sidebar
-    //         <Link
-		// 					to="/"
-		// 					underline="none"
-		// 					color="textPrimary"
-		// 				>
-		// 					Home
-		// 				</Link>
-    //         {isFetching
-    //         ? `Fetching your profile...`
-    //         : userInfo !== null
-    //         ? `Logged in as ${userInfo.username}`
-    //         : "You're not logged in"}
-    //   </Box>
     <Box flex={3} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
+      {isFetching
+            ? `Fetching your profile...`
+            : userInfo !== null
+            ? `Logged in as ${userInfo.username}`
+            : "You're not logged in"}
       <Box position="fixed">
         <List>
-          <ListItem disablePadding>
-            <ListItemButton component="a" href="#home">
+          <ListItem disablePadding onClick={handleHomeClick}>
+            <ListItemButton component="a" >
               <ListItemIcon>
                 <Home />
               </ListItemIcon>
@@ -85,14 +80,6 @@ const Sidebar = ({mode,setMode}) => {
                 <Settings />
               </ListItemIcon>
               <ListItemText primary="Settings" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton component="a" href="#simple-list">
-              <ListItemIcon>
-                <AccountBox />
-              </ListItemIcon>
-              <ListItemText primary="Profile" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
