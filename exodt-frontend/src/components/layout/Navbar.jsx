@@ -174,6 +174,7 @@ const Header = () => {
 		<MenuItem onClick={() => {handleMenuClose(); handleProfileClick();}}>Profile</MenuItem>
 		<MenuItem onClick={() => {handleMenuClose(); handleLogoutClick();}}>Logout</MenuItem>
 		<MenuItem onClick={handleMenuClose}>My account</MenuItem>
+		<MenuItem onClick={handleMenuClose}>Settings</MenuItem>
 		</Menu>
 	);
 

@@ -1,1 +1,1 @@
-export const POSTS_URL = "http://localhost:8000/api/";
+export const mediaUrl = "http://localhost:8000";

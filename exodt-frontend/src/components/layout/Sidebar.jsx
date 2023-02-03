@@ -27,12 +27,12 @@ const Sidebar = ({mode,setMode}) => {
 
   return (
     <Box flex={3} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
+      <Box position="fixed">
       {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
             ? `Logged in as ${userInfo.username}`
             : "You're not logged in"}
-      <Box position="fixed">
         <List>
           <ListItem disablePadding onClick={handleHomeClick}>
             <ListItemButton component="a" >

@@ -13,6 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
+import { mediaUrl } from '../../constants';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
@@ -43,8 +44,6 @@ const Messages = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const mediaUrl = 'http://localhost:8000'
 
   const {userProfileDetails} = useSelector((state) => state.auth)
 

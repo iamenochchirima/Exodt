@@ -2,14 +2,44 @@ from rest_framework import serializers
 from posts.models import Post 
 from main.models import UserProfile
 from chat.models import Message, MessageAttachment
-from users.views import CustomUserSerializer
 from django.db.models import Q
+from django.utils import timezone
+import pytz
 
 class PostSerializer(serializers.ModelSerializer):
+    author_details = serializers.SerializerMethodField("get_author_details")
+    created_formatted = serializers.SerializerMethodField("get_created_formatted")
 
     class Meta:
         model = Post
         fields = "__all__"
+
+    def get_author_details(self, obj):
+        author = obj.author
+        user_profile_serializer = UserProfileSerializer(author)
+        return user_profile_serializer.data
+    
+    def get_created_formatted(self, obj):
+        time_zone = pytz.timezone('UTC')
+        created = obj.created.astimezone(time_zone)
+        now = timezone.now().astimezone(time_zone)
+
+        delta = now - created
+        if delta.days == 0:
+            # less than 24 hours
+            if delta.seconds <= 60:
+                return "just now"
+            if delta.seconds <= 3600:
+                minutes = round(delta.seconds / 60)
+                return f"{minutes} minutes ago"
+            hours = round(delta.seconds / 3600)
+            return f"{hours} hours ago"
+        elif delta.days == 1:
+            # less than 2 days
+            return "yesterday"
+        else:
+            # more than 2 days
+            return created.strftime("%B %d, %Y")
 
 class UserProfileSerializer(serializers.ModelSerializer):
     message_count = serializers.SerializerMethodField("get_message_count")

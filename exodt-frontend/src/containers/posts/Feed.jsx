@@ -1,48 +1,57 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import Grid from '@material-ui/core/Grid';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Collapse from '@material-ui/core/Collapse';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
-import { useSelector, useDispatch} from 'react-redux';
+import { red } from '@material-ui/core/colors';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Grid from '@material-ui/core/Grid';
 
 import { useGetPostsQuery } from '../../redux/features/api/postsApi';
 import Spinner from '../../components/Spinner';
 import { Box } from '@mui/material';
+import { mediaUrl } from '../../constants';
 
 const useStyles = makeStyles((theme) => ({
-	cardMedia: {
-		paddingTop: '56.25%', // 16:9
+	root: {
+	  flexGrow: 1,
 	},
-	link: {
-		margin: theme.spacing(1, 1.5),
+	media: {
+	  paddingTop: '56.25%', // 16:9
 	},
-	cardHeader: {
-		backgroundColor:
-			theme.palette.type === 'light'
-				? theme.palette.grey[200]
-				: theme.palette.grey[700],
+	expand: {
+	  transform: 'rotate(0deg)',
+	  marginLeft: 'auto',
+	  transition: theme.transitions.create('transform', {
+		duration: theme.transitions.duration.shortest,
+	  }),
 	},
-	postTitle: {
-		fontSize: '16px',
-		textAlign: 'left',
+	expandOpen: {
+	  transform: 'rotate(180deg)',
 	},
-	postText: {
-		display: 'flex',
-		justifyContent: 'left',
-		alignItems: 'baseline',
-		fontSize: '12px',
-		textAlign: 'left',
-		marginBottom: theme.spacing(2),
+	avatar: {
+	  backgroundColor: red[500],
 	},
-
-}));
+  }));
 
 const Feed = () => {
 	const classes = useStyles();
+
+	const [expanded, setExpanded] = useState(false);
+  
+	const handleExpandClick = () => {
+	  setExpanded(!expanded);
+	};
 	
 	const {
 		data: posts,
@@ -55,22 +64,64 @@ const Feed = () => {
 	let content
 
 	if (isLoading) {
-		content = <Spinner/>
+		content = <Box flex={5} sx={{margin: 5}}><Spinner/></Box>
 	}  else if (!posts || posts.length === 0){
-		<p>Can not find any posts, sorry</p>
+		content =<Box flex={5} sx={{margin: 5}}>
+					 <center><p>Can not find any posts, sorry</p></center>
+					</Box>
 	} else if (isError) {
 		content = <div>{error.toString()}</div>
 	} else if (isSuccess) {
 		content = (
 			<React.Fragment>
-				<div className={classes.toolbar} />
-				<Box flex={5}>
+				<Box flex={5} sx={{margin: 5}}>
 					<Grid container spacing={5} alignItems="flex-end">
 						{posts.map((post) => {
+							console.log(post)
 							return (
 								// Enterprise card is full width at sm breakpoint
 								<Grid item key={post.id} xs={12} md={12}>
-									<Card className={classes.card}>
+									<Card className={classes.root}>
+										<CardHeader
+											avatar={
+											<Avatar 
+											aria-label="recipe" 
+											className={classes.avatar}
+											src={mediaUrl + post.author_details.profile_image} 
+											alt="Author profile picture" 
+											sx={{ width: 24, height: 24 }}
+											/>
+											}
+											action={
+											<IconButton aria-label="settings">
+												<MoreVertIcon />
+											</IconButton>
+											}
+											title={post.author_details.first_name + " " + post.author_details.last_name}
+											subheader={post.created_formatted}
+										/>
+										{post.image ? (
+											<CardMedia
+											className={classes.media}
+											image={post.image}
+											title="Post Image"
+										/>
+										) : null}
+										<CardContent>
+											<Typography variant="body2" color="textSecondary" component="p">
+											{post.content}
+											</Typography>
+										</CardContent>
+										<CardActions disableSpacing>
+											<IconButton aria-label="add to favorites">
+											<FavoriteIcon />
+											</IconButton>
+											<IconButton aria-label="share">
+											<ShareIcon />
+											</IconButton>
+										</CardActions>
+										</Card>
+									{/* <Card className={classes.card}>
 										<Link
 											color="textPrimary"
 											href={'post/' + post.id}
@@ -101,7 +152,7 @@ const Feed = () => {
 												</Typography>
 											</div>
 										</CardContent>
-									</Card>
+									</Card> */}
 								</Grid>
 							);
 						})}
