@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
-import {Favorite, FavoriteBorder, MoreVert, Share} from "@mui/icons-material";
+import {Favorite, MoreVert, Share} from "@mui/icons-material";
 import {Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, IconButton, Typography,
   } from "@mui/material";
 

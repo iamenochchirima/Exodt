@@ -1,20 +1,7 @@
 import React, { Fragment, useEffect, useState} from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Avatar } from '@mui/material';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import SearchBar from 'material-ui-search-bar';
+import {AppBar, IconButton, Typography, InputBase, Badge, MenuItem, Avatar, Menu, Toolbar} from '@mui/material';
+import {AccountCircle, Mail, Search, Notifications, MoreVert} from "@mui/icons-material";
 import { Button } from '@material-ui/core';
 import { useNavigate, NavLink, Link} from 'react-router-dom';
 
@@ -55,7 +42,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Search = styled('div')(({ theme }) => ({
+const Searchbar = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -126,17 +113,17 @@ const Header = () => {
 	// };
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+	const [mobileMoreVertAnchorEl, setMobileMoreVertAnchorEl] = React.useState(null);
 
 	const isMenuOpen = Boolean(anchorEl);
-	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+	const isMobileMenuOpen = Boolean(mobileMoreVertAnchorEl);
 
 	const handleProfileMenuOpen = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
 
 	const handleMobileMenuClose = () => {
-		setMobileMoreAnchorEl(null);
+		setMobileMoreVertAnchorEl(null);
 	};
 
 	const handleMenuClose = () => {
@@ -145,7 +132,7 @@ const Header = () => {
 	};
 
 	const handleMobileMenuOpen = (event) => {
-		setMobileMoreAnchorEl(event.currentTarget);
+		setMobileMoreVertAnchorEl(event.currentTarget);
 	};
 
   const handleMessageClick = (e) => {
@@ -181,7 +168,7 @@ const Header = () => {
 	const mobileMenuId = 'primary-search-account-menu-mobile';
 	const renderMobileMenu = (
 		<Menu
-		anchorEl={mobileMoreAnchorEl}
+		anchorEl={mobileMoreVertAnchorEl}
 		anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
 		id={mobileMenuId}
 		keepMounted
@@ -192,7 +179,7 @@ const Header = () => {
 		<MenuItem onClick={handleMessageClick}>
 			<IconButton aria-label="show number of new messages" color="inherit">
 			<Badge badgeContent={userProfileDetails?.message_count} color="secondary">
-				<MailIcon />
+				<Mail />
 			</Badge>
 			</IconButton>
 			<p>Messages</p>
@@ -200,7 +187,7 @@ const Header = () => {
 		<MenuItem>
 			<IconButton aria-label="show 11 new notifications" color="inherit">
 			<Badge badgeContent={11} color="secondary">
-				<NotificationsIcon />
+				<Notifications />
 			</Badge>
 			</IconButton>
 			<p>Notifications</p>
@@ -229,27 +216,27 @@ const Header = () => {
           >
             EXODT
           </Typography>
-          <Search>
+          <Searchbar>
             <SearchIconWrapper>
-              <SearchIcon />
+              <Search />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />
-          </Search>
+          </Searchbar>
             {isAuthenticated ? null : guestLinks()}
         
           {isAuthenticated ? (
             <div className={classes.sectionDesktop}>
             <IconButton aria-label="show number of new mails" color="inherit" onClick={handleMessageClick}>
               <Badge badgeContent={userProfileDetails?.message_count} color="secondary">
-                <MailIcon />
+                <Mail />
               </Badge>
             </IconButton>
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
+                <Notifications />
               </Badge>
             </IconButton>
             <IconButton
@@ -274,13 +261,13 @@ const Header = () => {
           ) : null}
           <div className={classes.sectionMobile}>
             <IconButton
-              aria-label="show more"
+              aria-label="show moreVert"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MoreVert />
             </IconButton>
           </div>
         </StyledToolbar>

@@ -35,11 +35,11 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box bgcolor={'background.default'}>
+      <Box bgcolor={'background.default'} color={'text.primary'}>
         <Header/>
         <Stack direction="row" spacing={2} justifyContent="space-between">
           <Sidebar setMode={setMode} mode={mode}/>
-          <Box flex={11}>
+          <Box flex={11} >
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/signup" element={<SignUp />} />
