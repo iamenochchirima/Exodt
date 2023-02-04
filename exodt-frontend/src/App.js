@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PostList from './containers/posts/Feed';
 import { Routes, Route } from "react-router-dom";
 import SignUp from './containers/auth/SignUp';
@@ -21,34 +21,47 @@ import Home from './components/layout/Home';
 import { Box, Stack } from '@mui/material';
 import SocketServices from './SocketServices';
 
+import {ThemeProvider, createTheme} from '@mui/material';
+
 function App() {
+
+  const [mode, setMode] = useState('light');
+
+  const theme = createTheme({
+    palette: {
+      mode: mode,
+    }
+  })
+
   return (
-    <Box position="relative">
-      <Header/>
-      <Stack direction="row" spacing={2} justifyContent="space-between">
-        <Sidebar />
-        <Box flex={11}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<LogOut />} />
-            <Route path="/post/:id" element={<PostView />} />
-            <Route path="/search" element={<Search/>} />
-            <Route path="/chat" element={<Chat/>} />
-            <Route path="/messages" element={<Messages/>} />
-            <Route path="/people" element={<People/>} />
-            <Route exact path="create-post" element={<CreatePost/>} />
-            <Route exact path="/edit-post/:id" element={<EditPost/>} />
-            <Route exact path="/reset-password" element={<ResetPassword/>} />
-            <Route exact path="/password/reset/confirm/:uid/:token" element={<ResetPasswordConfirm/>} />
-            <Route exact path="/activate/:uid/:token" element={<Activate/>} />
-            <Route exact path="/user-profile" element={<ProfileView/>} />
-            <Route exact path="socket-services" element={<SocketServices/>} />
-          </Routes>
-        </Box>
-      </Stack>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box bgcolor={'background.default'}>
+        <Header/>
+        <Stack direction="row" spacing={2} justifyContent="space-between">
+          <Sidebar setMode={setMode} mode={mode}/>
+          <Box flex={11}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<LogOut />} />
+              <Route path="/post/:id" element={<PostView />} />
+              <Route path="/search" element={<Search/>} />
+              <Route path="/chat" element={<Chat/>} />
+              <Route path="/messages" element={<Messages/>} />
+              <Route path="/people" element={<People/>} />
+              <Route exact path="create-post" element={<CreatePost/>} />
+              <Route exact path="/edit-post/:id" element={<EditPost/>} />
+              <Route exact path="/reset-password" element={<ResetPassword/>} />
+              <Route exact path="/password/reset/confirm/:uid/:token" element={<ResetPasswordConfirm/>} />
+              <Route exact path="/activate/:uid/:token" element={<Activate/>} />
+              <Route exact path="/user-profile" element={<ProfileView/>} />
+              <Route exact path="socket-services" element={<SocketServices/>} />
+            </Routes>
+          </Box>
+        </Stack>
+      </Box>
+    </ThemeProvider>
   );
 }
 export default App;

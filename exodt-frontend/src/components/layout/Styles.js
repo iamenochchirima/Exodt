@@ -5,9 +5,6 @@ const useStyles = makeStyles((theme) => ({
     // Header
     grow: {
       flexGrow: 1,
-      position: '-webkit-sticky',
-      position: 'sticky',
-      zIndex: 5,
     },
     title: {
       display: 'none',
