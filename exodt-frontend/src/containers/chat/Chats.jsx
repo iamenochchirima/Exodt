@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { Box, Stack, Typography, InputBase, Button, Divider, Avatar , Badge} from '@mui/material'
 import { ArchiveOutlined, Search } from '@mui/icons-material';
 import { styled, alpha} from '@mui/material/styles';
-import { makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
+import { withStyles, useTheme} from '@material-ui/core/styles';
 import { ChatList } from '.';
 import { useSelector } from 'react-redux';
 import  ThemeContext  from "@mui/material";
