@@ -2,8 +2,8 @@ from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 from posts.models import Post
 from main.models import UserProfile
-from chat.models import Message, MessageAttachment
-from . serializers import PostSerializer, UserProfileSerializer, MessageSerializer
+from chat.models import Message, MessageAttachment, Chats
+from . serializers import PostSerializer, UserProfileSerializer, MessageSerializer, ChatMessageSerializer, ChatsSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, AllowAny, BasePermission, IsAuthenticatedOrReadOnly
@@ -35,7 +35,7 @@ class PostsView(ModelViewSet):
     # search_fields = ['^slug']
 
 class UserProfileView(ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedCustom]
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
 
@@ -191,3 +191,8 @@ class MessageView(ModelViewSet):
         handleRequest(serializer)
 
         return Response(serializer.data, status=200)
+
+# class ChatsView(ModelViewSet):
+#     permission_classes = [AllowAny]
+#     serializer_class = ChatsSerializer
+#     queryset = Chats.objects.all()

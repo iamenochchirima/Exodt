@@ -53,9 +53,9 @@ const Feed = () => {
 	let content
 
 	if (isLoading) {
-		content = <Box flex={5} sx={{margin: 5}}><Spinner/></Box>
+		content = <Box flex={5} sx={{margin: [2, 0, 5]}}><Spinner/></Box>
 	}  else if (!posts || posts.length === 0){
-		content =<Box flex={5} sx={{margin: 5}}>
+		content =<Box flex={5} sx={{margin: [2, 0, 5]}}>
 					 <center><p>Can not find any posts, sorry</p></center>
 					</Box>
 	} else if (isError) {
@@ -63,7 +63,7 @@ const Feed = () => {
 	} else if (isSuccess) {
 		content = (
 			<React.Fragment>
-				<Box flex={5} sx={{margin: 5}} >
+				<Box flex={5} sx={{margin: [2, 0, 5]}} >
 					<Grid container spacing={5} alignItems="flex-end">
 						{posts.map((post) => {
 							console.log(post)

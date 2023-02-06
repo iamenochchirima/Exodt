@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from posts.models import Post 
 from main.models import UserProfile
-from chat.models import Message, MessageAttachment
+from chat.models import Message, MessageAttachment, Chats, ChatMessage
 from django.db.models import Q
 from django.utils import timezone
 import pytz
@@ -98,3 +98,21 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def get_sender_data(self, obj):
         return UserProfileSerializer(obj.sender.user_profile).data
+
+
+
+
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+    message = MessageSerializer(read_only=True)
+
+    class Meta:
+        model = ChatMessage
+        fields = '__all__'
+
+class ChatsSerializer(serializers.ModelSerializer):
+    messages = ChatMessageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Chats
+        fields = '__all__'

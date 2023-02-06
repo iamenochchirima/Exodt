@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from main.models import UserProfile
 
 User = get_user_model()
 
@@ -28,3 +29,16 @@ class MessageAttachment(models.Model):
 
     class Meta:
         ordering = ("-created_at",)
+
+class Chats(models.Model):
+    sender = models.ForeignKey(UserProfile, related_name='chat_sender', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(UserProfile, related_name='chat_receiver', on_delete=models.CASCADE)
+    messages = models.ManyToManyField(Message, through='ChatMessage')
+    archived = models.BooleanField(default=False)
+    pinned = models.BooleanField(default=False)
+
+class ChatMessage(models.Model):
+    chat = models.ForeignKey(Chats, on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    latest_message = models.DateTimeField(auto_now_add=True)
+    count = models.PositiveIntegerField(default=0)

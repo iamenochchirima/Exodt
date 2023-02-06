@@ -209,7 +209,6 @@ const Header = () => {
   return (
       <AppBar position="sticky">
         <StyledToolbar>
-          <MenuIcon sx={{ display: { xs: "block", sm: "none"}}}/>
           <Typography 
           className={classes.title} 
           variant="h6" 
