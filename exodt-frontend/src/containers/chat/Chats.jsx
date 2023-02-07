@@ -1,11 +1,10 @@
 import React, {useContext} from 'react'
 import { Box, Stack, Typography, InputBase, Button, Divider, Avatar , Badge} from '@mui/material'
 import { ArchiveOutlined, Search } from '@mui/icons-material';
-import { styled, alpha} from '@mui/material/styles';
-import { withStyles, useTheme} from '@material-ui/core/styles';
+import { styled, alpha, useTheme} from '@mui/material/styles';
+import { withStyles} from '@material-ui/core/styles';
 import { ChatList } from '.';
 import { useSelector } from 'react-redux';
-import  ThemeContext  from "@mui/material";
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -34,9 +33,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Searchbar = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: 20,
-  backgroundColor: alpha(theme.palette.common.white, 1),
+  backgroundColor: alpha(theme.palette.background.default),
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 2),
+    backgroundColor: alpha(theme.palette.background.default),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -77,8 +76,11 @@ const StyledBadge = withStyles((theme) => ({
 }))(Badge);
 
 const ChatElement = ({id, img, name, msg, time, unread, pinned, online }) => {
+
+  const theme = useTheme();
+  
   return (
-    <Box sx={{ width: '100%', borderRadius: 1, backgroundColor: '#FFF'}}
+    <Box sx={{ width: '100%', borderRadius: 1, backgroundColor: theme.palette.mode==='light' ? '#FFF': '#2D3B43'}}
     p={2}
     >
       <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
@@ -118,8 +120,7 @@ const ChatElement = ({id, img, name, msg, time, unread, pinned, online }) => {
 
 const Chats = () => {
 
-  const themeMode = useContext(ThemeContext);
-  const mode = themeMode.palette.mode;
+  const theme = useTheme();
 
   const {userProfileDetails} = useSelector((state) => state.auth)
 
@@ -127,7 +128,7 @@ const Chats = () => {
 
   return (
     <Box flex={2} sx={{ 
-      backgroundColor: '#F8FAFF', 
+      backgroundColor: theme.palette.mode==='light' ? '#F8FAFF' : theme.palette.background.default, 
       position: "relative",
       boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)"  
       }}
