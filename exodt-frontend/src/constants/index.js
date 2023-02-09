@@ -1,1 +1,1 @@
-export const mediaUrl = "http://localhost:8000";
+export const mediaUrl = "https://exodt.s3.amazonaws.com/";
