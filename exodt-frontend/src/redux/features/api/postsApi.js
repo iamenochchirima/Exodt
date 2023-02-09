@@ -4,7 +4,7 @@ export const postsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getPosts: builder.query({
           query: () => ({
-            url: '/api/posts',
+            url: '/api/posts/',
             method: 'GET',
           })
         }),
@@ -30,7 +30,7 @@ export const postsApi = apiSlice.injectEndpoints({
         }),
         DeletePost: builder.mutation({
           query: (id) => ({
-            url: `/api/posts/${id}`,
+            url: `/api/posts/${id}/`,
             method: 'DELETE',
           })
         }),

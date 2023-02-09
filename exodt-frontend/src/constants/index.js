@@ -1,1 +1,1 @@
-export const mediaUrl = "https://exodt.s3.amazonaws.com/";
+export const mediaUrl = "https://exodt.s3.amazonaws.com/media_root";

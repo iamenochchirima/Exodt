@@ -2,7 +2,7 @@ import React, {Suspense, lazy} from 'react'
 import { Box, Stack} from '@mui/material'
 
 const Chats = lazy(() => import('./Chats'));
-const ChatInterface = lazy(() => import('./ChatInterface'))
+const Conversation = lazy(() => import('./Conversation'))
 
 const Messages = () => {
   return (
@@ -12,7 +12,7 @@ const Messages = () => {
             <Chats/>
           </Suspense>
           <Suspense fallback={<Box flex={5} sx={{margin: 5}}>Loading...</Box>}>
-            <ChatInterface/>
+            <Conversation/>
           </Suspense>
         </Stack>
     </Box>

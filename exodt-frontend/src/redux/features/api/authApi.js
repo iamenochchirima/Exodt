@@ -9,7 +9,7 @@ export const authApi = apiSlice.injectEndpoints({
       query: () => '/api/profiles/'
     }),
     getUserProfileDetails: builder.query({
-      query: id => `/api/profiles/${id}`
+      query: id => `/api/profiles/${id}/`
     }),
     verifyEmail: builder.mutation({
       query: (body) => ({

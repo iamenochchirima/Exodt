@@ -172,7 +172,7 @@ AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 AWS_DEFAULT_ACL = 'public-read'
 
 AWS_LOCATION = 'static'
-# DEFAULT_FILE_STORAGE = 'exodt.storages.MediaStore'
+DEFAULT_FILE_STORAGE = 'exodt.storages.MediaStore'
 
 # STATIC_URL = '/static/'
 # MEDIA_URL = ' media_root/'
@@ -180,7 +180,7 @@ AWS_LOCATION = 'static'
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, 'static')
 # ]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
 
 # STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), ", "static_root")
 

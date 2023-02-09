@@ -4,7 +4,7 @@ export const chatApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getMessages: builder.query({
             query: () => ({
-              url: '/api/messages',
+              url: '/api/messages/',
               method: 'GET',
             })
         }),

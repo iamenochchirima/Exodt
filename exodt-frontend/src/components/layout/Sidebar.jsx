@@ -62,7 +62,7 @@ const Sidebar = ({mode,setMode}) => {
         </ListItem>
         </Box>
       </Box>
-      <Box flex={3} p={2} sx={{ display: { xs: "none", sm: "block" }}}>
+      <Box flex={2} p={2} sx={{ display: { xs: "none", sm: "block" }}}>
         <Box position="fixed">
         {isFetching
               ? `Fetching your profile...`

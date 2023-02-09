@@ -35,7 +35,7 @@ class PostsView(ModelViewSet):
     # search_fields = ['^slug']
 
 class UserProfileView(ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedCustom]
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
 
