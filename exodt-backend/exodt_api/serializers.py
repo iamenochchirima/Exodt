@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from posts.models import Post 
 from main.models import UserProfile
-from chat.models import Message, MessageAttachment, Chats, ChatMessage
+from chat.models import Conversation
 from django.db.models import Q
 from django.utils import timezone
 import pytz
@@ -57,8 +57,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             user_id = None
 
         conversation_list = UserProfile.objects.filter(
-            Q(user__in=Message.objects.filter(sender=user_id).values("receiver")) | 
-            Q(user__in=Message.objects.filter(receiver=user_id).values("sender"))
+            Q(user__in=Conversation.objects.filter(sender=user_id).values("receiver")) | 
+            Q(user__in=Conversation.objects.filter(receiver=user_id).values("sender"))
         ).distinct()
 
         return UserProfileSerializer(conversation_list, many=True).data
@@ -69,28 +69,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
         except Exception as e:
             user_id = None
 
-        message = Message.objects.filter(receiver=user_id, is_read=False).distinct() 
+        message = Conversation.objects.filter(receiver=user_id, is_read=False).distinct() 
 
         return message.count()
 
 
-class MessageAttachmentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = MessageAttachment
-        fields = "__all__"
-
-
-class MessageSerializer(serializers.ModelSerializer):
+class ConversationSerializer(serializers.ModelSerializer):
     sender = serializers.SerializerMethodField("get_sender_data")
     sender_id = serializers.IntegerField(write_only=True)
     receiver = serializers.SerializerMethodField("get_receiver_data")
     receiver_id = serializers.IntegerField(write_only=True)
-    message_attachments = MessageAttachmentSerializer(
-        read_only=True, many=True)
 
     class Meta: 
-        model = Message
+        model = Conversation
         fields = "__all__"
 
     def get_receiver_data(self, obj):
@@ -98,21 +89,3 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def get_sender_data(self, obj):
         return UserProfileSerializer(obj.sender.user_profile).data
-
-
-
-
-
-class ChatMessageSerializer(serializers.ModelSerializer):
-    message = MessageSerializer(read_only=True)
-
-    class Meta:
-        model = ChatMessage
-        fields = '__all__'
-
-class ChatsSerializer(serializers.ModelSerializer):
-    messages = ChatMessageSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Chats
-        fields = '__all__'

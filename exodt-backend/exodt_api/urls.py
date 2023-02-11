@@ -6,7 +6,7 @@ router = routers.DefaultRouter()
 
 app_name = 'exodt_api'
 
-router.register(r'messages', views.MessageView)
+router.register(r'messages', views.CoversationView)
 router.register(r'posts', views.PostsView)
 router.register(r'profiles', views.UserProfileView)
 

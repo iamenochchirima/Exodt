@@ -20,7 +20,7 @@ import {
   SentimentSatisfied,
 } from "@mui/icons-material";
 import { Chat_History } from ".";
-import { Timeline, TextMessage } from "./MessageTypes";
+import { Timeline, TextMessage, MediaMessage, LinkMessage, DocMessage } from "./MessageTypes";
 
 const StyledInput = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -123,7 +123,7 @@ const Conversation = () => {
           </Stack>
         </Box>
         {/* Messages */}
-        <Box width={"100%"} sx={{ flexGrow: 1 }}>
+        <Box width={"100%"} sx={{ flexGrow: 1, overflow: "scroll", height: "300px" }}>
           <Box p={3}>
             <Stack spacing={3}>
               {Chat_History.map((el) => {
@@ -133,13 +133,11 @@ const Conversation = () => {
                   case "msg":
                     switch (el.subtype) {
                       case "img":
-                        break;
+                        return <MediaMessage el={el}/>
                       case "doc":
-                        break;
+                        return <DocMessage el={el}/>
                       case "link":
-                        break;
-                      case "reply":
-                        break;
+                        return <LinkMessage el={el}/>
 
                       default:
                         return <TextMessage el={el} />;

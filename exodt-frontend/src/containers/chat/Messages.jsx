@@ -1,28 +1,37 @@
-import React, {Suspense, lazy} from 'react'
-import { Box, Stack} from '@mui/material'
+import React, { Suspense, lazy } from "react";
+import { Box, Stack } from "@mui/material";
 
-const Chats = lazy(() => import('./Chats'));
-const Conversation = lazy(() => import('./Conversation'))
+const Chats = lazy(() => import("./Chats"));
+const Conversation = lazy(() => import("./Conversation"));
 
 const Messages = () => {
   return (
-    <Box bgcolor={'background.default'} color={'text.primary'}>
-        <Stack direction="row" spacing={1} justifyContent="space-between">
-          <Suspense fallback={<Box flex={5} sx={{margin: 5}}>Loading...</Box>}>
-            <Chats/>
-          </Suspense>
-          <Suspense fallback={<Box flex={5} sx={{margin: 5}}>Loading...</Box>}>
-            <Conversation/>
-          </Suspense>
-        </Stack>
+    <Box color={"text.primary"}>
+      <Stack direction="row" spacing={1} justifyContent="space-between">
+        <Suspense
+          fallback={
+            <Box flex={5} sx={{ margin: 5 }}>
+              Loading...
+            </Box>
+          }
+        >
+          <Chats />
+        </Suspense>
+        <Suspense
+          fallback={
+            <Box flex={5} sx={{ margin: 5 }}>
+              Loading...
+            </Box>
+          }
+        >
+          <Conversation />
+        </Suspense>
+      </Stack>
     </Box>
-  )
-}
+  );
+};
 
-export default Messages
-
-
-
+export default Messages;
 
 // import React from 'react';
 // import { makeStyles } from '@material-ui/core/styles';
@@ -74,7 +83,6 @@ export default Messages
 //   const {userProfileDetails} = useSelector((state) => state.auth)
 
 //   const conversation_list = userProfileDetails?.conversed_list
-
 
 //   return (
 //       <div>
@@ -158,15 +166,6 @@ export default Messages
 
 // export default Messages;
 
-
-
-
-
-
-
-
-
-
 // // import React, {useEffect} from 'react';
 // // import List from '@mui/material/List';
 // // import ListItem from '@mui/material/ListItem';
@@ -190,7 +189,6 @@ export default Messages
 
 // //   const classes = useStyles();
 
-
 // //   return (
 // //     <Grid container className={classes.root} spacing={2}>
 // //       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -202,7 +200,7 @@ export default Messages
 // //                 >
 // //                   Messages
 //                 // </Typography>
-        
+
 // //         <Divider variant="inset" component="li" />
 // //       </List>
 // //       <Messages/>
