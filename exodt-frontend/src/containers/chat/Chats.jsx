@@ -12,8 +12,8 @@ import {
 import { ArchiveOutlined, Search } from "@mui/icons-material";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import { withStyles } from "@material-ui/core/styles";
-import { ChatList } from ".";
 import { useSelector } from "react-redux";
+import { useGetChatsQuery } from "../../redux/features/api/chatApi";
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -84,9 +84,9 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-const ChatElement = ({ id, img, name, msg, time, unread, pinned, online }) => {
+const ChatElement = ({ el }) => {
   const theme = useTheme();
-
+  console.log(el);
   return (
     <Box
       sx={{
@@ -94,7 +94,8 @@ const ChatElement = ({ id, img, name, msg, time, unread, pinned, online }) => {
         borderRadius: 1,
         backgroundColor: theme.palette.mode === "light" ? "#FFF" : "#2D3B43",
       }}
-      p={2}
+      p={0.5}
+      key={el.id}
     >
       <Stack
         direction={"row"}
@@ -102,7 +103,7 @@ const ChatElement = ({ id, img, name, msg, time, unread, pinned, online }) => {
         justifyContent={"space-between"}
       >
         <Stack direction={"row"} spacing={2}>
-          {online ? (
+          {el.online ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{
@@ -111,14 +112,22 @@ const ChatElement = ({ id, img, name, msg, time, unread, pinned, online }) => {
               }}
               variant="dot"
             >
-              <Avatar src={img} />
+              <Avatar src={el.participant_profile.profile_image} />
             </StyledBadge>
           ) : (
-            <Avatar src={img} />
+            <Avatar src={el.participant_profile.profile_image} />
           )}
           <Stack spacing={0.3}>
-            <Typography variant="subtitle2">{name}</Typography>
-            <Typography variant="caption">{msg}</Typography>
+            <Typography variant="subtitle2">
+              {el.participant_profile.first_name +
+                " " +
+                el.participant_profile.last_name}
+            </Typography>
+            <Typography variant="caption">
+              {el.latest_message?.message.length > 20
+                ? el.latest_message?.message.substr(0, 20) + "..."
+                : el.latest_message?.message}
+            </Typography>
           </Stack>
         </Stack>
         <Stack
@@ -127,9 +136,9 @@ const ChatElement = ({ id, img, name, msg, time, unread, pinned, online }) => {
           sx={{ pt: 0, pr: 1, pb: 1, pl: 1 }}
         >
           <Typography sx={{ fontWeight: 600 }} variant={"caption"}>
-            {time}
+            {el.latest_message.timestamp_formatted}
           </Typography>
-          <Badge color="primary" badgeContent={unread} />
+          <Badge color="primary" badgeContent={2} />
         </Stack>
       </Stack>
     </Box>
@@ -141,11 +150,17 @@ const Chats = () => {
 
   const { userProfileDetails } = useSelector((state) => state.auth);
 
-  const conversation_list = userProfileDetails?.conversed_list;
+  const id = userProfileDetails?.id;
+
+  const { data: ChatList } = useGetChatsQuery(id, {
+    pollingInterval: 900000,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
 
   return (
     <Box
-      flex={2}
+      flex={2.5}
       sx={{
         backgroundColor:
           theme.palette.mode === "light"
@@ -153,7 +168,7 @@ const Chats = () => {
             : theme.palette.background.default,
         position: "relative",
         boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
-        marginLeft: [4, 4, 5]
+        marginLeft: [4, 4, 5],
       }}
     >
       <Stack p={2} spacing={2} sx={{ height: "100vh" }}>
@@ -189,16 +204,16 @@ const Chats = () => {
             <Typography variant="subtitle2" sx={{ color: "#676767" }}>
               Pinned Chat
             </Typography>
-            {ChatList.filter((el) => el.pinned).map((el) => {
-              return <ChatElement {...el} />;
+            {ChatList?.filter((el) => el.latest_message && el.pinned).map((el) => {
+              return <ChatElement el={el} />;
             })}
           </Stack>
           <Stack spacing={2.4}>
             <Typography variant="subtitle2" sx={{ color: "#676767" }}>
               All Chats
             </Typography>
-            {ChatList.filter((el) => !el.pinned).map((el) => {
-              return <ChatElement {...el} />;
+            {ChatList?.filter((el) => el.latest_message && !el.pinned ).map((el) => {
+              return <ChatElement el={el} />;
             })}
           </Stack>
         </Stack>

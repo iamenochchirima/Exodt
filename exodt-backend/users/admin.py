@@ -10,7 +10,7 @@ class UserAdminConfig(UserAdmin):
     search_fields = ('email', 'first_name', 'last_name', 'username')
     list_filter = ('email', 'first_name', 'last_name', 'username', 'is_active', 'is_staff', 'is_verified', 'is_admin', 'is_superuser', 'date_joined', 'last_login')
     ordering = ('-start_date',)
-    list_display = ('email', 'first_name','last_name', 'username',
+    list_display = ('id','email', 'first_name','last_name', 'username',
                     'is_active', 'is_staff','is_verified', 'is_admin', 'is_superuser', 'date_joined', 'last_login')
     fieldsets = (
         (None, {'fields': ('email', 'first_name','last_name', 'username')}),

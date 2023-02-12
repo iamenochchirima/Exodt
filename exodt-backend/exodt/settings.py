@@ -30,7 +30,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,17 +51,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 ]
 
-ASGI_APPLICATION = "exodt.asgi.application"
 WSGI_APPLICATION = 'exodt.wsgi.application'
-
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-#         },
-#     },
-# }
 
 CHANNEL_LAYERS = {
     'default': {
@@ -100,21 +89,6 @@ TEMPLATES = [
         },
     },
 ]
-
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'db',
-#         'PORT': '',
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -174,16 +148,6 @@ AWS_DEFAULT_ACL = 'public-read'
 AWS_LOCATION = 'static'
 DEFAULT_FILE_STORAGE = 'exodt.storages.MediaStore'
 
-# STATIC_URL = '/static/'
-# MEDIA_URL = ' media_root/'
-
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static')
-# ]
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
-
-# STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), ", "static_root")
-
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
@@ -238,8 +202,6 @@ DJOSER = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    # 'social_core.backends.google.GoogleOAuth2',
-    # 'social_core.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend'
 ]
 
@@ -307,5 +269,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.UserAccount"
 
 SOCKET_SERVER = config("SOCKET_SERVER")
-
-# REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }

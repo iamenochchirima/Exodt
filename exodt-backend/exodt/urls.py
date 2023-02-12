@@ -1,8 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from rest_framework.schemas import get_schema_view
-from rest_framework.documentation import include_docs_urls
 from django.conf.urls.static import static
 from . import views
 
@@ -16,13 +14,6 @@ urlpatterns = [
     path('api_auth', include('rest_framework.urls', namespace='rest_framework')),
     path('main/', include('main.urls', namespace='main')),
     path('posts/', include('posts.urls', namespace='posts')),
-    path('chat/', include('chat.urls', namespace='chat')),
-    path('docs/', include_docs_urls(title='ExodtAPI')),
-    path('schema', get_schema_view(
-        title="ExodtAPI",
-        description="API for ExodtAPI",
-        version="1.0.0"
-    ), name='openapi-schema'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -2,8 +2,8 @@ from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 from posts.models import Post
 from main.models import UserProfile
-from chat.models import Conversation
-from . serializers import PostSerializer, UserProfileSerializer, ConversationSerializer
+from chat.models import Conversation, Message
+from . serializers import PostSerializer, UserProfileSerializer, ConversationSerializer, MessageSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, AllowAny, BasePermission, IsAuthenticatedOrReadOnly
@@ -17,6 +17,9 @@ from django.db.models import Q, Count, Subquery, OuterRef
 import json
 from exodt.settings import SOCKET_SERVER
 import requests
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class PostUserWritrPermission(BasePermission):
 
@@ -124,7 +127,45 @@ def handleRequest(serializerData):
         pass
     return True
 
-class CoversationView(ModelViewSet):
+class ConversationView(ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [IsAuthenticatedCustom]
+    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+
+        # Extract the user IDs from the request data
+        user_ids = request.data.get('user_ids')
+        print(request.data)
+        # Make sure that user_ids is a list and contains at least two elements
+        if not isinstance(user_ids, list) or len(user_ids) < 2:
+            return Response({'error': 'user_ids must be a list containing at least two user IDs'}, status=400)
+        # Get the User objects for the given user IDs
+        users = User.objects.filter(id__in=user_ids)
+        # Make sure that the User objects exist
+        if users.count() != len(user_ids):
+            return Response({'error': 'One or more of the user IDs are invalid'}, status=400)
+        # Create a new Conversation instance with the given users
+        conversation = Conversation.objects.create()
+        conversation.participants.set(users)
+        # Return the created Conversation instance
+        serializer = self.get_serializer(conversation)
+        return Response(serializer.data, status=201)
+    
+    def get_chats_list(self, request, user_id=None):
+        user = get_object_or_404(User, pk=user_id)
+        conversations = self.queryset.filter(participants=user)
+        serializer = self.serializer_class(conversations, many=True, context={'current_user_id': user_id})
+        return Response(serializer.data)
+
+
+class MessageView(ModelViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = MessageSerializer
+    queryset = Message.objects.all()
+
+    def get_conver_messages(self, request, *args, **kwargs):
+        conversation_id = self.kwargs.get('conversation_id')
+        if conversation_id:
+            self.queryset = self.queryset.filter(conversation__id=conversation_id)
+        return super().list(request, *args, **kwargs)
