@@ -14,10 +14,18 @@ export const chatApi = apiSlice.injectEndpoints({
               method: 'GET',
             })
         }),
+        sendMessage: builder.mutation({
+            query: (body) => ({
+              url: '/api/messages/',
+              method: 'POST',
+              body,
+            })
+          }),
     })
 });
 
 export const {
     useGetMessagesQuery,
     useGetChatsQuery,
+    useSendMessageMutation,
 } = chatApi;

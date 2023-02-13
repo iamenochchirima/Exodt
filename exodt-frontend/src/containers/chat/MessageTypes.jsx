@@ -9,16 +9,26 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const TextMessage = ({ el }) => {
+
+  const linkRegex = /(https?:\/\/[^\s]+)/g;
+  const match = el.message.match(linkRegex);
+  const link = match ? match[0] : null;
+
   const theme = useTheme();
+  const { userProfileDetails } = useSelector((state) => state.auth);
+
+  const user_id = userProfileDetails.id
 
   return (
-    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+    <Stack direction={"row"} justifyContent={el.sender !== user_id ? "start" : "end"}>
+      <Stack>
       <Box
         pading={1.5}
         sx={{
-          backgroundColor: el.incoming
+          backgroundColor: el.sender !== user_id
             ? theme.palette.background.default
             : theme.palette.primary.main,
           borderRadius: 1.5,
@@ -27,66 +37,22 @@ const TextMessage = ({ el }) => {
       >
         <Typography
           variant={"body2"}
-          color={el.incoming ? theme.palette.text : "#fff"}
+          color={el.sender !== user_id ? theme.palette.text : "#fff"}
           sx={{ padding: "10px" }}
         >
-          {el.message}
+          {link ? (
+        // Render the link preview here
+        <a href={link}>{link}</a>
+      ) : (
+        el.message
+      )}
         </Typography>
       </Box>
-    </Stack>
-  );
-};
-
-const LinkMessage = ({ el }) => {
-  const theme = useTheme();
-
-  return (
-    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
-      <Box
-        pading={1.5}
-        sx={{
-          backgroundColor: el.incoming
-            ? theme.palette.background.default
-            : theme.palette.primary.main,
-          borderRadius: 1.5,
-          width: "max-content",
-        }}
-      >
-        <Stack spacing={2}>
-          <Stack
-            p={2}
-            spacing={3}
-            alignItem={"center"}
-            sx={{
-              backgroundColor: theme.palette.background.paper,
-              borderRadius: 1,
-            }}
-          >
-            <img
-              src={el.preview}
-              alt={el.message}
-              style={{ maxHeight: 210, borderRadius: "10px" }}
-            />
-            <Stack spacing={2}>
-              <Typography variant="subtitle2">Creating a chat app</Typography>
-              <Typography
-                variant="subtitle2"
-                component={Link}
-                to="https://www.youtube.com"
-                sx={{ color: theme.palette.primary.main }}
-              >
-                www.youtube.com
-              </Typography>
-            </Stack>
-            <Typography
-              variant="body2"
-              color={el.incoming ? theme.palette.text : "#fff"}
-            >
-              {el.message}
-            </Typography>
-          </Stack>
-        </Stack>
-      </Box>
+      <Typography align={el.sender !== user_id ? "left" : "right"} variant="caption">
+        {el.timestamp_formatted}
+      </Typography>
+      </Stack>
+     
     </Stack>
   );
 };
@@ -94,12 +60,16 @@ const LinkMessage = ({ el }) => {
 const DocMessage = ({ el }) => {
   const theme = useTheme();
 
+  const { userProfileDetails } = useSelector((state) => state.auth);
+
+  const user_id = userProfileDetails.id
+
   return (
-    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+    <Stack direction={"row"} justifyContent={el.sender !== user_id ? "start" : "end"}>
       <Box
         pading={1.5}
         sx={{
-          backgroundColor: el.incoming
+          backgroundColor: el.sender !== user_id
             ? theme.palette.background.default
             : theme.palette.primary.main,
           borderRadius: 1.5,
@@ -119,7 +89,7 @@ const DocMessage = ({ el }) => {
             direction="row"
           >
             <ImageOutlined />
-            <Typography variant="caption">Abstact.png</Typography>
+            <Typography variant="caption">{el.document}</Typography>
             <IconButton>
               <DownloadOutlined />
             </IconButton>
@@ -127,7 +97,7 @@ const DocMessage = ({ el }) => {
           <Typography
             variant="body2"
             sx={{
-              color: el.incoming ? theme.palette.text : "#fff"
+              color: el.sender !== user_id ? theme.palette.text : "#fff"
             }}
           >
             {el.message}
@@ -138,29 +108,19 @@ const DocMessage = ({ el }) => {
   );
 };
 
-const Timeline = ({ el }) => {
-  return (
-    <Stack
-      direction={"row"}
-      alignItems={"center"}
-      justifyContent={"space-between"}
-    >
-      <Divider width="46%" />
-      <Typography variant="caption">{el.text}</Typography>
-      <Divider width="46%" />
-    </Stack>
-  );
-};
-
 const MediaMessage = ({ el }) => {
   const theme = useTheme();
 
+  const { userProfileDetails } = useSelector((state) => state.auth);
+
+  const user_id = userProfileDetails.id
+
   return (
-    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+    <Stack direction={"row"} justifyContent={el.sender !== user_id ? "start" : "end"}>
       <Box
         pading={1.5}
         sx={{
-          backgroundColor: el.incoming
+          backgroundColor: el.sender !== user_id
             ? theme.palette.background.default
             : theme.palette.primary.main,
           borderRadius: 1.5,
@@ -169,13 +129,13 @@ const MediaMessage = ({ el }) => {
       >
         <Stack spacing={1}>
           <img
-            src={el.img}
+            src={el.image}
             alt={el.message}
             style={{ maxHeight: 210, borderRadius: "10px" }}
           />
           <Typography
             variant="body2"
-            color={el.incoming ? theme.palette.text : "#fff"}
+            color={el.sender !== user_id ? theme.palette.text : "#fff"}
           >
             {el.message}
           </Typography>
@@ -185,4 +145,4 @@ const MediaMessage = ({ el }) => {
   );
 };
 
-export { Timeline, TextMessage, MediaMessage, LinkMessage, DocMessage };
+export { TextMessage, MediaMessage, DocMessage };

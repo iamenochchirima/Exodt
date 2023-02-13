@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Stack,
@@ -12,8 +12,9 @@ import {
 import { ArchiveOutlined, Search } from "@mui/icons-material";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import { withStyles } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useGetChatsQuery } from "../../redux/features/api/chatApi";
+import { setActiveChat } from "../../redux/features/api/chatSlice";
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -85,17 +86,33 @@ const StyledBadge = withStyles((theme) => ({
 }))(Badge);
 
 const ChatElement = ({ el }) => {
+  const [latestMessage, setLatestMessage] = useState(
+    el.latest_message?.message
+  );
+
+  const dispatch = useDispatch();
+
   const theme = useTheme();
-  console.log(el);
+
+  const handleChatClick = () => {
+    dispatch(setActiveChat(el));
+  };
+
   return (
     <Box
       sx={{
         width: "100%",
         borderRadius: 1,
         backgroundColor: theme.palette.mode === "light" ? "#FFF" : "#2D3B43",
+        cursor: "pointer",
+        "&:hover": {
+          backgroundColor: theme.palette.mode === "light" ? "#ddd" : "#800080",
+        },
       }}
       p={0.5}
       key={el.id}
+      onClick={handleChatClick}
+      minWidth="300px"
     >
       <Stack
         direction={"row"}
@@ -124,9 +141,9 @@ const ChatElement = ({ el }) => {
                 el.participant_profile.last_name}
             </Typography>
             <Typography variant="caption">
-              {el.latest_message?.message.length > 20
-                ? el.latest_message?.message.substr(0, 20) + "..."
-                : el.latest_message?.message}
+              {latestMessage.length > 20
+                ? latestMessage.substr(0, 20) + "..."
+                : latestMessage}
             </Typography>
           </Stack>
         </Stack>
@@ -204,17 +221,21 @@ const Chats = () => {
             <Typography variant="subtitle2" sx={{ color: "#676767" }}>
               Pinned Chat
             </Typography>
-            {ChatList?.filter((el) => el.latest_message && el.pinned).map((el) => {
-              return <ChatElement el={el} />;
-            })}
+            {ChatList?.filter((el) => el.latest_message && el.pinned).map(
+              (el) => {
+                return <ChatElement el={el} />;
+              }
+            )}
           </Stack>
           <Stack spacing={2.4}>
             <Typography variant="subtitle2" sx={{ color: "#676767" }}>
               All Chats
             </Typography>
-            {ChatList?.filter((el) => el.latest_message && !el.pinned ).map((el) => {
-              return <ChatElement el={el} />;
-            })}
+            {ChatList?.filter((el) => el.latest_message && !el.pinned).map(
+              (el) => {
+                return <ChatElement el={el} />;
+              }
+            )}
           </Stack>
         </Stack>
       </Stack>

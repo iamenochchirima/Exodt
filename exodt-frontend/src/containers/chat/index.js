@@ -156,7 +156,7 @@ const Chat_History = [
     type: "msg",
     message: "Ya sure, sending you a pic",
     incoming: true,
-    outgoing: false,
+    outgoing: false
   },
 
   {

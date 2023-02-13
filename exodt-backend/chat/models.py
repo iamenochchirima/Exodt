@@ -24,12 +24,9 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, related_name='messages', on_delete=models.CASCADE)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     message = models.TextField(blank=True, null=True)
-    media_file = models.FileField(upload_to=get_message_file, null=True, blank=True)
-    media_caption = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to=get_message_file, null=True, blank=True)
     link = models.URLField(null=True, blank=True)
-    link_caption = models.TextField(null=True, blank=True)
     document = models.FileField(null=True, upload_to=get_message_file, blank=True)
-    doc_caption = models.TextField(null=True, blank=True)
     is_read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 

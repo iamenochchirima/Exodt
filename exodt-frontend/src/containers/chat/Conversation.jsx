@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Box,
@@ -20,7 +20,19 @@ import {
   SentimentSatisfied,
 } from "@mui/icons-material";
 import { Chat_History } from ".";
-import { Timeline, TextMessage, MediaMessage, LinkMessage, DocMessage } from "./MessageTypes";
+import {
+  Timeline,
+  TextMessage,
+  MediaMessage,
+  LinkMessage,
+  DocMessage,
+} from "./MessageTypes";
+import { useSelector } from "react-redux";
+import {
+  useGetMessagesQuery,
+  useSendMessageMutation,
+} from "../../redux/features/api/chatApi";
+import io from "socket.io-client"
 
 const StyledInput = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -60,6 +72,65 @@ const StyledBadge = withStyles((theme) => ({
 
 const Conversation = () => {
   const theme = useTheme();
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [socket, setSocket] = useState(null)
+
+  const { activeChat } = useSelector((state) => state.chat);
+
+  const { userProfileDetails } = useSelector((state) => state.auth);
+
+  const user_id = userProfileDetails?.id;
+
+  const chat_id = activeChat?.id;
+
+  const { data } = useGetMessagesQuery(chat_id, {
+    pollingInterval: 900000,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
+
+  useEffect(() => {
+    socket?.on("Welcome", message => {
+      console.log(message)
+    })
+  }, [socket])
+
+  useEffect(() => {
+    setSocket(io("ws://localhost:8900"))
+  }, [])
+
+  useEffect(() => {
+    if (data) {
+      setMessages(data);
+    }
+  }, [data]);
+
+  const [sendMessage] = useSendMessageMutation();
+  const scrollRef = useRef();
+
+  const body = { sender: user_id, conversation: chat_id, message: newMessage };
+
+  useEffect(() =>{
+    scrollRef.current?.scrollIntoView({behavior: "smooth"})
+  }, [messages])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (body) {
+      try {
+        await sendMessage(body)
+          .unwrap()
+          .then((payload) => {
+            console.log("fulfilled", payload);
+            setMessages([...messages, payload]);
+          });
+      } catch (err) {
+        console.error("Failed to send message: ", err);
+      }
+    }
+    setNewMessage("");
+  };
 
   return (
     <Box
@@ -70,128 +141,153 @@ const Conversation = () => {
         position: "relative",
       }}
     >
-      <Stack
-        direction={"column"}
-        height={"100%"}
-        maxHeight={"100vh"}
-        width={"auto"}
-      >
-        {/* Header */}
-        <Box
-          p={2}
-          sx={{
-            width: "100%",
-            backgroundColor:
-              theme.palette.mode === "light"
-                ? "#F8FAFF"
-                : theme.palette.background.default,
-            position: "relative",
-            boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
-          }}
-        >
+      {activeChat ? (
+        <>
           <Stack
-            alignItems={"center"}
-            direction={"row"}
-            justifyContent={"space-between"}
-            sx={{ width: "100%", height: "100%" }}
+            direction={"column"}
+            height={"100%"}
+            maxHeight={"100vh"}
+            width={"auto"}
           >
-            <Stack direction={"row"} spacing={2}>
-              <Box>
-                <StyledBadge
-                  overlap="circular"
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  variant="dot"
-                >
-                  <Avatar src={faker.image.avatar()} />
-                </StyledBadge>
-              </Box>
-              <Stack spacing={0.2}>
-                <Typography variant="subtitle2">
-                  {faker.name.fullName()}
-                </Typography>
-                <Typography variant="caption">Online</Typography>
+            {/* Header */}
+            <Box
+              p={2}
+              sx={{
+                width: "100%",
+                backgroundColor:
+                  theme.palette.mode === "light"
+                    ? "#F8FAFF"
+                    : theme.palette.background.default,
+                position: "relative",
+                boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              <Stack
+                alignItems={"center"}
+                direction={"row"}
+                justifyContent={"space-between"}
+                sx={{ width: "100%", height: "100%" }}
+              >
+                <Stack direction={"row"} spacing={2}>
+                  <Box>
+                    <StyledBadge
+                      overlap="circular"
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      variant="dot"
+                    >
+                      <Avatar
+                        src={activeChat?.participant_profile.profile_image}
+                      />
+                    </StyledBadge>
+                  </Box>
+                  <Stack spacing={0.2}>
+                    <Typography variant="subtitle2">
+                      {activeChat?.participant_profile.first_name +
+                        " " +
+                        activeChat?.participant_profile.last_name}
+                    </Typography>
+                    <Typography variant="caption">Online</Typography>
+                  </Stack>
+                </Stack>
+                <Stack direction={"row"} spacing={1}>
+                  <IconButton>
+                    <InfoOutlined />
+                  </IconButton>
+                </Stack>
               </Stack>
-            </Stack>
-            <Stack direction={"row"} spacing={1}>
-              <IconButton>
-                <InfoOutlined />
-              </IconButton>
-            </Stack>
-          </Stack>
-        </Box>
-        {/* Messages */}
-        <Box width={"100%"} sx={{ flexGrow: 1, overflow: "scroll", height: "300px" }}>
-          <Box p={3}>
-            <Stack spacing={3}>
-              {Chat_History.map((el) => {
-                switch (el.type) {
-                  case "divider":
-                    return <Timeline el={el} />;
-                  case "msg":
-                    switch (el.subtype) {
-                      case "img":
-                        return <MediaMessage el={el}/>
-                      case "doc":
-                        return <DocMessage el={el}/>
-                      case "link":
-                        return <LinkMessage el={el}/>
-
+            </Box>
+            {/* Messages */}
+            <Box
+              width={"100%"}
+              sx={{ flexGrow: 1, overflow: "scroll", height: "300px" }}
+            >
+              <Box p={3}>
+                <Stack spacing={3}>
+                  {messages?.map((el) => {
+                    switch (true) {
+                      case el.image !== null:
+                        return (
+                          <div ref={scrollRef}>
+                            <MediaMessage el={el} />
+                          </div>
+                        );
+                      case el.document !== null:
+                        return (
+                          <div ref={scrollRef}>
+                            <DocMessage el={el} />
+                          </div>
+                        );
                       default:
-                        return <TextMessage el={el} />;
+                        return (
+                          <div ref={scrollRef}>
+                            <TextMessage el={el} />
+                          </div>
+                        );
                     }
-
-                    break;
-
-                  default:
-                    return <></>;
-                }
-              })}
-            </Stack>
-          </Box>
-        </Box>
-        {/* Footer */}
+                  })}
+                </Stack>
+              </Box>
+            </Box>
+            {/* Footer */}
+            <Box
+              p={2}
+              sx={{
+                width: "100%",
+                backgroundColor:
+                  theme.palette.mode === "light"
+                    ? "#F8FAFF"
+                    : theme.palette.background.default,
+              }}
+            >
+              <Stack direction={"row"} alignItems={"center"} spacing={3}>
+                <StyledInput
+                  fullWidth
+                  placeholder="Write a message"
+                  variant="filled"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  InputProps={{
+                    disableUnderline: true,
+                    startAdornment: (
+                      <InputAdornment>
+                        <IconButton>
+                          <ImageOutlined />
+                        </IconButton>
+                        <IconButton>
+                          <SentimentSatisfied />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment>
+                        <IconButton onClick={handleSubmit}>
+                          <SendOutlined />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Stack>
+            </Box>
+          </Stack>
+        </>
+      ) : (
         <Box
-          p={2}
           sx={{
-            width: "100%",
-            backgroundColor:
-              theme.palette.mode === "light"
-                ? "#F8FAFF"
-                : theme.palette.background.default,
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
           }}
         >
-          <Stack direction={"row"} alignItems={"center"} spacing={3}>
-            <StyledInput
-              fullWidth
-              placeholder="Write a message"
-              variant="filled"
-              InputProps={{
-                disableUnderline: true,
-                startAdornment: (
-                  <InputAdornment>
-                    <IconButton>
-                      <ImageOutlined />
-                    </IconButton>
-                    <IconButton>
-                      <SentimentSatisfied />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment>
-                    <IconButton>
-                      <SendOutlined />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Stack>
+          <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            Select a chat and start chatting
+          </Typography>
         </Box>
-      </Stack>
+      )}
     </Box>
   );
 };
