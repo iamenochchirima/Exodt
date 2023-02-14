@@ -1,16 +1,14 @@
 import { DownloadOutlined, ImageOutlined } from "@mui/icons-material";
 import {
   Box,
-  Divider,
   IconButton,
-  Link,
   Stack,
   Typography,
   useTheme,
 } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
-import {format} from 'timeago.js'
+import * as timeago from 'timeago.js';
 
 const TextMessage = ({ el }) => {
 
@@ -50,7 +48,7 @@ const TextMessage = ({ el }) => {
         </Typography>
       </Box>
       <Typography align={el.sender !== user_id ? "left" : "right"} variant="caption">
-        {format(el.timestamp)}
+        {timeago.format(el.timestamp)}
       </Typography>
       </Stack>
      

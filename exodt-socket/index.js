@@ -1,40 +1,46 @@
-const express = require('express');
-const cors = require('cors');
-const http = require('http');
-const path = require('path');
-const bodyParser = require('body-parser');
-const {Server} = require('socket.io');
-
-const PORT = 9000;
-const app = express();
-const server = http.createServer(app);
-
-app.use(cors());
-app.use(express.static(path.join(__dirname, 'client')));
-
-const io = new Server(server, {
+const io = require("socket.io")(8900, {
   cors: {
-    origin: "http://127.0.0.1:3000",
-    methods: ["GET", "POST"]
-  }
+    origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
+  },
 });
 
-app.use(bodyParser.json());
+let users = [];
 
-app.post("/server", (req, res) => {
-  io.emit("command", req.body);
-  console.log("received POST request:", req.body);
-  res.status(201).json({ status: "received" });
-});
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
 
-io.on('connection', (socket) => {
-  console.log("client connected");
-  socket.on('command', (data) => {
-    console.log("received command:", data);
-    io.emit('command', data);
+const getUser = (recieverId) => {
+  return users.find((user) => user.userId === recieverId);
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+io.on("connection", (socket) => {
+  // When connected
+  console.log("A user connected");
+
+  socket.on("addUser", (userId) => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
   });
-});
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  // Send and get messages
+  socket.on("sendMessage", ({ senderId, recieverId, message }) => {
+    const user = getUser(recieverId);
+    io.to(user?.socketId).emit("getMessage", {
+      senderId,
+      message,
+    });
+  });
+
+  // When disconnected
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+    removeUser(socket.id);
+    io.emit("getUsers", users);
+  });
 });

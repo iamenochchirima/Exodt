@@ -12,19 +12,15 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
-import { faker } from "@faker-js/faker";
 import {
   ImageOutlined,
   InfoOutlined,
   SendOutlined,
   SentimentSatisfied,
 } from "@mui/icons-material";
-import { Chat_History } from ".";
 import {
-  Timeline,
   TextMessage,
   MediaMessage,
-  LinkMessage,
   DocMessage,
 } from "./MessageTypes";
 import { useSelector } from "react-redux";

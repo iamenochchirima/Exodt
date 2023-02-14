@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import PostList from './containers/posts/Feed';
 import { Routes, Route } from "react-router-dom";
 import SignUp from './containers/auth/SignUp';
 import Login from './containers/auth/LogIn';
 import LogOut from './containers/auth/LogOut';
 import PostView from './containers/posts/PostView';
 import ProfileView from './containers/profile/ProfileView';
-import Search from './containers/posts/Search';
-import Chat from './containers/chat/Chat';
 import Messages from './containers/chat/Messages';
 import CreatePost from './containers/posts/CreatePost';
 import EditPost from './containers/posts/EditPost';
@@ -19,8 +16,6 @@ import Header from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import Home from './components/layout/Home';
 import { Box, Stack } from '@mui/material';
-import SocketServices from './SocketServices';
-
 import {ThemeProvider, createTheme} from '@mui/material';
 
 function App() {
@@ -46,8 +41,6 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/logout" element={<LogOut />} />
               <Route path="/post/:id" element={<PostView />} />
-              <Route path="/search" element={<Search/>} />
-              <Route path="/chat" element={<Chat/>} />
               <Route path="/messages" element={<Messages/>} />
               <Route path="/people" element={<People/>} />
               <Route exact path="create-post" element={<CreatePost/>} />
@@ -56,7 +49,6 @@ function App() {
               <Route exact path="/password/reset/confirm/:uid/:token" element={<ResetPasswordConfirm/>} />
               <Route exact path="/activate/:uid/:token" element={<Activate/>} />
               <Route exact path="/user-profile" element={<ProfileView/>} />
-              <Route exact path="socket-services" element={<SocketServices/>} />
             </Routes>
           </Box>
         </Stack>
