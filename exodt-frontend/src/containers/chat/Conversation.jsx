@@ -32,7 +32,7 @@ import {
   useGetMessagesQuery,
   useSendMessageMutation,
 } from "../../redux/features/api/chatApi";
-import io from "socket.io-client"
+import io from "socket.io-client";
 
 const StyledInput = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -74,7 +74,9 @@ const Conversation = () => {
   const theme = useTheme();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [socket, setSocket] = useState(null)
+  const [socketMessage, setSocketMessage] = useState(null);
+
+  const socket = useRef();
 
   const { activeChat } = useSelector((state) => state.chat);
 
@@ -84,6 +86,8 @@ const Conversation = () => {
 
   const chat_id = activeChat?.id;
 
+  const recieverId = activeChat?.participant_profile.id;
+
   const { data } = useGetMessagesQuery(chat_id, {
     pollingInterval: 900000,
     refetchOnMountOrArgChange: true,
@@ -91,14 +95,34 @@ const Conversation = () => {
   });
 
   useEffect(() => {
-    socket?.on("Welcome", message => {
-      console.log(message)
-    })
-  }, [socket])
+    socket.current = io("ws://localhost:8900");
+
+    socket.current.on("getMessage", (data) => {
+      setSocketMessage({
+        sender: data.senderId,
+        message: data.message,
+        timestamp: Date.now(),
+        image: null,
+        document: null,
+      });
+    });
+  }, []);
+
+  console.log(socketMessage, "here socket message")
 
   useEffect(() => {
-    setSocket(io("ws://localhost:8900"))
-  }, [])
+    socketMessage &&
+      activeChat?.participants.includes(socketMessage.sender) &&
+      setMessages((prev) => [...prev, socketMessage]);
+      console.log(socketMessage, "Socket message")
+  }, [socketMessage, activeChat]);
+
+  useEffect(() => {
+    socket.current.emit("addUser", user_id);
+    socket.current.on("getUsers", (users) => {
+      console.log(users);
+    });
+  }, [user_id]);
 
   useEffect(() => {
     if (data) {
@@ -111,12 +135,15 @@ const Conversation = () => {
 
   const body = { sender: user_id, conversation: chat_id, message: newMessage };
 
-  useEffect(() =>{
-    scrollRef.current?.scrollIntoView({behavior: "smooth"})
-  }, [messages])
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    socket.current.emit("sendMessage", {
+      senderId: user_id,
+      recieverId,
+      message: newMessage,
+    });
+
     if (body) {
       try {
         await sendMessage(body)
@@ -131,6 +158,10 @@ const Conversation = () => {
     }
     setNewMessage("");
   };
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <Box
@@ -207,6 +238,7 @@ const Conversation = () => {
               <Box p={3}>
                 <Stack spacing={3}>
                   {messages?.map((el) => {
+                    console.log(el)
                     switch (true) {
                       case el.image !== null:
                         return (

@@ -63,7 +63,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class ConversationSerializer(serializers.ModelSerializer):
-    participants = serializers.StringRelatedField(many=True)
     participant_profile = serializers.SerializerMethodField()
     latest_message = serializers.SerializerMethodField()
     created_formatted = serializers.SerializerMethodField("get_created_formatted")

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
+import {format} from 'timeago.js'
 
 const TextMessage = ({ el }) => {
 
@@ -49,7 +50,7 @@ const TextMessage = ({ el }) => {
         </Typography>
       </Box>
       <Typography align={el.sender !== user_id ? "left" : "right"} variant="caption">
-        {el.timestamp_formatted}
+        {format(el.timestamp)}
       </Typography>
       </Stack>
      
