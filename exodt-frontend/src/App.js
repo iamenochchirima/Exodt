@@ -15,7 +15,7 @@ import ResetPasswordConfirm from './containers/auth/ResetPasswordConfirm';
 import Header from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import Home from './components/layout/Home';
-import { Box, Stack } from '@mui/material';
+import { Box, CssBaseline, Stack } from '@mui/material';
 import {ThemeProvider, createTheme} from '@mui/material';
 
 function App() {
@@ -30,6 +30,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <Box bgcolor={'background.default'} color={'text.primary'}>
         <Header/>
         <Stack direction="row" spacing={2} justifyContent="space-between">
