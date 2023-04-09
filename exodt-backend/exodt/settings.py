@@ -138,20 +138,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_EXODT_USER_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_ACCESS_KEY_ID = config('EXODT_BACKBLAZE_API_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('EXODT_BACKBLAZE_API_KEY')
+AWS_STORAGE_BUCKET_NAME = config('EXODT_BACKBLAZE_BUCKET')
+AWS_S3_REGION_NAME = 'us-east-005'
+AWS_S3_ENDPOINT = f's3.{AWS_S3_REGION_NAME}.backblazeb2.com'
+AWS_S3_ENDPOINT_URL = f'https://{AWS_S3_ENDPOINT}'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-AWS_DEFAULT_ACL = 'public-read'
 
 AWS_LOCATION = 'static'
-DEFAULT_FILE_STORAGE = 'exodt.storages.MediaStore'
+DEFAULT_FILE_STORAGE = 'exodt.storages.MediaStorage'
 
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATIC_LOCATION = 'static'
+STATICFILES_STORAGE = 'exodt.storages.StaticStorage'
+STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT}/{STATIC_LOCATION}/"
 
-# TEMP = os.path.join(BASE_DIR, 'media_root/temp')
+MEDIA_LOCATION = 'media'
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT}/{MEDIA_LOCATION}/"
 
 REST_FRAMEWORK = {
 
