@@ -1,17 +1,25 @@
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './features/api/authSlice';
-import chatReducer from './features/api/chatSlice';
-import { apiSlice } from './features/api/apiSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { createWrapper } from "next-redux-wrapper";
+import {authApiSlice} from './api/authApiSlice';
+import {generalApiSlice} from './api/generalApiSlice';
 
-export const store = configureStore({
+import { authSlice } from "./slices/authSlice";
+import { appSlice } from "./slices/appSlice";
+
+const makeStore = () =>
+  configureStore({
     reducer: {
-        auth: authReducer,
-        chat: chatReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
+      [authApiSlice.reducerPath]: authApiSlice.reducer,
+      [generalApiSlice.reducerPath]: generalApiSlice.reducer,
+      [authSlice.name]: authSlice.reducer,
+      [appSlice.name]: appSlice.reducer,
     },
-
+    devTools: true,
     middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
-});
+      getDefaultMiddleware().concat(
+        authApiSlice.middleware,
+        generalApiSlice.middleware
+      ),
+  });
 
-export default store;
+export const wrapper = createWrapper(makeStore);
