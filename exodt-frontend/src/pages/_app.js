@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { Provider } from "react-redux";
 import { wrapper } from "../redux/Store";
+import { ThemeProvider } from "next-themes";
 
 export default function App({ Component, ...rest }) {
   const { store, props } = wrapper.useWrappedStore(rest);
@@ -8,7 +9,9 @@ export default function App({ Component, ...rest }) {
 
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <ThemeProvider enableSystem={true} attribute="class">
+        <Component {...pageProps} />
+      </ThemeProvider>
     </Provider>
   );
 }
