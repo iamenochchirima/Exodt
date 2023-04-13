@@ -1,3 +1,3 @@
 # EXODT
 
-## Migrating from CRA to Nextjs
+## Migrating the frontend from CRA to Nextjs...
