@@ -1,6 +1,6 @@
 import { AiFillHome, AiOutlineMessage } from "react-icons/ai";
 import { MdGroups } from "react-icons/md";
-import {BsFillPeopleFill } from "react-icons/bs";
+import {BsFillPeopleFill, BsSearch } from "react-icons/bs";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 

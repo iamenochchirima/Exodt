@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.feed {
+  width: 100%;
+}
+
 @font-face {
   font-family: 'graphik';
   src: url('../fonts/Graphik-Regular-Trial.otf') format('truetype');

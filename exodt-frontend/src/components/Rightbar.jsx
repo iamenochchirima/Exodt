@@ -2,8 +2,8 @@ import React from "react";
 
 const Rightbar = () => {
   return (
-    <div className="relative hidden mid:block w-[300px] h-full">
-      <div className="fixed h-full bg-slate-400 w-[300px]">Rightbar</div>
+    <div className="relative w-full bg-blue-400">
+      <div className="h-screen ">Rightbar</div>
     </div>
   );
 };

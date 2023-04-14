@@ -1,7 +1,5 @@
 import React from "react";
 import Head from "next/head";
-import Link from "next/link";
-import Topbar from "./Topbar";
 import Bottombar from "./Bottombar";
 import Leftbar from "./Leftbar";
 
@@ -12,10 +10,9 @@ const Layout = ({ title, content, children }) => {
         <Head>
           <title>{title}</title>
         </Head>
-        <Topbar />
         <div className="flex h-screen">
           <div className=""><Leftbar/></div>
-          <div className="w-full h-full my-[100px] ss:my-0">{children}</div>
+          <div className="w-full h-full">{children}</div>
         </div>
         <Bottombar />
       </div>
