@@ -1,6 +1,7 @@
 import { AiFillHome, AiOutlineMessage } from "react-icons/ai";
 import { MdGroups } from "react-icons/md";
 import {BsFillPeopleFill, BsSearch } from "react-icons/bs";
+import {RiCommunityLine} from 'react-icons/ri'
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,5 +29,11 @@ export const navlinks = [
     name: "Connections",
     url: "/connections",
     icon: <BsFillPeopleFill />
+  },
+  {
+    id: 5,
+    name: "Communities",
+    url: "/communities",
+    icon: <RiCommunityLine/>
   },
 ];

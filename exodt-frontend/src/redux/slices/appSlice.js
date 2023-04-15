@@ -2,18 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
-  isExploreOpen: false,
+  feedTab: "top",
 };
 
 export const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    setExploreOpen(state) {
-        state.isExploreOpen = true;
+    topTab(state) {
+        state.feedTab = "top";
       },
-    setExploreClose(state) {
-        state.isExploreOpen = false;
+    latestTab(state) {
+        state.feedTab = "latest";
+      },
+    localTab(state) {
+        state.feedTab = "local";
       },
 
     extraReducers: {
@@ -28,7 +31,8 @@ export const appSlice = createSlice({
 });
 
 export const {
-    setExploreOpen,
-    setExploreClose,
+    topTab,
+    latestTab,
+    localTab,
   } = appSlice.actions;
   export default appSlice.reducer;

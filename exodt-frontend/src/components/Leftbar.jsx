@@ -16,7 +16,7 @@ const Leftbar = () => {
   if (!mounted) return null;
   return (
     <div className="relative w-[100px] sm:w-[300px] hidden ss:block">
-      <div className="fixed flex flex-col items-center sm:items-start h-full">
+      <div className="fixed flex flex-col p-2 bg-slate-200 h-full items-center sm:items-start" style={{width: "inherit"}}>
         <div className="sm:flex hidden items-center">
           <div className="relative h-[50px] w-[50px]">
             <Image
@@ -49,8 +49,8 @@ const Leftbar = () => {
             />
           </div>
           <div className="sm:flex hidden  flex-col">
-            <span className="font-robotoBold text-lg">Enoch Chirima</span>
-            <span className="font-robotoLight">@iamenochchirima</span>
+            <span className="font-robotoBold text-lg">Shatrisha Jones</span>
+            <span className="font-robotoLight">@shatrisha27</span>
           </div>
         </div>
         <div
@@ -74,11 +74,29 @@ const Leftbar = () => {
           ))}
         </div>
         <hr />
-        <div className="py-5 text-2xl">
+        <div className="py-5 text-2xl ">
           {theme === "light" ? (
-            <BsFillMoonStarsFill onClick={() => setTheme("dark")} />
+            <button onClick={() => setTheme("dark")} className="flex gap-3 items-center">
+              <BsFillMoonStarsFill />
+              <span
+                className={`${
+                  theme === "dark" ? `` : `text-gray-950`
+                } sm:flex hidden text-lg `}
+              >
+                Theme
+              </span>
+            </button>
           ) : (
-            <BsSun onClick={() => setTheme("light")} />
+            <button onClick={() => setTheme("light")} className="flex gap-3 items-center">
+              <BsSun  />
+              <span
+                className={`${
+                  theme === "dark" ? `` : `text-gray-950`
+                } sm:flex hidden text-lg `}
+              >
+                Theme
+              </span>
+            </button>
           )}
         </div>
       </div>
