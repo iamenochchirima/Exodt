@@ -18,7 +18,7 @@ const Topbar = () => {
   if (!mounted) return null;
   return (
     <>
-      {isAuthenticated && (
+      {!isAuthenticated && (
         <>
           <div className="flex w-full justify-between">
             <button className="text-center w-1/2 bg-blue-500 p-2 rounded-tl-lg text-white">
@@ -54,7 +54,7 @@ const Topbar = () => {
           </div>
         </>
       )}
-      {!isAuthenticated && (
+      {isAuthenticated && (
         <>
           <button
             className={`${

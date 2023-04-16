@@ -12,7 +12,7 @@ export default function Home() {
   
   return (
     <Layout>
-      <div className="flex gap-2">
+      <div className="flex gap-5">
         <div className="relative w-full mid:w-2/3">
           <div className="sticky top-0">
             <Topbar />

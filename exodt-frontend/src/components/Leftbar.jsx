@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import { navlinks } from "@/config";
 import Link from "next/link";
-import { BsFillMoonStarsFill, BsSearch, BsSun } from "react-icons/bs";
+import { BsFillMoonStarsFill, BsSun } from "react-icons/bs";
 
 const Leftbar = () => {
   const { theme, setTheme } = useTheme();
@@ -16,25 +16,27 @@ const Leftbar = () => {
   if (!mounted) return null;
   return (
     <div className="relative w-[100px] sm:w-[300px] hidden ss:block">
-      <div className="fixed flex flex-col p-2 bg-slate-200 h-full items-center sm:items-start" style={{width: "inherit"}}>
+      <div className="fixed flex flex-col p-2  h-full items-center sm:items-start" style={{width: "inherit"}}>
         <div className="sm:flex hidden items-center">
           <div className="relative h-[50px] w-[50px]">
             <Image
-              className="absolute p-0 m-0"
-              alt="Logo"
+              className=" p-0 m-0"
               src="/logo.png"
               style={{
                 objectFit: "cover",
               }}
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 95vw,
+              90"
+              alt="logo"
             />
           </div>
           <h1 className="text-3xl font-graphikBold">
             NEXUS<span className="text-blue-500">X</span>
           </h1>
         </div>
-        <Image className="sm:hidden" src="/logo.png" height="50" width="50" />
+        <Image className="sm:hidden" src="/logo.png" height="50" width="50" alt="logo" />
         <div className="flex items-center gap-3 sm:mt-5">
           <div className="relative h-[25px] w-[25px] sm:h-[50px] sm:w-[50px] rounded-full">
             <Image
@@ -44,8 +46,10 @@ const Leftbar = () => {
                 objectFit: "cover",
               }}
               fill
-              sizes="100vw"
-              alt="Profile image"
+              sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 95vw,
+              90vw"
+              alt="profile image"
             />
           </div>
           <div className="sm:flex hidden  flex-col">
