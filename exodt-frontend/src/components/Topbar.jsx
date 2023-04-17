@@ -20,7 +20,7 @@ const Topbar = () => {
     <>
       {!isAuthenticated && (
         <>
-          <div className="flex w-full justify-between">
+          <div className="hidden ss:flex w-full justify-between pt-5">
             <button className="text-center w-1/2 bg-blue-500 p-2 rounded-tl-lg text-white">
               Create post
             </button>
@@ -55,7 +55,7 @@ const Topbar = () => {
         </>
       )}
       {isAuthenticated && (
-        <>
+        <div className="pt-5">
           <button
             className={`${
               theme === "dark" ? `bg-gray-600` : `bg-teal-100`
@@ -63,7 +63,11 @@ const Topbar = () => {
           >
             Search
           </button>
-        </>
+          <div className="flex my-5 gap-2">
+            <button className="w-1/2 rounded-full p-2 bg-blue-500">Sign in</button>
+            <button className="w-1/2 rounded-full p-2 border">Sign up</button>
+          </div>
+        </div>
       )}
     </>
   );

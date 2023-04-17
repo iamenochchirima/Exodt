@@ -11,7 +11,7 @@ const Rightbar = () => {
   useEffect(() => {
     const handleResize = () => {
       const screenWidth = window.innerWidth
-      if (screenWidth >= 1200) { // Change the value to the breakpoint you want to use
+      if (screenWidth >= 1200) {
         setDisplayedUsers(USERS)
       } else {
         const truncatedUsers = USERS.map(user => ({
@@ -40,7 +40,7 @@ const Rightbar = () => {
     <div className="relative w-full ">
       <div className="sticky top-0">
         {!isAuthenticated && (
-          <div className="">
+          <div className="pt-5">
             <h1 className="text-center ">Suggestions for you</h1>
             <div className="mt-5">
               <h1

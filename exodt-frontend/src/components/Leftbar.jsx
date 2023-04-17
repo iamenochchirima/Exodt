@@ -3,11 +3,13 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import { navlinks } from "@/config";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 import { BsFillMoonStarsFill, BsSun } from "react-icons/bs";
 
 const Leftbar = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     setMounted(true);
@@ -37,7 +39,7 @@ const Leftbar = () => {
           </h1>
         </div>
         <Image className="sm:hidden" src="/logo.png" height="50" width="50" alt="logo" />
-        <div className="flex items-center gap-3 sm:mt-5">
+        {!isAuthenticated && <><div className="flex items-center gap-3 sm:mt-5">
           <div className="relative h-[25px] w-[25px] sm:h-[50px] sm:w-[50px] rounded-full">
             <Image
               className="rounded-full"
@@ -77,6 +79,7 @@ const Leftbar = () => {
             </Link>
           ))}
         </div>
+        </>}
         <hr />
         <div className="py-5 text-2xl ">
           {theme === "light" ? (

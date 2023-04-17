@@ -2,7 +2,7 @@ import React from 'react'
 
 const Local = () => {
   return (
-    <div>Local</div>
+    <div className='h-[2000px]'>Local</div>
   )
 }
 

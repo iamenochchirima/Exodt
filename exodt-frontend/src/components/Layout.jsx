@@ -5,12 +5,12 @@ import Leftbar from "./Leftbar";
 
 const Layout = ({ title, content, children }) => {
   return (
-    <div className="flex justify-center items-start mx-5 sm:mx-10 md:mx-20 mid:mx-5 lg:mx-20 font-roboto mt-5">
+    <div className="flex justify-center items-start ss:mx-5 sm:mx-10 md:mx-20 mid:mx-5 lg:mx-20 font-roboto">
       <div className=" xl:max-w-[1500px] w-full ">
         <Head>
           <title>{title}</title>
         </Head>
-        <div className="flex gap-5 h-screen">
+        <div className="flex h-screen">
           <div className=""><Leftbar/></div>
           <div className="w-full h-full">{children}</div>
         </div>
