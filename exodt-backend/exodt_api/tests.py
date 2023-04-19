@@ -43,8 +43,8 @@ class TestMessage(APITestCase):
     login_url = "/user/login"
 
     def setUp(self):
-        from users.models import UserAccount
-        from main.models import UserProfile
+        from user_accounts.models import UserAccount
+        from user_profiles.models import UserProfile
 
         payload = {
             "first_name": "John",

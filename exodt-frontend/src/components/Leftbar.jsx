@@ -39,7 +39,7 @@ const Leftbar = () => {
           </h1>
         </div>
         <Image className="sm:hidden" src="/logo.png" height="50" width="50" alt="logo" />
-        {!isAuthenticated && <><div className="flex items-center gap-3 sm:mt-5">
+        {isAuthenticated && <><div className="flex items-center gap-3 sm:mt-5">
           <div className="relative h-[25px] w-[25px] sm:h-[50px] sm:w-[50px] rounded-full">
             <Image
               className="rounded-full"

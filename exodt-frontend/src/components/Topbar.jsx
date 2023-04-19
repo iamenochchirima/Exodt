@@ -18,7 +18,7 @@ const Topbar = () => {
   if (!mounted) return null;
   return (
     <>
-      {!isAuthenticated && (
+      {isAuthenticated && (
         <>
           <div className="hidden ss:flex w-full justify-between pt-5">
             <button className="text-center w-1/2 bg-blue-500 p-2 rounded-tl-lg text-white">
@@ -54,17 +54,17 @@ const Topbar = () => {
           </div>
         </>
       )}
-      {isAuthenticated && (
-        <div className="pt-5">
+      {!isAuthenticated && (
+        <div className="ss:pt-5">
           <button
             className={`${
               theme === "dark" ? `bg-gray-600` : `bg-teal-100`
-            } text-center   p-2 rounded-full  w-full`}
+            } text-center   p-2 rounded-full hidden ss:block w-full`}
           >
             Search
           </button>
-          <div className="flex my-5 gap-2">
-            <button className="w-1/2 rounded-full p-2 bg-blue-500">Sign in</button>
+          <div className="flex ss:my-5 gap-2">
+            <button className="w-1/2 rounded-full p-2 text-white bg-blue-500">Sign in</button>
             <button className="w-1/2 rounded-full p-2 border">Sign up</button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Post, Like
-from main.models import UserProfile
+from user_profiles.models import UserProfile
 from django.http import JsonResponse
 from .forms import PostModelForm, CommentModelForm
 from django.views.generic import UpdateView, DeleteView

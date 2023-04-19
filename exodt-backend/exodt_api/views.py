@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 from posts.models import Post
-from main.models import UserProfile
+from user_profiles.models import UserProfile
 from chat.models import Conversation, Message
 from . serializers import PostSerializer, UserProfileSerializer, ConversationSerializer, MessageSerializer
 from rest_framework.views import APIView
@@ -34,8 +34,6 @@ class PostsView(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadCustom]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ['^slug']
 
 class UserProfileView(ModelViewSet):
     permission_classes = [IsAuthenticatedCustom]

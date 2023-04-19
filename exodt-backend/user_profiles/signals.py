@@ -1,5 +1,5 @@
 from django.db.models.signals import post_save, pre_delete
-from users.models import UserAccount
+from user_accounts.models import UserAccount
 from django.dispatch import receiver
 from .models import UserProfile, Connection
 

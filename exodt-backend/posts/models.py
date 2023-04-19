@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from main.models import UserProfile
+from user_profiles.models import UserProfile
 from django.utils.translation import gettext_lazy as _
 import uuid
 import string

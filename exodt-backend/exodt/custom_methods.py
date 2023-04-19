@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework.views import exception_handler
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from users.models import UserAccount
+from user_accounts.models import UserAccount
 
 
 class IsAuthenticatedCustom(BasePermission):

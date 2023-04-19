@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from posts.models import Post 
-from main.models import UserProfile
+from user_profiles.models import UserProfile
 from chat.models import Conversation, Message
 from django.db.models import Q
 from django.utils import timezone
@@ -50,16 +50,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = "__all__"
-
-    # def get_message_count(self, obj):
-    #     try:
-    #         user_id = self.context["request"].user.id
-    #     except Exception as e:
-    #         user_id = None
-
-    #     message = Conversation.objects.filter(receiver=user_id, is_read=False).distinct() 
-
-    #     return message.count()
 
 
 class ConversationSerializer(serializers.ModelSerializer):

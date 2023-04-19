@@ -39,25 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_cleanup.apps.CleanupConfig',
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_filters',
     'corsheaders',
     'exodt_api',
-    'main',
+    'user_profiles',
     'posts',
     'chat',
-    'users',
+    'user_accounts',
 
-    'djoser',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
 WSGI_APPLICATION = 'exodt.wsgi.application'
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'
-    }
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,8 +77,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'main.context_processors.profile_pic',
-                'main.context_processors.invitations_recieved_count',
+                'user_profiles.context_processors.profile_pic',
+                'user_profiles.context_processors.invitations_recieved_count',
             ],
         },
     },
@@ -93,7 +87,7 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'exodt_db',
+        'NAME': 'nexusx',
         'USER': 'postgres',
         'PASSWORD': 'enoch26424',
         'HOST': 'localhost',
@@ -166,55 +160,31 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',  
     ),
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('HOST_EMAIL')
 EMAIL_HOST_PASSWORD = config('HOST_PASSWORD')
-EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = config('HOST_EMAIL')
+SENDGRID_API_KEY = config('SENDGRID_API_KEY')
 
 DOMAIN = ("localhost:3000")
-
-DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_CONFIRMATION_EMAIL': True,
-    'SEND_ACTIVATION_EMAIL': True,
-    'SET_PASSWORD_RETYPE': True,
-    'SET_USERNAME_RETYPE': True,
-    'HIDE_USERS': True,
-    'PERMISSIONS':{
-        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
-        'user_list': ['rest_framework.permissions.AllowAny'],
-    },
-    'SERIALIZERS': {
-        'user': 'users.serializers.UserCreateSerializer',
-        'user_create': 'users.serializers.UserCreateSerializer',
-        'current_user': 'users.serializers.UserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-    }
-
-}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 ]
 
 SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
-   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-   'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-   'AUTH_TOKEN_CLASSES': (
-       'rest_framework_simplejwt.tokens.AccessToken',
-   )
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.tokens.AccessToken',
+    )
 }
 
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
@@ -269,6 +239,6 @@ CORS_ORIGIN_WHITELIST = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "users.UserAccount"
+AUTH_USER_MODEL = "user_accounts.UserAccount"
 
 SOCKET_SERVER = config("SOCKET_SERVER")

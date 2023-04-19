@@ -2,9 +2,11 @@ from django.urls import path
 
 from . import views
 
-app_name = 'main'
+app_name = 'user_profiles'
 
 urlpatterns = [
+    path('load/', views.LoadUserProfileView.as_view(), name='load-user'),
+    
     path("profile_view", views.profile_view, name="profile_view") ,
     path("invites", views.invites_recieved_view, name="invites"),
     path("accept_invite", views.accept_invitation, name="accept_invite"),

@@ -2,10 +2,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .models import UserProfile, Connection
 from .forms import UserProfileModelForm
+from .serializers import ProfileSerializer
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.views.generic import ListView, DetailView
+from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+class LoadUserProfileView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        return self.request.user.user_profile
 
 @login_required
 def profile_view(request):
@@ -19,7 +31,7 @@ def profile_view(request):
             form.save()
             confirm = True
 
-    return render(request, "main/profile.html", {
+    return render(request, "user_profiles/profile.html", {
         "user_profile": user_profile,
         "form": form,
         "confirm": confirm
@@ -33,7 +45,7 @@ def invites_recieved_view(request):
     is_empty = False
     if len(result) == 0:
         is_empty = True
-    return render(request, 'main/invites.html', {
+    return render(request, 'user_profiles/invites.html', {
         'qs': result,
         'is_empty': is_empty
     })
@@ -49,7 +61,7 @@ def accept_invitation(request):
         if con.status == 'send':
             con.status = 'accepted'
             con.save()
-    return redirect('main:invites')
+    return redirect('user_profiles:invites')
     
 @login_required
 def decline_invitation(request):
@@ -59,20 +71,20 @@ def decline_invitation(request):
         receiver = UserProfile.objects.get(user=request.user)
         con = get_object_or_404(Connection, sender=sender, receiver=receiver)
         con.delete()
-    return redirect('main:invites')
+    return redirect('user_profiles:invites')
 
 @login_required
 def invite_profile_list_view(request):
     user = request.user
     query_set = UserProfile.objects.get_all_unconnected_profiles(user)
 
-    return render(request, 'main/toinvite_list.html', {
+    return render(request, 'user_profiles/toinvite_list.html', {
         'qs': query_set
     })
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = UserProfile
-    template_name = 'main/profile_detail.html'
+    template_name = 'user_profiles/profile_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -97,7 +109,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
 class ProfileListView(LoginRequiredMixin, ListView):
     model = UserProfile
-    template_name = 'main/profile_list.html'
+    template_name = 'user_profiles/profile_list.html'
 
     def get_queryset(self):
         query_set = UserProfile.objects.get_all_profiles(self.request.user)
@@ -137,7 +149,7 @@ def send_invitation(request):
 
         return redirect(request.META.get('HTTP_REFERER'))
 
-    return redirect('main:profile_view')
+    return redirect('user_profiles:profile_view')
 
 @login_required
 def remove_from_connections(request):
@@ -153,7 +165,7 @@ def remove_from_connections(request):
 
         return redirect(request.META.get('HTTP_REFERER'))
 
-    return redirect('main:profile_view')
+    return redirect('user_profiles:profile_view')
 
 
 
