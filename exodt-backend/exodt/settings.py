@@ -86,14 +86,16 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nexusx',
-        'USER': 'postgres',
-        'PASSWORD': 'enoch26424',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('PGDATABASE'),
+        'USER': config('PGUSER'),
+        'PASSWORD': config('PGPASSWORD'),
+        'HOST': config('PGHOST'),
+        'PORT': config('PGPORT'),
+        # 'DATABASE_URL': config('DATABASE_URL')
     }
 }
+
 
 
 # Password validation
