@@ -2,9 +2,9 @@ import { generalApiSlice } from "./generalApiSlice";
 
 export const generalApi = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation({
+    signup: builder.mutation({
       query: (body) => ({
-        url: "/users/create/",
+        url: "/user_accounts/create/",
         method: "POST",
         body,
       }),
@@ -90,7 +90,7 @@ export const generalApi = generalApiSlice.injectEndpoints({
 
 export const {
   useGetArticlesQuery,
-  useRegisterMutation,
+  useSignupMutation,
   useVerifyEmailMutation,
   useResetPasswordMutation,
   useConfirmResetMutation,

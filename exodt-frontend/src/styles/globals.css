@@ -6,6 +6,30 @@
   width: 100%;
 }
 
+
+.form-div {
+  padding: 0.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.2em;
+}
+
+.error-message {
+  color: red;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  display: none;
+}
+input:invalid[focused="true"] ~ .error-message {
+  display: block;
+}
+textarea:invalid[focused="true"] ~ .error-message {
+  display: block;
+}
+
+
 @font-face {
   font-family: 'graphik';
   src: url('../fonts/Graphik-Regular-Trial.otf') format('truetype');

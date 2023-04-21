@@ -34,7 +34,24 @@ def get_profile_image_filepath(self, filename):
 def default_profile_image():
 	return "default_image/default_profile_image.png"
 
+class Country(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        verbose_name_plural = 'Countries'
+
+    def __str__(self):
+        return self.name
+
 class UserProfile(models.Model):
+
+    gender_options = (
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('non-binary', 'Non-binary'),
+        ('other', 'Other'),
+    )
+
     first_name = models.CharField(max_length=225, blank=True)
     last_name = models.CharField(max_length=225, blank=True)
     email = models.EmailField(max_length=200, unique=True ,blank=True)
@@ -43,7 +60,8 @@ class UserProfile(models.Model):
     bio = models.TextField(default="No bio", max_length=300, blank = True)
     profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=default_profile_image)
     connections = models.ManyToManyField(User, blank=True, related_name="connections")
-    country = models.CharField(max_length=225, blank=True)
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=gender_options, null=True, blank=True)
     fav_field_os = models.CharField(max_length=225, blank=True)
     followers = models.CharField(max_length=225, blank=True)
     following = models.CharField(max_length=225, blank=True)

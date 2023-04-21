@@ -13,12 +13,12 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('admin/', admin.site.urls),
     path('api/', include('exodt_api.urls', namespace='exodt_api')),
-    path('api/users/', include('user_accounts.urls', namespace='user_accounts')),
+    path('user_accounts/', include('user_accounts.urls', namespace='user_accounts')),
+    path('user_profiles/', include('user_profiles.urls', namespace='user_profiles')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api_auth', include('rest_framework.urls', namespace='rest_framework')),
-    path('user_profiles/', include('user_profiles.urls', namespace='user_profiles')),
     path('posts/', include('posts.urls', namespace='posts')),
 ]
 

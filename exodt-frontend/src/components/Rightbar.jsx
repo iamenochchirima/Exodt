@@ -39,7 +39,7 @@ const Rightbar = () => {
   return (
     <div className="relative w-full ">
       <div className="sticky top-0">
-        {!isAuthenticated && (
+        {isAuthenticated && (
           <div className="pt-5">
             <h1 className="text-center ">Suggestions for you</h1>
             <div className="mt-5">

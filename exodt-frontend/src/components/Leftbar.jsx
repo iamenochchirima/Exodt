@@ -4,12 +4,47 @@ import Image from "next/image";
 import { navlinks } from "@/config";
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { BsFillMoonStarsFill, BsSun } from "react-icons/bs";
+import {
+  setLogoutState,
+  setAuthState,
+} from "@/redux/slices/authSlice";
+import {
+  useLoadUserQuery,
+  useLazyLoadUserQuery,
+  useLogoutMutation,
+} from "@/redux/api/authApi";
 
 const Leftbar = () => {
+  const dispatch = useDispatch();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const [userInfo, setUserInfo] = useState(null);
+  const {
+    isAuthenticated,
+    isLogedIn,
+    resetPasswordRequest,
+  } = useSelector((state) => state.auth);
+  const { data, isSuccess, error } = useLoadUserQuery();
+  const [fetchUser, { data: lazyData, isSuccess: success, error: lazyError }] =
+    useLazyLoadUserQuery();
+
+  useEffect(() => {
+    if (isLogedIn) {
+      fetchUser();
+    }
+    if (success) {
+      setUserInfo(lazyData.user);
+      dispatch(setAuthState());
+    }
+    if (isSuccess) {
+      setUserInfo(data.user);
+      dispatch(setAuthState());
+    }
+  }, [isLogedIn, success, lazyData, data, isSuccess]);
+
+  console.log(userInfo)
 
   useEffect(() => {
     setMounted(true);
@@ -43,7 +78,7 @@ const Leftbar = () => {
           <div className="relative h-[25px] w-[25px] sm:h-[50px] sm:w-[50px] rounded-full">
             <Image
               className="rounded-full"
-              src="/profile.jpg"
+              src={userInfo?.profile_image}
               style={{
                 objectFit: "cover",
               }}
@@ -55,8 +90,8 @@ const Leftbar = () => {
             />
           </div>
           <div className="sm:flex hidden  flex-col">
-            <span className="font-robotoBold text-lg">Shatrisha Jones</span>
-            <span className="font-robotoLight">@shatrisha27</span>
+            <span className="font-robotoBold text-lg">{`${userInfo?.first_name} ${" " }${userInfo?.last_name} `}</span>
+            <span className="font-robotoLight">{userInfo?.username}</span>
           </div>
         </div>
         <div
