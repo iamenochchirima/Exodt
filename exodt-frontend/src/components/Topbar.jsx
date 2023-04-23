@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { topTab, latestTab, localTab } from "@/redux/slices/appSlice";
+import Link from "next/link";
 
 const Topbar = () => {
   const { theme } = useTheme();
@@ -64,8 +65,8 @@ const Topbar = () => {
             Search
           </button>
           <div className="flex ss:my-5 gap-2">
-            <button className="w-1/2 rounded-full p-2 text-white bg-blue-500">Sign in</button>
-            <button className="w-1/2 rounded-full p-2 border">Sign up</button>
+            <Link href="/login" className="w-1/2 text-center rounded-full p-2 text-white bg-blue-500">Sign in</Link>
+            <Link href="/signup" className="w-1/2 text-center rounded-full p-2 border">Sign up</Link>
           </div>
         </div>
       )}

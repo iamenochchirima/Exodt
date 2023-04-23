@@ -32,7 +32,7 @@ def get_profile_image_filepath(self, filename):
 	return 'profile_images/' + str(self.pk) + '/profile_image.png'
 
 def default_profile_image():
-	return "default_image/default_profile_image.png"
+	return "default_image/profile.png"
 
 class Country(models.Model):
     name = models.CharField(max_length=100, unique=True)

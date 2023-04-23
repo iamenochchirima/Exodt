@@ -11,7 +11,7 @@ export default function Home() {
   const { feedTab } = useSelector((state) => state.app);
 
   return (
-    <Layout>
+  
       <div className="flex gap-5">
         <div className="relative w-full mid:w-2/3">
           <div className="sticky top-0">
@@ -32,6 +32,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </Layout>
+   
   );
 }

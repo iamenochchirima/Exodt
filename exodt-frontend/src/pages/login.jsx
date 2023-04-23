@@ -13,7 +13,6 @@ import { ThreeDots } from "react-loader-spinner";
 import Image from "next/image";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { GrClose } from "react-icons/gr";
-import Layout from "@/components/Layout";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 
@@ -74,7 +73,7 @@ const Login = () => {
   if (!mounted) return null;
 
   return (
-    <Layout>
+    <>
       <div className="fixed z-20 inset-0 overflow-y-auto bg-black bg-opacity-50">
         <div className=" flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div
@@ -224,7 +223,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

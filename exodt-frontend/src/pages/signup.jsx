@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   useSignupMutation,
-  useGetCountriesQuery,
 } from "@/redux/api/generalApi";
 import { ThreeDots } from "react-loader-spinner";
 import { GrClose } from "react-icons/gr";
@@ -9,7 +8,6 @@ import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Link from "next/link";
-import Layout from "@/components/Layout";
 import { useTheme } from "next-themes";
 
 const Signup = () => {
@@ -20,8 +18,6 @@ const Signup = () => {
   const dispatch = useDispatch();
   const [register, { isLoading, isSuccess, isError: isRegisterError, error }] =
     useSignupMutation();
-  const { data, isSuccess: countriesSuccess, isError } = useGetCountriesQuery();
-
   const [focused, setFocused] = useState({
     first_name: false,
     last_name: false,
@@ -34,12 +30,6 @@ const Signup = () => {
   const handleFocused = (field) => {
     setFocused((prev) => ({ ...prev, [field]: true }));
   };
-
-  useEffect(() => {
-    if (countriesSuccess) {
-      setCounties(data);
-    }
-  }, [data, countriesSuccess]);
 
   const initialFormData = Object.freeze({
     first_name: "",
@@ -93,9 +83,9 @@ const Signup = () => {
 
   if (!mounted) return null;
 
-  if (!isSuccess) {
+  if (isSuccess) {
     return (
-      <Layout>
+      <>
         <div className="fixed z-20 inset-0 overflow-y-scroll bg-black bg-opacity-75">
           <div className=" flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className={`${
@@ -123,11 +113,11 @@ const Signup = () => {
             </div>
           </div>
         </div>
-      </Layout>
+      </>
     );
   } else {
     return (
-      <Layout>
+      <>
         <div className="fixed z-20 inset-0 overflow-y-scroll bg-black bg-opacity-50">
           <div className=" flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div
@@ -370,7 +360,7 @@ const Signup = () => {
             </div>
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 };
