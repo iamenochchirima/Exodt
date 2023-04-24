@@ -71,9 +71,7 @@ const Leftbar = () => {
               alt="logo"
             />
           </div>
-          <h1 className="text-3xl font-graphikBold">
-            NEXUS<span className="text-blue-500">X</span>
-          </h1>
+          <Image src="/name.png" height={30} width={130} />
         </div>
         <Image
           className="sm:hidden"

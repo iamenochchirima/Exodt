@@ -29,9 +29,9 @@ export const generalApi = generalApiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-    verifyNewsletterEmail: builder.mutation({
-      query: ({ token }) => ({
-        url: `/newsletter/verify-nl-email/${token}/`,
+    profileInfo: builder.mutation({
+      query: ( username ) => ({
+        url: `/user_profiles/load_profile/${username}/`,
         method: "GET",
       }),
     }),
@@ -96,8 +96,7 @@ export const {
   useConfirmResetMutation,
   useGetCountriesQuery,
   useSignUpNewsletterMutation,
-  useVerifyNewsletterEmailMutation,
-  useNewsletterUnsubscribeMutation,
+  useProfileInfoMutation,
   useLazyGetFullArticleQuery,
   useGetSpecialArticlesQuery,
   useGetCategoriesQuery,

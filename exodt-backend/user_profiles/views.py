@@ -4,13 +4,14 @@ from .models import UserProfile, Connection
 from .forms import UserProfileModelForm
 from .serializers import ProfileSerializer
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.views.generic import ListView, DetailView
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class LoadUserProfileView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
@@ -19,23 +20,18 @@ class LoadUserProfileView(RetrieveAPIView):
     def get_object(self):
         return self.request.user.user_profile
 
-@login_required
-def profile_view(request):
-    
-    user_profile = UserProfile.objects.get(user=request.user)
-    form = UserProfileModelForm(request.POST or None, request.FILES or None, instance=user_profile)
-    confirm = False
 
-    if request.method == 'POST':
-        if form.is_valid:
-            form.save()
-            confirm = True
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    return render(request, "user_profiles/profile.html", {
-        "user_profile": user_profile,
-        "form": form,
-        "confirm": confirm
-    })
+    def get(self, request, username, format=None):
+        try:
+            profile = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return Response({'error': f'Profile with username {username} does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
 
 @login_required
 def invites_recieved_view(request):
@@ -50,6 +46,7 @@ def invites_recieved_view(request):
         'is_empty': is_empty
     })
 
+
 @login_required
 def accept_invitation(request):
     if request.method == 'POST':
@@ -62,7 +59,8 @@ def accept_invitation(request):
             con.status = 'accepted'
             con.save()
     return redirect('user_profiles:invites')
-    
+
+
 @login_required
 def decline_invitation(request):
     if request.method == 'POST':
@@ -73,6 +71,7 @@ def decline_invitation(request):
         con.delete()
     return redirect('user_profiles:invites')
 
+
 @login_required
 def invite_profile_list_view(request):
     user = request.user
@@ -81,6 +80,7 @@ def invite_profile_list_view(request):
     return render(request, 'user_profiles/toinvite_list.html', {
         'qs': query_set
     })
+
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = UserProfile
@@ -98,13 +98,13 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             con_r.append(item.receiver.user)
         for item in con_sender:
             con_s.append(item.sender.user)
-        
+
         context['con_r'] = con_r
         context['con_s'] = con_s
         context['posts'] = self.get_object().get_all_authors_posts()
-        context['len_posts'] = True if len(self.get_object().get_all_authors_posts()) > 0 else False
+        context['len_posts'] = True if len(
+            self.get_object().get_all_authors_posts()) > 0 else False
         return context
-
 
 
 class ProfileListView(LoginRequiredMixin, ListView):
@@ -127,7 +127,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
             con_r.append(item.receiver.user)
         for item in con_sender:
             con_s.append(item.sender.user)
-        
+
         context['con_r'] = con_r
         context['con_s'] = con_s
 
@@ -137,6 +137,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
             context['is_empty'] = True
         return context
 
+
 @login_required
 def send_invitation(request):
     if request.method == 'POST':
@@ -145,11 +146,13 @@ def send_invitation(request):
         sender = UserProfile.objects.get(user=user)
         receiver = UserProfile.objects.get(pk=pk)
 
-        con = Connection.objects.create(sender=sender, receiver=receiver, status='send')
+        con = Connection.objects.create(
+            sender=sender, receiver=receiver, status='send')
 
         return redirect(request.META.get('HTTP_REFERER'))
 
     return redirect('user_profiles:profile_view')
+
 
 @login_required
 def remove_from_connections(request):
@@ -159,14 +162,11 @@ def remove_from_connections(request):
         sender = UserProfile.objects.get(user=user)
         receiver = UserProfile.objects.get(pk=pk)
 
-        con = Connection.objects.get(Q(sender=sender) & Q(receiver=receiver) | Q(sender=receiver) & Q(receiver=sender))
+        con = Connection.objects.get(Q(sender=sender) & Q(
+            receiver=receiver) | Q(sender=receiver) & Q(receiver=sender))
 
         con.delete()
 
         return redirect(request.META.get('HTTP_REFERER'))
 
     return redirect('user_profiles:profile_view')
-
-
-
-
