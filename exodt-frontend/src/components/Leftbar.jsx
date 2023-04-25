@@ -71,7 +71,7 @@ const Leftbar = () => {
               alt="logo"
             />
           </div>
-          <Image src="/name.png" height={30} width={130} />
+          <Image src="/name.png" height={40} width={130} alt="name" sizes="100vw" />
         </div>
         <Image
           className="sm:hidden"

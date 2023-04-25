@@ -57,7 +57,7 @@ class UserProfile(models.Model):
     email = models.EmailField(max_length=200, unique=True ,blank=True)
     username = models.CharField(max_length=50, unique=True)
     user = models.OneToOneField(User, related_name='user_profile', on_delete=models.CASCADE)
-    bio = models.TextField(default="No bio", max_length=300, blank = True)
+    bio = models.TextField(blank=True, null=True, max_length=300)
     profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=default_profile_image)
     connections = models.ManyToManyField(User, blank=True, related_name="connections")
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
