@@ -54,7 +54,7 @@ const UserProfile = () => {
           <span>Manage account</span>
         </button>
       </div>
-      <div className="flex gap-10 w-full mt-10">
+      <div className="flex items-center gap-10 w-full mt-10">
         <Image
           className="rounded-full bg-slate-400"
           src={
@@ -67,34 +67,46 @@ const UserProfile = () => {
           width={150}
           sizes="100vw"
         />
-        <div className="flex mt-5">
         <div className="">
-          <h1 className="text-3xl">{`${profileInfo?.first_name} ${" "}${
-            profileInfo?.last_name
-          } `}</h1>
-          <h3 className="py-1">{`${"@"}${profileInfo?.username}`}</h3>
+          <h1 className="font-robotoBold text-lg">{`${
+            profileInfo?.first_name
+          } ${" "}${profileInfo?.last_name} `}</h1>
+          <h3 className="">{`${"@"}${profileInfo?.username}`}</h3>
           <h2
             className={`${
               theme === "light" ? `text-gray-700` : `text-dimWhite`
-            } text-xl `}
+            } `}
           >
             Data Scientist
           </h2>
+          <div className="py-2 flex">
+            <ul className={` ${theme === "light" ? ` border-black` : `border-dimWhite`} border-dashed felx flex-col text-center border-l`}>
+              <li className="font-robotoBold">10</li>
+              <li>Followers</li>
+            </ul>
+            <ul className={` ${theme === "light" ? ` border-black` : `border-dimWhite`} border-dashed felx flex-col text-center border-l`}>
+              <li className="font-robotoBold">10</li>
+              <li>Followers</li>
+            </ul>
+            <ul className={` ${theme === "light" ? ` border-black` : `border-dimWhite`} border-dashed felx flex-col text-center border-x`}>
+              <li className="font-robotoBold">10</li>
+              <li>Followers</li>
+            </ul>
+          </div>
         </div>
       </div>
-      </div>
       {profileInfo?.bio && (
-      <div className="mt-10">
-        <h1 className="text-xl">About</h1>
-        <p className="my-5">
+        <div className="mt-10">
+          <h1 className="text-xl">About</h1>
+          <p className="my-5">
             Experienced software developer with expertise in full-stack
             development, cloud computing, and DevOps. Passionate about creating
             scalable and maintainable software solutions that meet the needs of
             end-users. Proficient in programming languages like Python,
             JavaScript, and Java.
           </p>
-      </div>
-        )}
+        </div>
+      )}
       <div className="">
         <button onClick={handleLogout}>Logout</button>
       </div>

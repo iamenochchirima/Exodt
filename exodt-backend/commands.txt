@@ -1,3 +1,4 @@
 docker-compose build
 docker-compose run --rm app
 docker exec -it django_container(exodt_app_run_3bc58da33c1f) /bin/bash
+source venv/bin/activate
