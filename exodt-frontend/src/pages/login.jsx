@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import {
   setAuthState,
-  setCloseLoginViewState,
   setIsLogedIn,
   setOpenPasswordReset,
 } from "@/redux/slices/authSlice";
@@ -57,7 +56,6 @@ const Login = () => {
             setFormData(initialFormData);
             dispatch(setAuthState());
             dispatch(setIsLogedIn());
-            dispatch(setCloseLoginViewState());
             router.push("/");
           });
       } catch (err) {

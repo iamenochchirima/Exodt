@@ -3,6 +3,8 @@ import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
   feedTab: "top",
+  manageAccount: false,
+  editProfile: false,
 };
 
 export const appSlice = createSlice({
@@ -18,6 +20,18 @@ export const appSlice = createSlice({
     localTab(state) {
         state.feedTab = "local";
       },
+    openManageAcc(state) {
+      state.manageAccount = true
+    },
+    closeManageAcc(state) {
+      state.manageAccount = false
+    },
+    openEditProf(state) {
+      state.editProfile = true
+    },
+    closeEditProf(state) {
+      state.editProfile = false
+    },
 
     extraReducers: {
       [HYDRATE]: (state, action) => {
@@ -34,5 +48,9 @@ export const {
     topTab,
     latestTab,
     localTab,
+    openEditProf,
+    openManageAcc,
+    closeEditProf,
+    closeManageAcc,
   } = appSlice.actions;
   export default appSlice.reducer;

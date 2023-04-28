@@ -11,7 +11,7 @@ const Layout = ({ title, content, children }) => {
           <title>{title}</title>
         </Head>
         <div className="flex h-screen">
-          <div className=""><Leftbar/></div>
+          <div className="border-r mr-5"><Leftbar/></div>
           <div className="w-full h-full">{children}</div>
         </div>
         <Bottombar />
@@ -21,7 +21,7 @@ const Layout = ({ title, content, children }) => {
 };
 
 Layout.defaultProps = {
-  title: "Exodt app",
+  title: "NexusX",
   content: "Layout",
 };
 

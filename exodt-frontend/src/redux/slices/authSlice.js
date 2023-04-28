@@ -7,6 +7,7 @@ const initialState = {
   registerView: false,
   isLogedIn: false,
   resetPasswordRequest: false,
+  username: "",
 };
 
 export const authSlice = createSlice({
@@ -19,29 +20,20 @@ export const authSlice = createSlice({
     setLogoutState(state) {
       state.isAuthenticated = false;
     },
-    setOpenLoginViewState(state) {
-      state.loginView = true;
-    },
-    setCloseLoginViewState(state) {
-      state.loginView = false;
-    },
-    setOpenRegisterViewState(state) {
-      state.registerView = true;
-    },
-    setCloseRegisterViewState(state) {
-      state.registerView = false;
-    },
     setIsLogedIn(state) {
       state.isLogedIn = true;
-    },
-    setCloseIsLogedIn(state) {
-      state.isLogedIn = false;
     },
     setOpenPasswordReset(state) {
       state.resetPasswordRequest = true;
     },
     setClosePasswordReset(state) {
       state.resetPasswordRequest = false;
+    },
+    setUsername(state, action) {
+      state.username = action.payload
+    },
+    removeUsername(state) {
+      state.username = ""
     },
 
     extraReducers: {
@@ -58,12 +50,9 @@ export const authSlice = createSlice({
 export const {
   setAuthState,
   setLogoutState,
-  setOpenLoginViewState,
-  setCloseLoginViewState,
-  setOpenRegisterViewState,
-  setCloseRegisterViewState,
   setIsLogedIn,
-  setCloseIsLogedIn,
+  setUsername,
+  removeUsername,
   setOpenPasswordReset,
   setClosePasswordReset,
 } = authSlice.actions;
