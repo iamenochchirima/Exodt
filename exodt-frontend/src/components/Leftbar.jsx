@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 const Leftbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { theme, setTheme } = useTheme("dark");
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const { isAuthenticated, isLogedIn } = useSelector((state) => state.auth);
@@ -150,7 +150,7 @@ const Leftbar = () => {
                       />
                     </div>
                     <div className="sm:flex hidden flex-col">
-                      <h1 className="font-robotoBold leading-normal  text-lg">{`${
+                      <h1 className="text-left font-robotoBold leading-normal  text-lg">{`${
                         userInfo?.first_name
                       } ${" "}${userInfo?.last_name} `}</h1>
                       <h1 className="font-robotoLight text-left leading-none">

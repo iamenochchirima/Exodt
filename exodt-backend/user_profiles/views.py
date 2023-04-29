@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .models import UserProfile, Connection
+from rest_framework import status, serializers
+from .models import UserProfile, Connection, Country
 from .forms import UserProfileModelForm
 from .serializers import ProfileSerializer
 from rest_framework.response import Response
@@ -31,6 +32,60 @@ class ProfileView(APIView):
             return Response({'error': f'Profile with username {username} does not exist'}, status=status.HTTP_404_NOT_FOUND)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
+
+
+class UpdateUserProfileSerializer(serializers.ModelSerializer):
+    about = serializers.CharField(max_length=1000,  allow_blank=True, allow_null=True)
+    profile_image = serializers.ImageField( allow_null=True, required=False)
+    country = serializers.PrimaryKeyRelatedField(
+        queryset=Country.objects.all(), allow_null=True, required=False)
+    gender = serializers.CharField(max_length=30,  allow_blank=True, allow_null=True)
+
+    class Meta:
+        model = UserProfile
+        fields = ('about', 'profile_image', 'country', 'gender')
+
+    def validate_profile_image(self, value):
+        if value:
+            # check if the uploaded file is an image
+            if not value.content_type.startswith('image'):
+                raise serializers.ValidationError('Invalid image format')
+        return value
+
+    def validate_gender(self, value):
+        if len(value) > 30:
+            raise serializers.ValidationError('Gender is too long')
+        return value
+
+    def update(self, instance, validated_data):
+        instance.about = validated_data.get('about', instance.about)
+        instance.country = validated_data.get('country', instance.country)
+        if validated_data.get('profile_image'):
+            instance.profile_image.delete()
+            instance.profile_image = validated_data.get('profile_image')
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.save()
+        return instance
+
+
+class UserProfileUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.user_profile
+
+    def put(self, request, *args, **kwargs):
+        profile = self.get_object()
+        print(request.data)
+        print(profile)
+        serializer = UpdateUserProfileSerializer(
+            profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @login_required

@@ -5,8 +5,9 @@ from . import views
 app_name = 'user_profiles'
 
 urlpatterns = [
-    path('load/', views.LoadUserProfileView.as_view(), name='load-user'),
+    path('load_user/', views.LoadUserProfileView.as_view(), name='load-user'),
     path('load_profile/<username>/', views.ProfileView.as_view()),
+    path('update_profile/', views.UserProfileUpdateAPIView.as_view(), name='profile-update'),
 
 
     path("invites", views.invites_recieved_view, name="invites"),

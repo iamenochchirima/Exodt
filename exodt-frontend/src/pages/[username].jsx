@@ -117,7 +117,7 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
-      {profileInfo?.bio && (
+      {profileInfo?.about && (
         <div className="mt-10">
           <h1 className="text-xl">About</h1>
           <p className="my-5">

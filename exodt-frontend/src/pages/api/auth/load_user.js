@@ -59,7 +59,7 @@ export default async (req, res) => {
             access = refreshData.access;
 
             // retry the original request with the new access token
-            const apiRes = await axios.get(`${API_URL}/user_profiles/load/`, {
+            const apiRes = await axios.get(`${API_URL}/user_profiles/load_user/`, {
               headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${access}`,
@@ -95,7 +95,7 @@ export default async (req, res) => {
     }
 
     try {
-      const apiRes = await axios.get(`${API_URL}/user_profiles/load/`, {
+      const apiRes = await axios.get(`${API_URL}/user_profiles/load_user/`, {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${access}`,
