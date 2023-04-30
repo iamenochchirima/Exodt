@@ -14,21 +14,16 @@ import { MdCancel } from "react-icons/md";
 import getCroppedImg from "./utils/cropImage";
 import { useTheme } from "next-themes";
 
-const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }) => {
+const CropEasy = ({ photoURL, setOpenCrop, setCroppedImage, setProfileChanged, setProfileImage }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [cropLoading, setCropLoading] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [croppedImage, setCroppedImage] = useState(null);
   const { theme } = useTheme();
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
-
-  const onClose = useCallback(() => {
-    setCroppedImage(null);
   }, []);
 
   const zoomPercent = (value) => {
@@ -43,8 +38,9 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }) => {
         croppedAreaPixels,
         rotation
       );
-      setPhotoURL(url);
-      setFile(file);
+      setProfileImage(url)
+      setCroppedImage(file)
+      setProfileChanged(true)
       setOpenCrop(false);
     } catch (error) {
       toast.error(`${error.message}`, {

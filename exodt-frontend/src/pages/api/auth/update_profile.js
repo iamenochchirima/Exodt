@@ -24,8 +24,9 @@ export default async (req, res) => {
     try {
       const apiRes = await axios.put(`${API_URL}/user_profiles/update_profile/`, body, {
         headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${access}`,
+          "Accept": "application/json",
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${access}`,
         },
       });
       const data = await apiRes.data;

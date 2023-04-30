@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { useUpdateUserMutation } from "@/redux/api/authApi";
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 
 const EditProfile = (props) => {
   const userInfo = props.userInfo;
@@ -27,8 +29,9 @@ const EditProfile = (props) => {
   const [photoURL, setPhotoURL] = useState(null);
   const [isNameEdited, setIsNameEdited] = useState(false);
   const [isProfileEdited, setIsProfileEdited] = useState(false);
-
-  console.log(file, "file here");
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [converted, setConverted] = useState(null);
+  const [profileChanged, setProfileChanged] = useState(false);
 
   const [
     updateUserProfile,
@@ -43,10 +46,6 @@ const EditProfile = (props) => {
     dispatch(closeEditProf());
   };
 
-  const handleEditClick = () => {
-    setOpenCrop(true);
-  };
-
   const accountBody = {
     first_name: firstName,
     last_name: lastName,
@@ -57,18 +56,12 @@ const EditProfile = (props) => {
     country: country,
     gender: gender,
   };
-  const profileImageBody = {
-    about: about,
-    country: country,
-    gender: gender,
-  };
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     if (profileBody) {
       try {
         await updateUserProfile(profileBody);
-        console.log(profileBody);
         setIsProfileEdited(false);
       } catch (err) {
         console.error("Failed to update: ", err);
@@ -95,6 +88,57 @@ const EditProfile = (props) => {
 
   const handleProfileChange = () => {
     setIsProfileEdited(true);
+  };
+
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFile(file);
+      setPhotoURL(URL.createObjectURL(file));
+      setOpenCrop(true);
+    }
+  };
+
+  const profileImageBody = {
+    profile_image: croppedImage,
+    about: about,
+    country: country,
+    gender: gender,
+  };
+
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      setProfileChanged(false);
+    }
+  }, [isUpdateSuccess]);
+
+  useEffect(() => {
+    if (croppedImage) {
+      console.log(croppedImage)
+    }
+  }, [croppedImage]);
+
+  const saveProfileImage = async () => {
+    if (profileImageBody && croppedImage !== null) {
+      try {
+        await updateUserProfile(profileImageBody);
+      } catch (err) {
+        console.error("Failed to update image: ", err);
+        toast.error("Failed to update", {
+          autoClose: 5000,
+          position: "top-center",
+          hideProgressBar: true,
+        });
+      }
+    }
+  };
+
+  const cancelProfileImageChanges = () => {
+    setCroppedImage(null);
+    setProfileImage(userInfo?.profile_image);
+    setProfileChanged(false);
+    setFile(null);
+    setPhotoURL(null);
   };
 
   return (
@@ -126,14 +170,47 @@ const EditProfile = (props) => {
               />
             </div>
             <div className="flex justify-center gap-3">
-              <button
-                className={`${
-                  theme === "dark" ? `border-white` : `border-gray-700`
-                } py-1 px-2 rounded-full border w-[130px]`}
-                onClick={handleEditClick}
-              >
-                Add photo
-              </button>
+              {profileChanged ? (
+                <div className="py-2 flex flex-col">
+                  <button
+                    onClick={saveProfileImage}
+                    className={`${
+                      theme === "dark" ? `border-white` : `border-gray-700`
+                    } p-2 gap-2 mb-1 justify-center rounded-full border flex w-[200px]`}
+                  >
+                    <AiOutlineCheck size={20} />
+                    <span>Save Changes</span>
+                  </button>
+                  <button
+                    onClick={cancelProfileImageChanges}
+                    className={`${
+                      theme === "dark" ? `border-white` : `border-gray-700`
+                    } p-2 gap-2 justify-center rounded-full border flex w-[200px]`}
+                  >
+                    <MdOutlineClose size={20} />
+                    <span>Cancel Changes</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className={`${
+                    theme === "dark" ? `border-white` : `border-gray-700`
+                  } py-1 px-2 rounded-full border w-[130px]`}
+                >
+                  <form>
+                    <label htmlFor="profile_picture" className="">
+                      Add photo
+                    </label>
+                    <input
+                      type="file"
+                      name="profile_picture"
+                      id="profile_picture"
+                      onChange={handleFileInputChange}
+                      className="hidden"
+                    />
+                  </form>
+                </button>
+              )}
             </div>
 
             <hr />
@@ -225,7 +302,15 @@ const EditProfile = (props) => {
         </div>
       </div>
       {openCrop && (
-        <CropEasy {...{ photoURL, setOpenCrop, setFile, setPhotoURL }} />
+        <CropEasy
+          {...{
+            photoURL,
+            setOpenCrop,
+            setCroppedImage,
+            setProfileChanged,
+            setProfileImage,
+          }}
+        />
       )}
     </>
   );
