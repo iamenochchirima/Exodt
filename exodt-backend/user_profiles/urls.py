@@ -8,6 +8,7 @@ urlpatterns = [
     path('load_user/', views.LoadUserProfileView.as_view(), name='load-user'),
     path('load_profile/<username>/', views.ProfileView.as_view()),
     path('update_profile/', views.UserProfileUpdateAPIView.as_view(), name='profile-update'),
+    path('countries/', views.CountryList.as_view(), name='country-list'),
 
 
     path("invites", views.invites_recieved_view, name="invites"),

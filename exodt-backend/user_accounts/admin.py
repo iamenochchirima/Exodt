@@ -8,13 +8,13 @@ from django.db import models
 class UserAdminConfig(UserAdmin):
     model = UserAccount
     search_fields = ('email', 'first_name', 'last_name', 'username')
-    list_filter = ('email', 'first_name', 'last_name', 'username', 'is_active', 'is_staff', 'is_verified', 'is_admin', 'is_superuser', 'date_joined', 'last_login')
+    list_filter = ('email', 'first_name', 'last_name', 'username', 'is_active', 'is_staff',  'is_email_verified', 'is_verified', 'is_admin', 'is_superuser', 'date_joined', 'last_login')
     ordering = ('-start_date',)
     list_display = ('id','email', 'first_name','last_name', 'username',
-                    'is_active', 'is_staff','is_verified', 'is_admin', 'is_superuser', 'date_joined', 'last_login')
+                    'is_active', 'is_staff', 'is_email_verified', 'is_verified', 'is_admin', 'is_superuser', 'date_joined', 'last_login')
     fieldsets = (
         (None, {'fields': ('email', 'first_name','last_name', 'username')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_verified', 'is_admin', 'is_superuser')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active',  'is_email_verified', 'is_verified', 'is_admin', 'is_superuser')}),
     )
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 20, 'cols': 60})},
@@ -22,7 +22,7 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'first_name', 'last_name', 'username', 'password1', 'password2', 'is_active', 'is_staff', 'is_verified', 'is_admin', 'is_superuser')}
+            'fields': ('email', 'first_name', 'last_name', 'username', 'password1', 'password2', 'is_active', 'is_staff',  'is_email_verified', 'is_verified', 'is_admin', 'is_superuser')}
          ),
     )
 

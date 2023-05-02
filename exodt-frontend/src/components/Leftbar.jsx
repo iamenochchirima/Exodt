@@ -7,7 +7,7 @@ import { setLogoutState } from "@/redux/slices/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { BsFillMoonStarsFill, BsSun } from "react-icons/bs";
-import { setAuthState, setUsername } from "@/redux/slices/authSlice";
+import { setAuthState, setProfileInfo } from "@/redux/slices/authSlice";
 import {
   useLoadUserQuery,
   useLazyLoadUserQuery,
@@ -51,7 +51,7 @@ const Leftbar = () => {
     if (isSuccess) {
       setUserInfo(data.user);
       dispatch(setAuthState());
-      dispatch(setUsername(data?.user.username));
+      dispatch(setProfileInfo(data?.user));
     }
   }, [isLogedIn, success, lazyData, data, isSuccess]);
 

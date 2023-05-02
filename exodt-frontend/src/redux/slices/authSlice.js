@@ -7,7 +7,7 @@ const initialState = {
   registerView: false,
   isLogedIn: false,
   resetPasswordRequest: false,
-  username: "",
+  profileInfo: {},
 };
 
 export const authSlice = createSlice({
@@ -29,11 +29,11 @@ export const authSlice = createSlice({
     setClosePasswordReset(state) {
       state.resetPasswordRequest = false;
     },
-    setUsername(state, action) {
-      state.username = action.payload
+    setProfileInfo(state, action) {
+      state.profileInfo = action.payload
     },
-    removeUsername(state) {
-      state.username = ""
+    removeProfileInfo(state) {
+      state.profileInfo = {}
     },
 
     extraReducers: {
@@ -51,8 +51,8 @@ export const {
   setAuthState,
   setLogoutState,
   setIsLogedIn,
-  setUsername,
-  removeUsername,
+  setProfileInfo,
+  removeProfileInfo,
   setOpenPasswordReset,
   setClosePasswordReset,
 } = authSlice.actions;

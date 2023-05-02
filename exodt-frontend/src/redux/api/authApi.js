@@ -29,9 +29,16 @@ export const authApi = authApiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
-    updateUser: builder.mutation({
+    updateUserProfile: builder.mutation({
       query: (body) => ({
         url: "/auth/update_profile",
+        method: "POST",
+        body,
+      }),
+    }),
+    updateUserAccount: builder.mutation({
+      query: (body) => ({
+        url: "/auth/update_account",
         method: "POST",
         body,
       }),
@@ -57,7 +64,8 @@ export const {
   useLoadUserQuery,
   useLazyLoadUserQuery,
   useLogoutMutation,
-  useUpdateUserMutation,
+  useUpdateUserProfileMutation,
+  useUpdateUserAccountMutation,
   useChangeEmailMutation,
   useMainNewsletterMutation,
   useDeleteAccountMutation

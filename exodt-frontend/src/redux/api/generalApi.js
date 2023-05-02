@@ -25,13 +25,19 @@ export const generalApi = generalApiSlice.injectEndpoints({
     }),
     verifyEmail: builder.mutation({
       query: ({ uid, token }) => ({
-        url: `/users/verify-email/${uid}/${token}/`,
+        url: `/user_accounts/verify-email/${uid}/${token}/`,
         method: "GET",
       }),
     }),
     profileInfo: builder.mutation({
       query: ( username ) => ({
         url: `/user_profiles/load_profile/${username}/`,
+        method: "GET",
+      }),
+    }),
+    getCountries: builder.query({
+      query: () => ({
+        url: "/user_profiles/countries/",
         method: "GET",
       }),
     }),
@@ -58,12 +64,6 @@ export const generalApi = generalApiSlice.injectEndpoints({
     search: builder.query({
       query: ({ searchQuery, page = 1, page_size = 3 }) =>
         `/api/search/?search_query=${searchQuery}&page=${page}&page_size=${page_size}`,
-    }),
-    getCountries: builder.query({
-      query: () => ({
-        url: "/users/countries/",
-        method: "GET",
-      }),
     }),
     getCategories: builder.query({
       query: () => ({
@@ -94,7 +94,7 @@ export const {
   useVerifyEmailMutation,
   useResetPasswordMutation,
   useConfirmResetMutation,
-  useGetCountriesQuery,
+  useLazyGetCountriesQuery,
   useSignUpNewsletterMutation,
   useProfileInfoMutation,
   useLazyGetFullArticleQuery,

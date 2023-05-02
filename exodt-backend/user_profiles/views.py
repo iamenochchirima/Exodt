@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework import status, serializers
 from .models import UserProfile, Connection, Country
-from .forms import UserProfileModelForm
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, CountrySerializer
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.views.generic import ListView, DetailView
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
@@ -86,6 +85,13 @@ class UserProfileUpdateAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class CountryList(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    def get(self, request):
+        countries = Country.objects.all()
+        serializer = CountrySerializer(countries, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @login_required

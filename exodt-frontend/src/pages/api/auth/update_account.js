@@ -7,14 +7,13 @@ export default async (req, res) => {
     const cookies = cookie.parse(req.headers.cookie ?? "");
     const access = cookies.access ?? false;
 
-    const body = req.body
+    const body = req.body;
 
     try {
-      const apiRes = await axios.put(`${API_URL}/user_profiles/update_profile/`, body, {
+      const apiRes = await axios.put(`${API_URL}/user_accounts/update/`, body, {
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${access}`,
+          Accept: "application/json",
+          Authorization: `Bearer ${access}`,
         },
       });
       const data = await apiRes.data;
@@ -30,7 +29,7 @@ export default async (req, res) => {
       }
     } catch (err) {
       return res.status(500).json({
-        error: err,
+        error: "Something went wrong when updating user",
       });
     }
   } else {

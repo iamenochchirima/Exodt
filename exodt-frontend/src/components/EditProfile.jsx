@@ -4,11 +4,15 @@ import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { useUpdateUserMutation } from "@/redux/api/authApi";
+import {
+  useUpdateUserProfileMutation,
+  useUpdateUserAccountMutation,
+} from "@/redux/api/authApi";
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+import { useLazyGetCountriesQuery } from "@/redux/api/generalApi";
 
 const EditProfile = (props) => {
   const userInfo = props.userInfo;
@@ -30,17 +34,23 @@ const EditProfile = (props) => {
   const [isNameEdited, setIsNameEdited] = useState(false);
   const [isProfileEdited, setIsProfileEdited] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
-  const [converted, setConverted] = useState(null);
   const [profileChanged, setProfileChanged] = useState(false);
 
   const [
     updateUserProfile,
     { isSuccess: isUpdateSuccess, isLoading, error, isError },
-  ] = useUpdateUserMutation();
+  ] = useUpdateUserProfileMutation();
+  const [
+    updateUserAccount,
+    {
+      isSuccess: isUpdateAccSuccess,
+      isLoading: accUpdateLoading,
+      error: accoutUpdateError,
+      isError: isAccountUpdateError,
+    },
+  ] = useUpdateUserAccountMutation();
 
-  useEffect(() => {
-    console.log(error, "Error here");
-  }, [isError, error]);
+  const [getCountries, { data: lazyCountires }] = useLazyGetCountriesQuery();
 
   const handleClose = () => {
     dispatch(closeEditProf());
@@ -58,6 +68,7 @@ const EditProfile = (props) => {
   };
 
   const handleProfileUpdate = async (e) => {
+    console.log(profileBody);
     e.preventDefault();
     if (profileBody) {
       try {
@@ -73,8 +84,7 @@ const EditProfile = (props) => {
     e.preventDefault();
     if (accountBody) {
       try {
-        // await updateUserAccount(accountBody);
-        console.log(accountBody);
+        await updateUserAccount(accountBody);
         setIsNameEdited(false);
       } catch (err) {
         console.error("Failed to update: ", err);
@@ -90,6 +100,10 @@ const EditProfile = (props) => {
     setIsProfileEdited(true);
   };
 
+  useEffect(() => {
+    getCountries();
+  }, []);
+
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -100,7 +114,10 @@ const EditProfile = (props) => {
   };
 
   const profileImageBody = {
-    profile_image: croppedImage,
+    profile_image: {
+      croppedImage,
+      name: croppedImage?.name,
+    },
     about: about,
     country: country,
     gender: gender,
@@ -111,12 +128,6 @@ const EditProfile = (props) => {
       setProfileChanged(false);
     }
   }, [isUpdateSuccess]);
-
-  useEffect(() => {
-    if (croppedImage) {
-      console.log(croppedImage)
-    }
-  }, [croppedImage]);
 
   const saveProfileImage = async () => {
     if (profileImageBody && croppedImage !== null) {
@@ -222,7 +233,9 @@ const EditProfile = (props) => {
                   </label>
                   <input
                     className={`${
-                      theme === "dark" ? `text-white` : `text-gray-900`
+                      theme === "dark"
+                        ? `text-white  bg-gray-700`
+                        : `text-gray-900`
                     } relative block w-full appearance-none rounded mb-2 border border-gray-300 px-3 py-2 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
                     type="text"
                     id="firstName"
@@ -240,7 +253,9 @@ const EditProfile = (props) => {
                   </label>
                   <input
                     className={`${
-                      theme === "dark" ? `text-white` : `text-gray-900`
+                      theme === "dark"
+                        ? `text-white  bg-gray-700`
+                        : `text-gray-900`
                     } relative block w-full appearance-none rounded mb-2 border border-gray-300 px-3 py-2 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
                     type="text"
                     id="lastName"
@@ -267,13 +282,15 @@ const EditProfile = (props) => {
             </form>
             <hr />
             <form onSubmit={handleProfileUpdate} className="">
-              <div className="flex flex-col space-y-1">
+              <div className="flex flex-col space-y-1 mb-3">
                 <label className="text-sm font-bold" htmlFor="firstName">
                   About
                 </label>
                 <textarea
                   className={`${
-                    theme === "dark" ? `text-white` : `text-gray-900`
+                    theme === "dark"
+                      ? `text-white  bg-gray-700`
+                      : `text-gray-900`
                   } relative block w-full appearance-none rounded mb-2 border border-gray-300 px-3 py-2 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
                   type="text"
                   id="about"
@@ -284,6 +301,58 @@ const EditProfile = (props) => {
                     handleProfileChange();
                   }}
                 />
+              </div>
+              <div className="flex flex-col space-y-1 mb-3">
+                <label className="text-sm font-bold" htmlFor="country">
+                  Country
+                </label>
+                <select
+                  className={`${
+                    theme === "dark"
+                      ? `text-white  bg-gray-700`
+                      : `text-gray-900`
+                  } relative block w-full appearance-none rounded mb-2 border border-gray-300 px-3 py-2 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
+                  id="country"
+                  name="country"
+                  value={country}
+                  onChange={(event) => {
+                    setCountry(event.target.value);
+                    handleProfileChange();
+                  }}
+                >
+                  <option value="">Select a country</option>
+                  {lazyCountires?.map((country) => (
+                    <option key={country.id} value={country.id}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col space-y-1 mb-3">
+                <label className="text-sm font-bold" htmlFor="gender">
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  required
+                  className={`${
+                    theme === "dark"
+                      ? `text-white bg-gray-700`
+                      : `text-gray-900`
+                  } relative block w-full appearance-none rounded mb-2 border border-gray-300 px-3 py-2 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
+                  name="gender"
+                  value={gender}
+                  onChange={(event) => {
+                    setGender(event.target.value);
+                    handleProfileChange();
+                  }}
+                >
+                  <option value="">Select a gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="nonbinary">Non-binary</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
               {isProfileEdited && (
                 <div className="py-2">
