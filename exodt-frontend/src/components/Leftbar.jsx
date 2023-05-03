@@ -29,16 +29,16 @@ const Leftbar = () => {
   const [fetchUser, { data: lazyData, isSuccess: success, error: lazyError }] =
     useLazyLoadUserQuery();
 
-    const handleLogout = () => {
-      logout();
-      dispatch(setLogoutState());
-    };
+  const handleLogout = () => {
+    logout();
+    dispatch(setLogoutState());
+  };
 
-    useEffect(() => {
-      if (logoutSuccess) {
-        router.push("/");
-      }
-    }, [logoutSuccess]);
+  useEffect(() => {
+    if (logoutSuccess) {
+      router.push("/");
+    }
+  }, [logoutSuccess]);
 
   useEffect(() => {
     if (isLogedIn) {
@@ -73,36 +73,36 @@ const Leftbar = () => {
         style={{ width: "inherit" }}
       >
         <Link href="/">
-        <div className="sm:flex hidden items-center">
-          <div className="relative h-[50px] w-[50px]">
-            <Image
-              className=" p-0 m-0"
-              src="/logo.png"
-              style={{
-                objectFit: "cover",
-              }}
-              fill
-              sizes="(max-width: 768px) 100vw,
+          <div className="sm:flex hidden items-center">
+            <div className="relative h-[50px] w-[50px]">
+              <Image
+                className=" p-0 m-0"
+                src="/logo.png"
+                style={{
+                  objectFit: "cover",
+                }}
+                fill
+                sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 95vw,
               90"
-              alt="logo"
+                alt="logo"
+              />
+            </div>
+            <Image
+              src="/name.png"
+              height={40}
+              width={130}
+              alt="name"
+              sizes="100vw"
             />
           </div>
           <Image
-            src="/name.png"
-            height={40}
-            width={130}
-            alt="name"
-            sizes="100vw"
+            className="sm:hidden"
+            src="/logo.png"
+            height="50"
+            width="50"
+            alt="logo"
           />
-        </div>
-        <Image
-          className="sm:hidden"
-          src="/logo.png"
-          height="50"
-          width="50"
-          alt="logo"
-        />
         </Link>
         {isAuthenticated && (
           <>
@@ -225,14 +225,14 @@ const Leftbar = () => {
               {navlinks?.map((item) => (
                 <Link key={item.id} href={item.url}>
                   <div className="flex gap-3 pt-3 items-center">
-                    <span className="text-2xl">{item.icon}</span>
-                    <span
+                    <div className="text-2xl">{item.icon}</div>
+                    <h1
                       className={`${
                         theme === "dark" ? `` : `text-gray-950`
                       } sm:flex hidden text-lg `}
                     >
                       {item.name}
-                    </span>
+                    </h1>
                   </div>
                 </Link>
               ))}
