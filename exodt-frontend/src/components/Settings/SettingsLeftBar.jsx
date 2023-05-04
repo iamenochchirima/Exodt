@@ -66,7 +66,7 @@ const SettingsLeftBar = ({ setActiveTab }) => {
         >
           <div className="flex gap-2 items-center">
             <MdOutlinePrivacyTip className="text-xl" />
-            <h1> Security and Privacy</h1>
+            <h1>Security and Privacy</h1>
           </div>
           <div>
             <AiOutlineRight size={18} />
