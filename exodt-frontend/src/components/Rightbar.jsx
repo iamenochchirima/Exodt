@@ -37,8 +37,8 @@ const Rightbar = () => {
   if (!mounted) return null;
 
   return (
-    <div className="relative w-full ">
-      <div className="sticky top-0">
+    <div className="w-full ">
+      <div className="">
         {isAuthenticated && (
           <div className="pt-5">
             <h1 className="text-center ">Suggestions for you</h1>

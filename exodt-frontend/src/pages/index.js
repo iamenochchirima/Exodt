@@ -26,8 +26,8 @@ export default function Home() {
             {feedTab === "local" && <Local />}
           </div>
         </div>
-        <div className="hidden relative mid:block w-1/3">
-          <div className="sticky top-0">
+        <div className="hidden mid:block w-1/3">
+          <div className="">
             <Rightbar />
           </div>
         </div>

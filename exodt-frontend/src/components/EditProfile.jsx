@@ -18,12 +18,6 @@ const EditProfile = (props) => {
   const userInfo = props.userInfo;
   const [firstName, setFirstName] = useState(userInfo?.first_name);
   const [lastName, setLastName] = useState(userInfo?.last_name);
-  const [country, setCountry] = useState(
-    userInfo?.country === null ? "" : userInfo?.country
-  );
-  const [gender, setGender] = useState(
-    userInfo?.gender === null ? "" : userInfo?.gender
-  );
   const [about, setAbout] = useState(userInfo?.about);
   const [profileImage, setProfileImage] = useState(userInfo?.profile_image);
   const { theme } = useTheme();
@@ -35,6 +29,13 @@ const EditProfile = (props) => {
   const [isProfileEdited, setIsProfileEdited] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
   const [profileChanged, setProfileChanged] = useState(false);
+  const [country, setCountry] = useState(
+    userInfo?.country === null ? "" : userInfo?.country
+  );
+  const [gender, setGender] = useState(
+    userInfo?.gender === null ? "" : userInfo?.gender
+  );
+  const [getCountries, { data: lazyCountires }] = useLazyGetCountriesQuery();
 
   const [
     updateUserProfile,
@@ -49,8 +50,6 @@ const EditProfile = (props) => {
       isError: isAccountUpdateError,
     },
   ] = useUpdateUserAccountMutation();
-
-  const [getCountries, { data: lazyCountires }] = useLazyGetCountriesQuery();
 
   const handleClose = () => {
     dispatch(closeEditProf());
@@ -114,10 +113,7 @@ const EditProfile = (props) => {
   };
 
   const profileImageBody = {
-    profile_image: {
-      croppedImage,
-      name: croppedImage?.name,
-    },
+    profile_image: file,
     about: about,
     country: country,
     gender: gender,

@@ -4,13 +4,19 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { topTab, latestTab, localTab } from "@/redux/slices/appSlice";
 import Link from "next/link";
+import CreatePost from "./Feed/CreatePost";
 
 const Topbar = () => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const dispatch = useDispatch();
+  const [createComp, setCreateComp] = useState(false)
 
   const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const handleCreate = () => {
+    setCreateComp(true)
+  }
 
   useEffect(() => {
     setMounted(true);
@@ -22,7 +28,7 @@ const Topbar = () => {
       {isAuthenticated && (
         <>
           <div className="hidden ss:flex w-full justify-between pt-5">
-            <button className="text-center w-1/2 bg-blue-500 p-2 rounded-tl-lg text-white">
+            <button onClick={handleCreate} className="text-center w-1/2 bg-blue-500 p-2 rounded-tl-lg text-white">
               Create post
             </button>
             <button
@@ -70,6 +76,7 @@ const Topbar = () => {
           </div>
         </div>
       )}
+      {createComp && <CreatePost {...{setCreateComp}}/>}
     </>
   );
 };
