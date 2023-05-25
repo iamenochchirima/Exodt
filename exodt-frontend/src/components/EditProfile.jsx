@@ -214,6 +214,7 @@ const EditProfile = (props) => {
                       id="profile_picture"
                       onChange={handleFileInputChange}
                       className="hidden"
+                      accept="image/x-png,image/jpeg,image/gif,image/svg+xml,image/webp"
                     />
                   </form>
                 </button>
