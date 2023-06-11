@@ -6,5 +6,6 @@ app_name = 'user_accounts'
 urlpatterns = [
     path('create/', views.UserCreate.as_view(), name="create-user"),
     path('update/', views.UpdateUserAccount.as_view(), name='update-account'),
+     path('delete/', views.DeleteUserAccount.as_view(), name='delete-account'),
     path('verify-email/<str:uidb64>/<str:token>/', views.VerifyEmailView.as_view(), name='verify-email'),
 ]

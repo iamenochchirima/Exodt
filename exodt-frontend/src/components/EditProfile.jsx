@@ -11,7 +11,6 @@ import {
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
 import { useLazyGetCountriesQuery } from "@/redux/api/generalApi";
 
 const EditProfile = (props) => {
@@ -41,15 +40,7 @@ const EditProfile = (props) => {
     updateUserProfile,
     { isSuccess: isUpdateSuccess, isLoading, error, isError },
   ] = useUpdateUserProfileMutation();
-  const [
-    updateUserAccount,
-    {
-      isSuccess: isUpdateAccSuccess,
-      isLoading: accUpdateLoading,
-      error: accoutUpdateError,
-      isError: isAccountUpdateError,
-    },
-  ] = useUpdateUserAccountMutation();
+  const [updateUserAccount, {}] = useUpdateUserAccountMutation();
 
   const handleClose = () => {
     dispatch(closeEditProf());
@@ -67,7 +58,6 @@ const EditProfile = (props) => {
   };
 
   const handleProfileUpdate = async (e) => {
-    console.log(profileBody);
     e.preventDefault();
     if (profileBody) {
       try {

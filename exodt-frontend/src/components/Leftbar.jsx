@@ -74,20 +74,6 @@ const Leftbar = () => {
       >
         <Link href="/">
           <div className="sm:flex hidden items-center">
-            <div className="relative h-[50px] w-[50px]">
-              <Image
-                className=" p-0 m-0"
-                src="/logo.png"
-                style={{
-                  objectFit: "cover",
-                }}
-                fill
-                sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 95vw,
-              90"
-                alt="logo"
-              />
-            </div>
             <Image
               src="/name.png"
               height={40}

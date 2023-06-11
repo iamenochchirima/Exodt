@@ -154,3 +154,11 @@ class VerifyEmailView(APIView):
             return Response({'error': 'User account not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteUserAccount(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, format=None):
+        user = request.user
+        user.delete()
+        return Response({'message': 'User account deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
