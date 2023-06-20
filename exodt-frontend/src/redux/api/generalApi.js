@@ -35,6 +35,13 @@ export const generalApi = generalApiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    updateProfileImage: builder.mutation({
+      query: (body) => ({
+        url: "/user_profiles/update_profile_image",
+        method: "PUT",
+        body,
+      }),
+    }),
     getCountries: builder.query({
       query: () => ({
         url: "/user_profiles/countries/",
@@ -96,6 +103,7 @@ export const {
   useConfirmResetMutation,
   useLazyGetCountriesQuery,
   useSignUpNewsletterMutation,
+  useUpdateProfileImageMutation,
   useProfileInfoMutation,
   useLazyGetFullArticleQuery,
   useGetSpecialArticlesQuery,

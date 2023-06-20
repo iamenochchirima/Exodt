@@ -228,13 +228,21 @@ CORS_ALLOW_HEADERS = (
 )
 CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')
 
-
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:3000',
+]
+
+# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:3000']
+# CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_HTTP_ONLY = False
+# SESSION_COOKIE
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

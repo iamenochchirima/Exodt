@@ -4,7 +4,7 @@ from rest_framework import status, serializers
 from .models import UserProfile, Connection, Country
 from .serializers import ProfileSerializer, CountrySerializer
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from django.views.generic import ListView, DetailView
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
@@ -79,6 +79,25 @@ class UserProfileUpdateAPIView(APIView):
         print(profile)
         serializer = UpdateUserProfileSerializer(
             profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class UserProfileImageUpdateAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def put(self, request, *args, **kwargs):
+        email = request.data.get('email') 
+        try:
+            user = User.objects.get(email=email) 
+        except User.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        profile = user.user_profile  
+        serializer = UpdateUserProfileSerializer(profile, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()

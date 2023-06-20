@@ -44,16 +44,16 @@ const Leftbar = () => {
     if (isLogedIn) {
       fetchUser();
     }
-    if (success) {
-      setUserInfo(lazyData.user);
-      dispatch(setAuthState());
-    }
+    // if (success) {
+    //   setUserInfo(lazyData.user);
+    //   dispatch(setAuthState());
+    // }
     if (isSuccess) {
-      setUserInfo(data.user);
+      setUserInfo(data);
       dispatch(setAuthState());
-      dispatch(setProfileInfo(data?.user));
+      dispatch(setProfileInfo(data));
     }
-  }, [isLogedIn, success, lazyData, data, isSuccess]);
+  }, [isLogedIn, data, isSuccess]);
 
   useEffect(() => {
     if (!isAuthenticated) {

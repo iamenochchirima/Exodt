@@ -11,7 +11,7 @@ import {
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { useLazyGetCountriesQuery } from "@/redux/api/generalApi";
+import { useLazyGetCountriesQuery, useUpdateProfileImageMutation } from "@/redux/api/generalApi";
 
 const EditProfile = (props) => {
   const userInfo = props.userInfo;
@@ -102,6 +102,12 @@ const EditProfile = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      setProfileChanged(false);
+    }
+  }, [isUpdateSuccess]);
+
   const profileImageBody = {
     profile_image: file,
     about: about,
@@ -109,18 +115,12 @@ const EditProfile = (props) => {
     gender: gender,
   };
 
-  useEffect(() => {
-    if (isUpdateSuccess) {
-      setProfileChanged(false);
-    }
-  }, [isUpdateSuccess]);
-
   const saveProfileImage = async () => {
     if (profileImageBody && croppedImage !== null) {
       try {
-        await updateUserProfile(profileImageBody);
+        
       } catch (err) {
-        console.error("Failed to update image: ", err);
+        console.error("Failed to update profile: ", err);
         toast.error("Failed to update", {
           autoClose: 5000,
           position: "top-center",

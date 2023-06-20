@@ -14,6 +14,11 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setTokens(state, {payload}) {
+      localStorage.setItem('accessToken', payload.access)
+      localStorage.setItem('refreshToken', payload.refresh)
+      state.isAuthenticated = true;
+    },
     setAuthState(state) {
       state.isAuthenticated = true;
     },
@@ -50,6 +55,7 @@ export const authSlice = createSlice({
 export const {
   setAuthState,
   setLogoutState,
+  setTokens,
   setIsLogedIn,
   setProfileInfo,
   removeProfileInfo,

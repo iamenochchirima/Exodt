@@ -13,7 +13,7 @@ export default async (req, res) => {
       const apiRes = await axios.put(`${API_URL}/user_profiles/update_profile/`, body, {
         headers: {
           "Accept": "application/json",
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${access}`,
         },
       });

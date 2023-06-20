@@ -4,7 +4,7 @@ export const authApi = authApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (body) => ({
-        url: "/auth/login/",
+        url: "/api/token/",
         method: "POST",
         body,
       }),
@@ -18,28 +18,28 @@ export const authApi = authApiSlice.injectEndpoints({
     }),
     loadUser: builder.query({
       query: (body) => ({
-        url: "/auth/load_user",
+        url: "/user_profiles/load_user/",
         method: "GET",
         body,
       }),
     }),
     deleteAccount: builder.mutation({
       query: () => ({
-        url: "/auth/delete_user",
+        url: "/user_accounts/delete/",
         method: "POST",
       }),
     }),
     updateUserProfile: builder.mutation({
       query: (body) => ({
-        url: "/auth/update_profile",
-        method: "POST",
+        url: "/user_profiles/update_profile/",
+        method: "PUT",
         body,
       }),
     }),
     updateUserAccount: builder.mutation({
       query: (body) => ({
-        url: "/auth/update_account",
-        method: "POST",
+        url: "/user_accounts/update/",
+        method: "PUT",
         body,
       }),
     }),

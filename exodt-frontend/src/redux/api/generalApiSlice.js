@@ -4,6 +4,10 @@ import { API_URL } from "@/config";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: API_URL,
+  credentials: "include",
+  prepareHeaders: (headers) => {
+    return headers;
+  },
 });
 
 export const generalApiSlice = createApi({

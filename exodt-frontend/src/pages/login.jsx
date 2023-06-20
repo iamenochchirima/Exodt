@@ -3,9 +3,9 @@ import { useLoginMutation } from "@/redux/api/authApi";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import {
-  setAuthState,
   setIsLogedIn,
   setOpenPasswordReset,
+  setTokens,
 } from "@/redux/slices/authSlice";
 import { useTheme } from "next-themes";
 import { ThreeDots } from "react-loader-spinner";
@@ -23,7 +23,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
-  const [login, { isLoading, isSuccess, isError, error }] = useLoginMutation();
+  const [login, {data, isLoading, isSuccess, isError, error }] = useLoginMutation();
 
   const initialFormData = Object.freeze({
     email: "",
@@ -54,7 +54,7 @@ const Login = () => {
           .unwrap()
           .then((payload) => {
             setFormData(initialFormData);
-            dispatch(setAuthState());
+            dispatch(setTokens(payload));
             dispatch(setIsLogedIn());
             router.push("/");
           });
@@ -158,7 +158,7 @@ const Login = () => {
                   </div>
                 </div>
                 {error &&
-                  error.data.err.message ===
+                  error?.data?.err?.message ===
                     "Request failed with status code 401" && (
                     <div className="text-red-500 mt-2">
                       Incorrect email or password
