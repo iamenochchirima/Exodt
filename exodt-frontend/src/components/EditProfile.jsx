@@ -11,7 +11,10 @@ import {
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { useLazyGetCountriesQuery, useUpdateProfileImageMutation } from "@/redux/api/generalApi";
+import {
+  useLazyGetCountriesQuery,
+  useUpdateProfileImageMutation,
+} from "@/redux/api/generalApi";
 
 const EditProfile = (props) => {
   const userInfo = props.userInfo;
@@ -108,19 +111,27 @@ const EditProfile = (props) => {
     }
   }, [isUpdateSuccess]);
 
-  const profileImageBody = {
-    profile_image: file,
-    about: about,
-    country: country,
-    gender: gender,
-  };
-
   const saveProfileImage = async () => {
-    if (profileImageBody && croppedImage !== null) {
+    if (croppedImage !== null) {
+      const lastModified = Date.now();
+      const fileName = croppedImage.name; 
+      const fileType = croppedImage.type;
+
+      const conFile = new File([croppedImage],fileName, { lastModified, type: fileType, });
+      const formData = new FormData();
+      formData.append("profile_image", conFile);
+      formData.append("about", about);
+      formData.append("country", country);
+      formData.append("gender", gender);
       try {
-        
+        await updateUserProfile(formData);
+        toast.success("Profile updated", {
+          autoClose: 5000,
+          position: "top-center",
+          hideProgressBar: true,
+        });
       } catch (err) {
-        console.error("Failed to update profile: ", err);
+        console.error("Failed to update image: ", err);
         toast.error("Failed to update", {
           autoClose: 5000,
           position: "top-center",
