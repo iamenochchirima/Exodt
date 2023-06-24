@@ -57,14 +57,12 @@ const Rightbar = () => {
                     className="flex justify-between items-center"
                   >
                     <div className="py-3 flex gap-2 items-center">
-                      <div className="relative h-[35px] w-[35px] rounded-full">
+                      <div className=" h-[35px] w-[35px] rounded-full">
                         <Image
                           className="rounded-full"
                           src={user.avatar}
-                          style={{
-                            objectFit: "cover",
-                          }}
-                          fill
+                          height={55}
+                          width={55}
                           sizes="(max-width: 768px) 100vw"
                           alt="profile picture"
                         />
