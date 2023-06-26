@@ -30,7 +30,7 @@ export const generalApi = generalApiSlice.injectEndpoints({
       }),
     }),
     profileInfo: builder.mutation({
-      query: ( username ) => ({
+      query: (username) => ({
         url: `/user_profiles/load_profile/${username}/`,
         method: "GET",
       }),
@@ -48,19 +48,15 @@ export const generalApi = generalApiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-    getSpecialArticles: builder.query({
-      query: () => ({
-        url: "/api/special-articles/",
-        method: "GET",
-      }),
+    getAllPosts: builder.query({
+      query: () => `/posts/get-posts/`,
     }),
-    getArticles: builder.query({
-      query: (page = 1, page_size = 3) =>
-        `/api/articles/?page=${page}&page_size=${page_size}`,
+    getAllCategories: builder.query({
+      query: () => `/posts/get-categories/`,
     }),
-    getFullArticle: builder.query({
-      query: (slug) => ({
-        url: `/api/articles/${slug}/`,
+    getFullPost: builder.query({
+      query: (id) => ({
+        url: `/posts/detail/${id}/`,
         method: "GET",
       }),
     }),
@@ -96,7 +92,9 @@ export const generalApi = generalApiSlice.injectEndpoints({
 });
 
 export const {
-  useGetArticlesQuery,
+  useGetAllCategoriesQuery,
+  useGetAllPostsQuery,
+  useGetFullPostQuery,
   useSignupMutation,
   useVerifyEmailMutation,
   useResetPasswordMutation,

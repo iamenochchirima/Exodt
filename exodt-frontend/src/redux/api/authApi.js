@@ -43,6 +43,27 @@ export const authApi = authApiSlice.injectEndpoints({
         body,
       }),
     }),
+    createPost: builder.mutation({
+      query: (body) => ({
+        url: "/posts/create/",
+        method: "POST",
+        body,
+      }),
+    }),
+    deletePost: builder.mutation({
+      query: (id) => ({
+        url: `/posts/delete/${id}`,
+        method: "POST",
+        body,
+      }),
+    }),
+    updatePost: builder.mutation({
+      query: (body) => ({
+        url: `/posts/update/${id}`,
+        method: "DELETE",
+        body,
+      }),
+    }),
     changeEmail: builder.mutation({
       query: (body) => ({
         url: "/auth/change_email",
@@ -60,6 +81,9 @@ export const authApi = authApiSlice.injectEndpoints({
 });
 
 export const {
+  useDeletePostMutation,
+  useCreatePostMutation,
+  useUpdatePostMutation,
   useLoginMutation,
   useLoadUserQuery,
   useLazyLoadUserQuery,

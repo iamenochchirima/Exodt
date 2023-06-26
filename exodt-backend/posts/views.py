@@ -1,8 +1,8 @@
 from django.shortcuts import redirect
-from .models import Post, Like
+from .models import Post, Like, Category
 from rest_framework.views import APIView
 from user_profiles.models import UserProfile
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -11,14 +11,42 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .serializers import PostSerializer
+from rest_framework import serializers
+from .serializers import CategorySerializer, PostSerializer
+
+
+class CreatePostSerializer(serializers.ModelSerializer):
+    content = serializers.CharField(max_length=1000)
+    image = serializers.ImageField(allow_null=True, required=False)
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), allow_null=True, required=False)
+
+    class Meta:
+        model = Post
+        fields = ('content', 'image', 'category')
+
+    def validate_image(self, value):
+        if value:
+            # check if the uploaded file is an image
+            if not value.content_type.startswith('image'):
+                raise serializers.ValidationError('Invalid image format')
+        return value
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        user_profile = user.user_profile
+        post = Post(author=user_profile, **validated_data)
+        post.save()
+        return post
 
 
 class CreatePostAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = PostSerializer(data=request.data)
+        print(request.data)
+        serializer = CreatePostSerializer(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -26,9 +54,20 @@ class CreatePostAPIView(APIView):
 
 
 class PostListAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+
+class CategoryListAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
 

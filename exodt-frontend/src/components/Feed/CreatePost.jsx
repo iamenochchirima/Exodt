@@ -1,15 +1,22 @@
+import { useCreatePostMutation } from "@/redux/api/authApi";
+import { useGetAllCategoriesQuery } from "@/redux/api/generalApi";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { BsFillSendFill } from "react-icons/bs";
 import { MdOutlineClose } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const CreatePost = ({ setCreateComp }) => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
-  const {profileInfo} = useSelector((state) => state.auth)
+  const { profileInfo } = useSelector((state) => state.auth);
+
+  const [createPost, { isLoading, isSuccess }] = useCreatePostMutation();
+  const {data: categories} = useGetAllCategoriesQuery()
 
   const handleClose = () => {
     setCreateComp(false);
@@ -20,7 +27,17 @@ const CreatePost = ({ setCreateComp }) => {
     const formData = new FormData();
     formData.append("content", content);
     formData.append("image", image);
-    formData.append("author", profileInfo.user);
+    formData.append("category", category)
+    try {
+      createPost(formData);
+      toast.success("Post have been successfully saved", {
+        autoClose: 5000,
+        position: "top-center",
+        hideProgressBar: true,
+      });
+    } catch (error) {
+      console.log("Failed to create post", error);
+    }
   };
 
   useEffect(() => {
@@ -76,6 +93,28 @@ const CreatePost = ({ setCreateComp }) => {
               onChange={(e) => setImage(e.target.files[0])}
               accept="image/x-png,image/jpeg,image/gif,image/svg+xml,image/webp"
             />
+             <label className="text-sm font-bold" htmlFor="gender">
+                  Category
+                </label>
+                <select
+                  id="gender"
+                  required
+                  className={`${
+                    theme === "dark"
+                      ? `text-white bg-gray-700`
+                      : `text-gray-900`
+                  } relative block w-full appearance-none rounded mb-2 border border-gray-300 px-3 py-2 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
+                  name="gender"
+                  value={category}
+                  onChange={(event) => {
+                    setCategory(event.target.value);
+                  }}
+                >
+                  <option value="">Select a gender</option>
+                  {categories?.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
             <div className="flex justify-end">
               <button
                 type="submit"
