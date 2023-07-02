@@ -12,7 +12,7 @@ const CreatePost = ({ setCreateComp }) => {
   const [mounted, setMounted] = useState(false);
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
   const { profileInfo } = useSelector((state) => state.auth);
 
   const [createPost, { isLoading, isSuccess }] = useCreatePostMutation();
