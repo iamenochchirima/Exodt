@@ -94,6 +94,7 @@ export const generalApi = generalApiSlice.injectEndpoints({
 export const {
   useGetAllCategoriesQuery,
   useGetAllPostsQuery,
+  useLazyGetAllPostsQuery,
   useGetFullPostQuery,
   useSignupMutation,
   useVerifyEmailMutation,

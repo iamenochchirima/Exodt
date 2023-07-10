@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dfinity/auth-client": "^0.16.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@headlessui/react": "^1.7.14",

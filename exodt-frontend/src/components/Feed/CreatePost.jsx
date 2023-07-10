@@ -1,19 +1,20 @@
 import { useCreatePostMutation } from "@/redux/api/authApi";
 import { useGetAllCategoriesQuery } from "@/redux/api/generalApi";
+import { setPostCreated } from "@/redux/slices/postsSlice";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { BsFillSendFill } from "react-icons/bs";
 import { MdOutlineClose } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const CreatePost = ({ setCreateComp }) => {
+  const dispatch = useDispatch()
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
-  const { profileInfo } = useSelector((state) => state.auth);
 
   const [createPost, { isLoading, isSuccess }] = useCreatePostMutation();
   const {data: categories} = useGetAllCategoriesQuery()
@@ -29,12 +30,19 @@ const CreatePost = ({ setCreateComp }) => {
     formData.append("image", image);
     formData.append("category", category)
     try {
-      createPost(formData);
-      toast.success("Post have been successfully saved", {
-        autoClose: 5000,
-        position: "top-center",
-        hideProgressBar: true,
-      });
+      const res = await createPost(formData);
+      if (res) {
+        dispatch(setPostCreated())
+        setContent("")
+        setCategory("")
+        setImage("")
+        setCreateComp(false)
+        toast.success("Post have been successfully saved", {
+          autoClose: 5000,
+          position: "top-center",
+          hideProgressBar: true,
+        });
+      }
     } catch (error) {
       console.log("Failed to create post", error);
     }
