@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { closePostCreated } from "@/redux/slices/postsSlice";
+import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 
 const Top = () => {
   const [posts, setPosts] = useState(null);
@@ -43,12 +44,12 @@ const Top = () => {
     }
   }, [lazyPosts]);
 
-  console.log(postCreated)
+  console.log(postCreated);
 
   return (
     <div className="mt-5">
       {posts?.map((post) => (
-        <div key={post.id} className="border p-3 rounded-lg">
+        <div key={post.id} className="border p-3 rounded-lg mt-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-5">
               <div className=" h-[35px] w-[35px] rounded-full">
@@ -103,10 +104,30 @@ const Top = () => {
             </Menu>
           </div>
           <div className="flex justify-center">
-            {post.image && <Image src={post.image} alt="post image" height={200} width={200} />}
+            {post.image && (
+              <Image
+                src={post.image}
+                alt="post image"
+                height={200}
+                width={200}
+              />
+            )}
           </div>
           <div className="pt-3">
             {post.content && <p className="font-robotoLight">{post.content}</p>}
+          </div>
+          <div className="flex gap-3 items-center border-t mt-3 p-3">
+            <button className="flex items-center gap-2">
+              <AiFillHeart size={20} />
+              <span>100</span>
+            </button>
+            {/* <li>
+              <AiOutlineHeart />
+            </li> */}
+            <button className="flex items-center gap-2">
+              <AiOutlineComment size={20} />
+              <span >20</span>
+            </button>
           </div>
         </div>
       ))}
