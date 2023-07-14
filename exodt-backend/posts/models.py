@@ -17,7 +17,7 @@ def posts_images_upload_path(instance, filename):
     return 'posts_images/exodtpost_{}.{}'.format(runique_name, ext)
 
 class Post(models.Model):
-    content = models.TextField()
+    content = models.TextField(max_length=2000)
     image = models.ImageField(_('Image'), upload_to=posts_images_upload_path, blank=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
     liked = models.ManyToManyField(UserProfile, default=None, related_name='liked', blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
