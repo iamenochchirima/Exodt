@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Post
+from .models import Category, Post, Like, Comment
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -10,6 +10,8 @@ class CategorySerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     profile_image = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
+    num_likes = serializers.SerializerMethodField()
+    num_comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -20,4 +22,20 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj.author.username
+    
+    def get_num_likes(self, obj):
+        return obj.like_set.count()
+    
+    def get_num_comments(self, obj):
+        return obj.comment_set.count()
+    
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
 

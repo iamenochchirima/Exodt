@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 from .models import Post, Like, Category
+from rest_framework import generics
 from rest_framework.views import APIView
 from user_profiles.models import UserProfile
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -12,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from rest_framework import serializers
-from .serializers import CategorySerializer, PostSerializer
+from .serializers import CategorySerializer, PostSerializer, LikeSerializer
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
@@ -121,6 +122,54 @@ class PostUpdateAPIView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class LikeAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+
+    def create(self, request, *args, **kwargs):
+        post_id = request.data.get('post_id')
+        user = request.user
+        if not post_id:
+            return Response({'error': 'post_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if Like.objects.filter(user=user, post=post).exists():
+            return Response({'error': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        like = Like(user=user, post=post, value='Like')
+        like.save()
+        return Response({'success': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)
+
+
+class UnlikeAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+
+    def delete(self, request, *args, **kwargs):
+        post_id = request.data.get('post_id')
+        user = request.user
+        if not post_id:
+            return Response({'error': 'post_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            like = Like.objects.get(user=user, post=post)
+            like.delete()
+            return Response({'success': 'Post unliked successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        except Like.DoesNotExist:
+            return Response({'error': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @login_required

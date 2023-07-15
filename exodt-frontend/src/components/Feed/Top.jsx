@@ -40,7 +40,7 @@ const Top = () => {
     }
   }, [lazyPosts]);
 
-  console.log(postCreated);
+  console.log(posts)
 
   return (
     <div className="mt-5">
