@@ -64,6 +64,20 @@ export const authApi = authApiSlice.injectEndpoints({
         body,
       }),
     }),
+    likePost: builder.mutation({
+      query: (body) => ({
+        url: `/posts/like/`,
+        method: "POST",
+        body,
+      }),
+    }),
+    unlikePost: builder.mutation({
+      query: (body) => ({
+        url: `/posts/unlike/`,
+        method: "DELETE",
+        body,
+      }),
+    }),
     changeEmail: builder.mutation({
       query: (body) => ({
         url: "/auth/change_email",
@@ -81,6 +95,8 @@ export const authApi = authApiSlice.injectEndpoints({
 });
 
 export const {
+  useLikePostMutation,
+  useUnlikePostMutation,
   useDeletePostMutation,
   useCreatePostMutation,
   useUpdatePostMutation,

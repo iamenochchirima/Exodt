@@ -130,7 +130,7 @@ class LikeAPIView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         post_id = request.data.get('post_id')
-        user = request.user
+        user = request.user.user_profile
         if not post_id:
             return Response({'error': 'post_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -154,7 +154,7 @@ class UnlikeAPIView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         post_id = request.data.get('post_id')
-        user = request.user
+        user = request.user.user_profile
         if not post_id:
             return Response({'error': 'post_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
         

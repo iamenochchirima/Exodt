@@ -1,18 +1,61 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { format } from "timeago.js";
 import { Menu, Transition } from "@headlessui/react";
 import { BsThreeDots } from "react-icons/bs";
 import Link from "next/link";
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 import Image from "next/image";
+import {
+  useLikePostMutation,
+  useUnlikePostMutation,
+} from "@/redux/api/authApi";
+import { useSelector } from "react-redux";
 
 const Post = ({ post, theme }) => {
-
   const [isExpanded, setIsExpanded] = useState(false);
-  const characterLimit = 100; // Define the character limit here
+  const characterLimit = 100;
+
+  const [displayedPost, setDisplayedPost] = useState(post)
+
+  const [likePost, { data: likeRes, error }] = useLikePostMutation();
+  const [unlikePost, { data: unlikeRes, error: unlikeError }] = useUnlikePostMutation();
+
+  const { profileInfo } = useSelector((state) => state.auth);
+  const [liked, setLiked] = useState(false);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  useEffect(() => {
+    if (displayedPost.liked_by.includes(profileInfo.id)) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+  }, [displayedPost, profileInfo]);
+
+  const likeUnlike = (id) => {
+    const body = {
+      "post_id": id
+    }
+    if (liked) {
+      try {
+        unlikePost(body);
+        setLiked(false);
+        setDisplayedPost((prevPost) => ({ ...prevPost, num_likes: prevPost.num_likes - 1 }));
+      } catch (error) {
+        console.log("Failed to unlike displayedPost", error);
+      }
+    } else if (!liked) {
+      try {
+        likePost(body);
+        setLiked(true);
+        setDisplayedPost((prevPost) => ({ ...prevPost, num_likes: prevPost.num_likes + 1 }));
+      } catch (error) {
+        console.log("Failed to like displayedPost", error);
+      }
+    }
   };
 
   return (
@@ -22,7 +65,7 @@ const Post = ({ post, theme }) => {
           <div className=" h-[35px] w-[35px] rounded-full">
             <Image
               className="rounded-full"
-              src={post.profile_image}
+              src={displayedPost.profile_image}
               height={55}
               width={55}
               sizes="(max-width: 768px) 100vw"
@@ -30,10 +73,10 @@ const Post = ({ post, theme }) => {
             />
           </div>
 
-          <Link href={`/${encodeURIComponent(post.username)}/`}>
-            {post.username}
+          <Link href={`/${encodeURIComponent(displayedPost.username)}/`}>
+            {displayedPost.username}
           </Link>
-          <h3> {format(post.created)}</h3>
+          <h3> {format(displayedPost.created)}</h3>
         </div>
         <Menu>
           <Menu.Button>
@@ -71,31 +114,33 @@ const Post = ({ post, theme }) => {
         </Menu>
       </div>
       <div className="flex justify-center">
-        {post.image && (
-          <Image src={post.image} alt="post image" height={200} width={200} />
+        {displayedPost.image && (
+          <Image src={displayedPost.image} alt="displayedPost image" height={200} width={200} />
         )}
       </div>
       <div className="pt-3">
-      <p className="font-robotoLight">
-            {isExpanded ? post.content : `${post.content.slice(0, characterLimit)}...`}
-          </p>
-          {!isExpanded && post.content.length > characterLimit && (
-            <button onClick={toggleExpand} className="read-more-button">
-              Read more
-            </button>
-          )}
+        <p className="font-robotoLight">
+          {isExpanded
+            ? displayedPost.content
+            : `${displayedPost.content.slice(0, characterLimit)}...`}
+        </p>
+        {!isExpanded && displayedPost.content.length > characterLimit && (
+          <button onClick={toggleExpand} className="read-more-button">
+            Read more
+          </button>
+        )}
       </div>
       <div className="flex gap-3 items-center border-t mt-3 p-3">
-        <button className="flex items-center gap-2">
-          <AiFillHeart size={20} />
-          <span>100</span>
+        <button
+          onClick={() => likeUnlike(displayedPost.id)}
+          className="flex items-center gap-2"
+        >
+          {liked ? <AiFillHeart size={20} /> : <AiOutlineHeart />}
+          <span>{displayedPost.num_likes}</span>
         </button>
-        {/* <li>
-        <AiOutlineHeart />
-      </li> */}
         <button className="flex items-center gap-2">
           <AiOutlineComment size={20} />
-          <span>20</span>
+          <span>{displayedPost.num_comments}</span>
         </button>
       </div>
     </div>
