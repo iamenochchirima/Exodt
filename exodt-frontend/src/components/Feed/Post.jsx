@@ -135,7 +135,7 @@ const Post = ({ post, theme }) => {
           onClick={() => likeUnlike(displayedPost.id)}
           className="flex items-center gap-2"
         >
-          {liked ? <AiFillHeart size={20} /> : <AiOutlineHeart />}
+          {liked ? <AiFillHeart size={20} /> : <AiOutlineHeart size={20} />}
           <span>{displayedPost.num_likes}</span>
         </button>
         <button className="flex items-center gap-2">
