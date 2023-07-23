@@ -11,7 +11,7 @@ import {
 } from "@/redux/api/authApi";
 import { useSelector } from "react-redux";
 
-const Post = ({ post, theme }) => {
+const Postcard = ({ post, theme }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const characterLimit = 100;
   const [likes, setLikes] = useState(post.num_likes)
@@ -123,11 +123,14 @@ const Post = ({ post, theme }) => {
         )}
       </div>
       <div className="pt-3">
+        <Link href={`/posts/${encodeURIComponent(post.id)}/`}>
+        
         <p className="font-robotoLight">
           {isExpanded
             ? post.content
             : `${post.content.slice(0, characterLimit)}...`}
         </p>
+        </Link>
         {!isExpanded && post.content.length > characterLimit && (
           <button onClick={toggleExpand} className="read-more-button">
             Read more
@@ -151,4 +154,4 @@ const Post = ({ post, theme }) => {
   );
 };
 
-export default Post;
+export default Postcard;

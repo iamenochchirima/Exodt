@@ -7,7 +7,7 @@ import React, {useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useDispatch, useSelector } from "react-redux";
 import { closePostCreated } from "@/redux/slices/postsSlice";
-import Post from "./Post";
+import PostCard from "./PostCard";
 
 const Top = () => {
   const [posts, setPosts] = useState(null);
@@ -40,12 +40,10 @@ const Top = () => {
     }
   }, [lazyPosts]);
 
-  console.log(posts)
-
   return (
     <div className="mt-5">
       {posts?.map((post) => (
-        <Post key={post.id} {...{ post, theme }} />
+        <PostCard key={post.id} {...{ post, theme }} />
       ))}
     </div>
   );
