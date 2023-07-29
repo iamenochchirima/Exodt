@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from .models import Post, Like, Category
+from .models import Post, Like, Category, Comment
 from rest_framework import generics
 from rest_framework.views import APIView
 from user_profiles.models import UserProfile
@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from rest_framework import serializers
-from .serializers import CategorySerializer, PostSerializer, LikeSerializer
+from .serializers import CategorySerializer, PostSerializer, LikeSerializer, CommentSerializer
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
@@ -73,6 +73,8 @@ class CategoryListAPIView(APIView):
 
 
 class PostDetailAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request, pk):
         try:
             post = Post.objects.get(pk=pk)
@@ -122,7 +124,8 @@ class PostUpdateAPIView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class LikeAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Like.objects.all()
@@ -133,12 +136,12 @@ class LikeAPIView(generics.CreateAPIView):
         user = request.user.user_profile
         if not post_id:
             return Response({'error': 'post_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             post = Post.objects.get(pk=post_id)
         except Post.DoesNotExist:
             return Response({'error': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if Like.objects.filter(user=user, post=post).exists():
             return Response({'error': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -157,12 +160,12 @@ class UnlikeAPIView(generics.DestroyAPIView):
         user = request.user.user_profile
         if not post_id:
             return Response({'error': 'post_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             post = Post.objects.get(pk=post_id)
         except Post.DoesNotExist:
             return Response({'error': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        
+
         try:
             like = Like.objects.get(user=user, post=post)
             like.delete()
@@ -171,41 +174,74 @@ class UnlikeAPIView(generics.DestroyAPIView):
             return Response({'error': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CommentCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommentSerializer
 
-@login_required
-def like_unlike_post(request):
-    user = request.user
-    if request.method == 'POST':
-        post_id = request.POST.get('post_id')
-        post = Post.objects.get(id=post_id)
-        profile = UserProfile.objects.get(user=user)
+    def create(self, request, *args, **kwargs):
+        post_id = request.data.get('post_id')
+        body = request.data.get('body')
+        user = request.user.user_profile
 
-        if profile in post.liked.all():
-            post.liked.remove(profile)
-        else:
-            post.liked.add(profile)
+        if not post_id:
+            return Response({'error': 'post_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        like, created = Like.objects.get_or_create(
-            user=profile, post_id=post_id)
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-        if not created:
-            if like.value == 'Like':
-                like.value = 'Unlike'
+        comment = Comment(user=user, post=post, body=body)
+        comment.save()
+        return Response({'success': 'Comment created successfully.'}, status=status.HTTP_201_CREATED)
+
+
+class CommentDeleteAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        comment_id = kwargs.get('pk')
+        user = request.user.user_profile
+
+        try:
+            comment = Comment.objects.get(pk=comment_id, user=user)
+            comment.delete()
+            return Response({'success': 'Comment deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        except Comment.DoesNotExist:
+            return Response({'error': 'Comment not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class CommentUpdateAPIView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def update(self, request, *args, **kwargs):
+        comment_id = kwargs.get('pk')
+        user = request.user.user_profile
+
+        try:
+            comment = Comment.objects.get(pk=comment_id, user=user)
+            serializer = self.get_serializer(
+                comment, data=request.data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'success': 'Comment updated successfully.'}, status=status.HTTP_200_OK)
             else:
-                like.value = 'Like'
-        else:
-            like.value = 'Like'
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Comment.DoesNotExist:
+            return Response({'error': 'Comment not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        post.save()
-        like.save()
+class CommentListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = CommentSerializer
 
-        data = {
-            'value': like.value,
-            'likes': post.liked.all().count()
-        }
-
-        print(data)
-
-        return JsonResponse(data, safe=False)
-
-    return redirect('posts:main_post_view')
+    def get_queryset(self):
+        post_id = self.kwargs.get('post_id')
+        try:
+            post = Post.objects.get(pk=post_id)
+            return Comment.objects.filter(post=post)
+        except Post.DoesNotExist:
+            return Comment.objects.none()

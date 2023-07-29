@@ -53,14 +53,14 @@ export const authApi = authApiSlice.injectEndpoints({
     deletePost: builder.mutation({
       query: (id) => ({
         url: `/posts/delete/${id}`,
-        method: "POST",
+        method: "DELETE",
         body,
       }),
     }),
     updatePost: builder.mutation({
       query: (body) => ({
         url: `/posts/update/${id}`,
-        method: "DELETE",
+        method: "POST",
         body,
       }),
     }),
@@ -74,6 +74,27 @@ export const authApi = authApiSlice.injectEndpoints({
     unlikePost: builder.mutation({
       query: (body) => ({
         url: `/posts/unlike/`,
+        method: "DELETE",
+        body,
+      }),
+    }),
+     createComment: builder.mutation({
+      query: (body) => ({
+        url: "/posts/comments/create/",
+        method: "POST",
+        body,
+      }),
+    }),
+    updateComment: builder.mutation({
+      query: (body) => ({
+        url: `/posts/comments/${id}/update/`,
+        method: "POST",
+        body,
+      }),
+    }),
+    deleteComment: builder.mutation({
+      query: (id) => ({
+        url: `/posts/comments/${id}/delete/`,
         method: "DELETE",
         body,
       }),
@@ -95,6 +116,9 @@ export const authApi = authApiSlice.injectEndpoints({
 });
 
 export const {
+  useCreateCommentMutation,
+  useUpdateCommentMutation,
+  useDeleteCommentMutation,
   useLikePostMutation,
   useUnlikePostMutation,
   useDeletePostMutation,

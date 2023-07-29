@@ -56,7 +56,13 @@ export const generalApi = generalApiSlice.injectEndpoints({
     }),
     getFullPost: builder.query({
       query: (id) => ({
-        url: `/posts/detail/${id}/`,
+        url: `/posts/detail/${id}`,
+        method: "GET",
+      }),
+    }),
+    getPostComments: builder.query({
+      query: (id) => ({
+        url: `/posts/comments/${id}`,
         method: "GET",
       }),
     }),
@@ -95,7 +101,8 @@ export const {
   useGetAllCategoriesQuery,
   useGetAllPostsQuery,
   useLazyGetAllPostsQuery,
-  useGetFullPostQuery,
+  useLazyGetFullPostQuery,
+  useLazyGetPostCommentsQuery,
   useSignupMutation,
   useVerifyEmailMutation,
   useResetPasswordMutation,

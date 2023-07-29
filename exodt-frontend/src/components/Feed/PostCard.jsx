@@ -145,10 +145,11 @@ const Postcard = ({ post, theme }) => {
           {liked ? <AiFillHeart size={20} /> : <AiOutlineHeart size={20} />}
           <span>{likes}</span>
         </button>
-        <button className="flex items-center gap-2">
+        <Link href={`/posts/${encodeURIComponent(post.id)}/`} className="flex items-center gap-2">
           <AiOutlineComment size={20} />
           <span>{post.num_comments}</span>
-        </button>
+          <span>Comments</span>
+        </Link>
       </div>
     </div>
   );
