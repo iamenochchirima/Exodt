@@ -19,7 +19,7 @@ import PostComment from "@/components/Feed/PostComment";
 
 const Post = () => {
 
-  const theme = useTheme()
+  const { theme } = useTheme()
 
   const router = useRouter();
   const { id } = router.query || {};
@@ -34,7 +34,7 @@ const Post = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const characterLimit = 300;
   const [likes, setLikes] = useState(post?.num_likes)
-
+ 
   const [likePost, { data: likeRes, error }] = useLikePostMutation();
   const [unlikePost, { data: unlikeRes, error: unlikeError }] = useUnlikePostMutation();
 
@@ -103,15 +103,15 @@ const Post = () => {
       formData.append("body", comment);
       formData.append("post_id", id);
       try {
-        const res = await createPostComment(formData);
-        if (res) {
+        await createPostComment(formData).unwrap().then(() => {
           setComment("")
+          getPostComments(id)
           toast.success("Commented!!!", {
             autoClose: 5000,
             position: "top-center",
             hideProgressBar: true,
           });
-        }
+        });
       } catch (error) {
         console.log("Failed to create post comment", error);
       }
@@ -230,7 +230,7 @@ const Post = () => {
         </form>
         {/* Comment section */}
         {comments?.map((comment, index) => (
-          <PostComment key={index} {...{ comment}} />
+          <PostComment key={index} {...{ comment, theme }} />
         ))}
 
       </div>)}

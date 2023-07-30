@@ -8,11 +8,17 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 
 const PostComment = (comment) => {
-  const theme = useTheme()
   const [com, setComment] = useState(comment.comment)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const characterLimit = 100;
+  const { theme } = useTheme()
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
-    <div>
-      
+    <div className="p-5 border m-5 rounded-lg">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-5">
           <div className=" h-[35px] w-[35px] rounded-full">
@@ -64,6 +70,16 @@ const PostComment = (comment) => {
           </Transition>
         </Menu>
       </div>
+      <p className="font-robotoLight m-2">
+        {isExpanded
+          ? com?.body
+          : `${com?.body.slice(0, characterLimit)}...`}
+      </p>
+      {!isExpanded && com.body.length > characterLimit && (
+        <button onClick={toggleExpand} className="read-more-button">
+          Read more
+        </button>
+      )}
     </div>
 
   )
