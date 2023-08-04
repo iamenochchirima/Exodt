@@ -11,7 +11,7 @@ import {
 } from "@/redux/api/authApi";
 import { useSelector } from "react-redux";
 
-const Postcard = ({ post, theme }) => {
+const Postcard = ({ post, theme, handleDeletePost }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const characterLimit = 100;
   const [likes, setLikes] = useState(post.num_likes)
@@ -63,7 +63,6 @@ const Postcard = ({ post, theme }) => {
       }
     }
   };
-
   return (
     <div className="border p-3 rounded-lg mt-2">
       <div className="flex items-center justify-between">
@@ -107,9 +106,30 @@ const Postcard = ({ post, theme }) => {
                     className={` ${theme === "light"
                       ? `text-gray-800 hover:bg-gray-200`
                       : `text-white hover:bg-gray-700`
-                      } block px-4 py-2 text-sm`}
+                      } ${profileInfo?.username === post.username ? `block` : `hidden`} px-4 py-2 w-full text-left text-sm`}
                   >
                     Edit
+                  </button>
+                </Menu.Item>
+                <Menu.Item>
+                  <button
+                  onClick={() => handleDeletePost(post.id)}
+                    className={` ${theme === "light"
+                      ? `text-gray-800 hover:bg-gray-200`
+                      : `text-white hover:bg-gray-700`
+                      } ${profileInfo?.username === post.username ? `block` : `hidden`} px-4 py-2 w-full text-left text-sm`}
+                  >
+                    Delete
+                  </button>
+                </Menu.Item>
+                <Menu.Item>
+                  <button
+                    className={` ${theme === "light"
+                      ? `text-gray-800 hover:bg-gray-200`
+                      : `text-white hover:bg-gray-700`
+                      } block px-4 py-2 w-full text-left text-sm`}
+                  >
+                    Bookmark
                   </button>
                 </Menu.Item>
               </div>
@@ -124,12 +144,12 @@ const Postcard = ({ post, theme }) => {
       </div>
       <div className="pt-3">
         <Link href={`/posts/${encodeURIComponent(post.id)}/`}>
-        
-        <p className="font-robotoLight">
-          {isExpanded
-            ? post.content
-            : `${post.content.slice(0, characterLimit)}...`}
-        </p>
+
+          <p className="font-robotoLight">
+            {isExpanded
+              ? post.content
+              : `${post.content.slice(0, characterLimit)}...`}
+          </p>
         </Link>
         {!isExpanded && post.content.length > characterLimit && (
           <button onClick={toggleExpand} className="read-more-button">

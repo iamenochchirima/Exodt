@@ -8,8 +8,10 @@ import { useTheme } from "next-themes";
 import { useDispatch, useSelector } from "react-redux";
 import { closePostCreated } from "@/redux/slices/postsSlice";
 import PostCard from "./PostCard";
+import { useDeletePostMutation } from "@/redux/api/authApi";
 
 const Top = () => {
+  const [deletePost] = useDeletePostMutation()
   const [posts, setPosts] = useState(null);
   const dispatch = useDispatch();
   const { data, isSuccess } = useGetAllPostsQuery();
@@ -40,10 +42,20 @@ const Top = () => {
     }
   }, [lazyPosts]);
 
+
+  const handleDeletePost = async (id) => {
+    try {
+      const result = await deletePost(id);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
   return (
     <div className="mt-5">
       {posts?.map((post) => (
-        <PostCard key={post.id} {...{ post, theme }} />
+        <PostCard key={post.id} {...{ post, theme, handleDeletePost }} />
       ))}
     </div>
   );

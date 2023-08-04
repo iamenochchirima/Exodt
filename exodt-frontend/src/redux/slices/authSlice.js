@@ -14,16 +14,22 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setTokens(state, {payload}) {
-      localStorage.setItem('accessToken', payload.access)
-      localStorage.setItem('refreshToken', payload.refresh)
+    setTokens(state, { payload }) {
+      localStorage.setItem("accessToken", payload.access);
+      localStorage.setItem("refreshToken", payload.refresh);
       state.isAuthenticated = true;
     },
     setAuthState(state) {
       state.isAuthenticated = true;
     },
     setLogoutState(state) {
-      state.isAuthenticated = false;
+      try {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        state.isAuthenticated = false;
+      } catch (error) {
+        console.error("Error removing items from local storage:", error);
+      }
     },
     setIsLogedIn(state) {
       state.isLogedIn = true;
@@ -35,10 +41,10 @@ export const authSlice = createSlice({
       state.resetPasswordRequest = false;
     },
     setProfileInfo(state, action) {
-      state.profileInfo = action.payload
+      state.profileInfo = action.payload;
     },
     removeProfileInfo(state) {
-      state.profileInfo = {}
+      state.profileInfo = {};
     },
 
     extraReducers: {

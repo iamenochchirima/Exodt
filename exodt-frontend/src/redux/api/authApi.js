@@ -9,13 +9,6 @@ export const authApi = authApiSlice.injectEndpoints({
         body,
       }),
     }),
-    logout: builder.mutation({
-      query: (body) => ({
-        url: "/auth/logout/",
-        method: "POST",
-        body,
-      }),
-    }),
     loadUser: builder.query({
       query: (body) => ({
         url: "/user_profiles/load_user/",
@@ -53,15 +46,13 @@ export const authApi = authApiSlice.injectEndpoints({
     deletePost: builder.mutation({
       query: (id) => ({
         url: `/posts/delete/${id}`,
-        method: "DELETE",
-        body,
+        method: "DELETE"
       }),
     }),
     updatePost: builder.mutation({
-      query: (body) => ({
+      query: (id) => ({
         url: `/posts/update/${id}`,
-        method: "POST",
-        body,
+        method: "POST"
       }),
     }),
     likePost: builder.mutation({
@@ -94,9 +85,8 @@ export const authApi = authApiSlice.injectEndpoints({
     }),
     deleteComment: builder.mutation({
       query: (id) => ({
-        url: `/posts/comments/${id}/delete/`,
+        url: `/posts/comments/delete/${id}`,
         method: "DELETE",
-        body,
       }),
     }),
     changeEmail: builder.mutation({
@@ -127,7 +117,6 @@ export const {
   useLoginMutation,
   useLoadUserQuery,
   useLazyLoadUserQuery,
-  useLogoutMutation,
   useUpdateUserProfileMutation,
   useUpdateUserAccountMutation,
   useChangeEmailMutation,

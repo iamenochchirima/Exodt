@@ -9,6 +9,7 @@ import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 import Image from "next/image";
 import {
   useCreateCommentMutation,
+  useDeleteCommentMutation,
   useLikePostMutation,
   useUnlikePostMutation,
 } from "@/redux/api/authApi";
@@ -20,6 +21,7 @@ import PostComment from "@/components/Feed/PostComment";
 const Post = () => {
 
   const { theme } = useTheme()
+  const [comments, setComments] = useState(null)
 
   const router = useRouter();
   const { id } = router.query || {};
@@ -27,14 +29,21 @@ const Post = () => {
 
   const [getPost, { data: post, isSuccess }] =
     useLazyGetFullPostQuery();
+  const [deleteComment, {}] = useDeleteCommentMutation()
 
-  const [getPostComments, { data: comments }] =
+  const [getPostComments, { data }] =
     useLazyGetPostCommentsQuery();
+
+  useEffect(() => {
+    if (data) {
+      setComments(data)
+    }
+  }, [data])
 
   const [isExpanded, setIsExpanded] = useState(false);
   const characterLimit = 300;
   const [likes, setLikes] = useState(post?.num_likes)
- 
+
   const [likePost, { data: likeRes, error }] = useLikePostMutation();
   const [unlikePost, { data: unlikeRes, error: unlikeError }] = useUnlikePostMutation();
 
@@ -117,6 +126,16 @@ const Post = () => {
       }
     }
   }
+
+  const handleDeleteComment = async (id) => {
+    try {
+      const result = await deleteComment(id);
+      console.log(result)
+      setComments((prevcomments) => prevcomments.filter((comment) => comment.id !== id));
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
 
   return (
     <>
@@ -229,10 +248,9 @@ const Post = () => {
           </button>
         </form>
         {/* Comment section */}
-        {comments?.map((comment, index) => (
-          <PostComment key={index} {...{ comment, theme }} />
+        {comments?.map((comment) => (
+          <PostComment key={comment.id} {...{ comment, theme, handleDeleteComment }} />
         ))}
-
       </div>)}
     </>
   )

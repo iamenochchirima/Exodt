@@ -93,7 +93,7 @@ class PostDeleteAPIView(APIView):
         except Post.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if post.author != request.user:
+        if post.author.user != request.user:
             return Response(
                 {'error': 'You do not have permission to delete this post.'},
                 status=status.HTTP_403_FORBIDDEN

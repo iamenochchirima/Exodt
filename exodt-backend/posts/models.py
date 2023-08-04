@@ -54,4 +54,7 @@ class Comment(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.pk) 
+        return str(self.pk)
+
+    class Meta:
+        ordering = ('-created',) 

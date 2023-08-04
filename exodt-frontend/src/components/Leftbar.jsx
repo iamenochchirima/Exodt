@@ -11,7 +11,6 @@ import { setAuthState, setProfileInfo } from "@/redux/slices/authSlice";
 import {
   useLoadUserQuery,
   useLazyLoadUserQuery,
-  useLogoutMutation,
 } from "@/redux/api/authApi";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import { Menu, Transition } from "@headlessui/react";
@@ -25,20 +24,13 @@ const Leftbar = () => {
   const [userInfo, setUserInfo] = useState(null);
   const { isAuthenticated, isLogedIn } = useSelector((state) => state.auth);
   const { data, isSuccess, error } = useLoadUserQuery();
-  const [logout, { isSuccess: logoutSuccess }] = useLogoutMutation();
   const [fetchUser, { data: lazyData, isSuccess: success, error: lazyError }] =
     useLazyLoadUserQuery();
 
   const handleLogout = () => {
-    logout();
     dispatch(setLogoutState());
+    router.push("/");
   };
-
-  useEffect(() => {
-    if (logoutSuccess) {
-      router.push("/");
-    }
-  }, [logoutSuccess]);
 
   useEffect(() => {
     if (isLogedIn) {
